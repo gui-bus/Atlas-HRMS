@@ -38,6 +38,7 @@ jobs:
         run: pnpm build
         env:
           NEXT_DISABLE_ESLINT: 1
+          NEXT_PRIVATE_LOCAL_WEBPACK: true
 
       - name: Run backend unit and integration tests
         run: pnpm --filter @atlas/api test
