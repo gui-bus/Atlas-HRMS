@@ -14,18 +14,29 @@ import { Throttle } from "@nestjs/throttler";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
+import {
+  UserResponseDto,
+  LoginResponseDto,
+  RefreshResponseDto,
+  LogoutResponseDto,
+  ErrorResponseDto,
+} from "./dto/responses.dto";
 
 @ApiTags("auth")
 @Controller("auth")
+@ApiResponse({ status: 400, description: "Dados de requisição inválidos", type: ErrorResponseDto })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("register")
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @ApiOperation({ summary: "Cadastrar um novo usuário no sistema" })
-  @ApiResponse({ status: 201, description: "Usuário criado com sucesso" })
-  @ApiResponse({ status: 400, description: "Dados inválidos" })
-  @ApiResponse({ status: 409, description: "E-mail já cadastrado" })
+  @ApiResponse({ status: 201, description: "Usuário criado com sucesso", type: UserResponseDto })
+  @ApiResponse({
+    status: 409,
+    description: "E-mail já cadastrado no banco de dados",
+    type: ErrorResponseDto,
+  })
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }
@@ -34,8 +45,12 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Realizar login obtendo token de acesso e cookie de atualização" })
-  @ApiResponse({ status: 200, description: "Login efetuado com sucesso" })
-  @ApiResponse({ status: 401, description: "Credenciais inválidas" })
+  @ApiResponse({ status: 200, description: "Login efetuado com sucesso", type: LoginResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: "Credenciais inválidas fornecidas",
+    type: ErrorResponseDto,
+  })
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
     const result = await this.authService.login(dto);
 
@@ -56,8 +71,12 @@ export class AuthController {
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Renovar o token de acesso utilizando o refresh token do cookie" })
-  @ApiResponse({ status: 200, description: "Token renovado com sucesso" })
-  @ApiResponse({ status: 401, description: "Token de atualização inválido ou ausente" })
+  @ApiResponse({ status: 200, description: "Token renovado com sucesso", type: RefreshResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: "Token de atualização inválido ou ausente",
+    type: ErrorResponseDto,
+  })
   async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
     const refreshToken = request.cookies?.refreshToken;
     if (!refreshToken) {
@@ -82,7 +101,7 @@ export class AuthController {
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Efetuar logout limpando o cookie de sessão" })
-  @ApiResponse({ status: 200, description: "Logout concluído" })
+  @ApiResponse({ status: 200, description: "Logout concluído", type: LogoutResponseDto })
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie("refreshToken", {
       httpOnly: true,
