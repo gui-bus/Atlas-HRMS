@@ -52,8 +52,11 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS
-  app.enableCors();
+  // Enable CORS with credentials support for frontend local dev
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  });
 
   // Global validation pipe
   app.useGlobalPipes(
