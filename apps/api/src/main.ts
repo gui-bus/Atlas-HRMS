@@ -8,8 +8,20 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Security headers
-  app.use(helmet());
+  // Security headers with Content Security Policy for Scalar API Docs
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"],
+          fontSrc: ["'self'", "fonts.gstatic.com"],
+          imgSrc: ["'self'", "data:", "cdn.jsdelivr.net"],
+          scriptSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "'unsafe-eval'"],
+        },
+      },
+    }),
+  );
 
   // Enable CORS
   app.enableCors();
@@ -38,7 +50,7 @@ async function bootstrap() {
     "/docs",
     apiReference({
       spec: {
-        content: document,
+        content: () => document,
       },
     }),
   );
