@@ -1,0 +1,17 @@
+{
+  "name": "@atlas/types",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@atlas/tsconfig": "workspace:*",
+    "typescript": "^5.4.5"
+  }
+}
