@@ -12,9 +12,17 @@ jest.mock("bcrypt", () => ({
   hash: jest.fn(),
 }));
 
+interface MockPrismaService {
+  user: {
+    findUnique: jest.Mock;
+    create: jest.Mock;
+    update: jest.Mock;
+  };
+}
+
 describe("AuthService", () => {
   let service: AuthService;
-  let prisma: jest.Mocked<any>;
+  let prisma: MockPrismaService;
   let jwtService: jest.Mocked<JwtService>;
   let auditService: jest.Mocked<AuditService>;
 

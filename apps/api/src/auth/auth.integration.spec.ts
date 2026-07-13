@@ -15,9 +15,17 @@ jest.mock("bcrypt", () => ({
   hash: jest.fn(),
 }));
 
+interface MockPrismaService {
+  user: {
+    findUnique: jest.Mock;
+    create: jest.Mock;
+    update: jest.Mock;
+  };
+}
+
 describe("Auth Integration Tests (Supertest)", () => {
   let app: INestApplication;
-  let prisma: jest.Mocked<any>;
+  let prisma: MockPrismaService;
 
   const mockUser = {
     id: "user-id",
