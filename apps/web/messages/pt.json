@@ -15,5 +15,21 @@
     "activeRecruitments": "Vagas Abertas",
     "pendingVacations": "Solicitações de Férias",
     "quickActions": "Ações Rápidas"
+  },
+  "Auth": {
+    "welcomeBack": "Bem-vindo de volta",
+    "enterDetails": "Por favor, insira suas credenciais para acessar o painel",
+    "emailAddress": "Endereço de E-mail",
+    "password": "Senha",
+    "confirmPassword": "Confirmar Senha",
+    "passwordsMustMatch": "As senhas devem ser idênticas",
+    "signIn": "Entrar",
+    "signingIn": "Entrando",
+    "noAccount": "Não tem uma conta?",
+    "signUp": "Cadastrar-se",
+    "createAccount": "Criar Nova Conta",
+    "fillRegisterDetails": "Preencha as informações abaixo para se cadastrar",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "registering": "Cadastrando"
   }
 }
