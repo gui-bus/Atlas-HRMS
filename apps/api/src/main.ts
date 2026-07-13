@@ -1,4 +1,15 @@
 import "reflect-metadata";
+import * as dotenv from "dotenv";
+import * as path from "path";
+import * as fs from "fs";
+
+const apiEnvPath = path.join(process.cwd(), "apps/api/.env");
+if (fs.existsSync(apiEnvPath)) {
+  dotenv.config({ path: apiEnvPath });
+} else {
+  dotenv.config();
+}
+
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
@@ -6,6 +17,7 @@ import { apiReference } from "@scalar/nestjs-api-reference";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
+import { AllExceptionsFilter } from "./common/http-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -51,6 +63,9 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
+  // Global exception filter for rich error presentation
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // Swagger setup
   const config = new DocumentBuilder()

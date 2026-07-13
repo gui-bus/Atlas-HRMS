@@ -10,6 +10,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Request, Response } from "express";
+import { Throttle } from "@nestjs/throttler";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
@@ -20,6 +21,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("register")
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @ApiOperation({ summary: "Cadastrar um novo usuário no sistema" })
   @ApiResponse({ status: 201, description: "Usuário criado com sucesso" })
   @ApiResponse({ status: 400, description: "Dados inválidos" })
@@ -29,6 +31,7 @@ export class AuthController {
   }
 
   @Post("login")
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Realizar login obtendo token de acesso e cookie de atualização" })
   @ApiResponse({ status: 200, description: "Login efetuado com sucesso" })

@@ -50,10 +50,50 @@ export class AuthService {
       throw new UnauthorizedException("Credenciais inválidas");
     }
 
+    // Check account lockout status
+    if (user.lockoutUntil && user.lockoutUntil > new Date()) {
+      const minutesLeft = Math.ceil((user.lockoutUntil.getTime() - Date.now()) / (60 * 1000));
+      throw new UnauthorizedException(
+        `Esta conta está bloqueada temporariamente. Tente novamente em ${minutesLeft} minutos.`,
+      );
+    }
+
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Credenciais inválidas");
+      const updatedFailedAttempts = user.failedAttempts + 1;
+      let lockoutUntil: Date | null = null;
+      let message = "Credenciais inválidas";
+
+      if (updatedFailedAttempts >= 10) {
+        lockoutUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes lockout
+        message = "Conta bloqueada por 30 minutos devido a 10 tentativas falhas consecutivas.";
+      } else if (updatedFailedAttempts >= 5) {
+        lockoutUntil = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes lockout
+        message = "Conta bloqueada por 10 minutos devido a 5 tentativas falhas consecutivas.";
+      } else {
+        const remaining = 5 - updatedFailedAttempts;
+        message = `Credenciais inválidas. Você tem mais ${remaining} tentativas antes do bloqueio da conta.`;
+      }
+
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          failedAttempts: updatedFailedAttempts,
+          lockoutUntil,
+        },
+      });
+
+      throw new UnauthorizedException(message);
     }
+
+    // Reset lockout parameters on success
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        failedAttempts: 0,
+        lockoutUntil: null,
+      },
+    });
 
     const tokens = await this.generateTokens(user.id, user.email, user.role);
 
