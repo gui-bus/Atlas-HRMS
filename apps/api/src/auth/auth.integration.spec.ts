@@ -86,6 +86,7 @@ describe("Auth Integration Tests (Supertest)", () => {
       const response = await request(app.getHttpServer()).post("/auth/register").send({
         email: "register-integration@atlas.com",
         password: "SecurePassword123#",
+        confirmPassword: "SecurePassword123#",
       });
 
       expect(response.status).toBe(201);
@@ -98,6 +99,7 @@ describe("Auth Integration Tests (Supertest)", () => {
       const response = await request(app.getHttpServer()).post("/auth/register").send({
         email: "weak@atlas.com",
         password: "123", // too weak, no special char, uppercase or length
+        confirmPassword: "123",
       });
 
       expect(response.status).toBe(400);

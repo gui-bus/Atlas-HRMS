@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { JwtService } from "@nestjs/jwt";
-import { UnauthorizedException, ConflictException } from "@nestjs/common";
+import { UnauthorizedException, ConflictException, BadRequestException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { AuthService } from "./auth.service";
 import { PrismaService } from "../common/prisma.service";
@@ -64,8 +64,25 @@ describe("AuthService", () => {
   });
 
   describe("register", () => {
+    it("should throw BadRequestException if passwords do not match", async () => {
+      const dto = {
+        email: "new@atlas.com",
+        password: "Password123#",
+        confirmPassword: "DifferentPassword123#",
+        role: UserRole.EMPLOYEE,
+      };
+
+      await expect(service.register(dto)).rejects.toThrow(BadRequestException);
+      expect(prisma.user.create).not.toHaveBeenCalled();
+    });
+
     it("should successfully register a user", async () => {
-      const dto = { email: "new@atlas.com", password: "Password123#", role: UserRole.EMPLOYEE };
+      const dto = {
+        email: "new@atlas.com",
+        password: "Password123#",
+        confirmPassword: "Password123#",
+        role: UserRole.EMPLOYEE,
+      };
       prisma.user.findUnique.mockResolvedValue(null);
       (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-password");
 
@@ -91,7 +108,12 @@ describe("AuthService", () => {
     });
 
     it("should throw ConflictException if email is already taken", async () => {
-      const dto = { email: "exists@atlas.com", password: "Password123#", role: UserRole.EMPLOYEE };
+      const dto = {
+        email: "exists@atlas.com",
+        password: "Password123#",
+        confirmPassword: "Password123#",
+        role: UserRole.EMPLOYEE,
+      };
       prisma.user.findUnique.mockResolvedValue({ id: "existing-id" });
 
       await expect(service.register(dto)).rejects.toThrow(ConflictException);
