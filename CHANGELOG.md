@@ -14,6 +14,8 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Proteção contra Brute Force (Account Lockout)**: Lógica no banco de dados bloqueando temporariamente contas após 5 tentativas de login incorretas (10 minutos de bloqueio) e 10 tentativas (30 minutos de bloqueio).
 - **Limitador de Requisições (Rate Limiting)**: Registro global do `ThrottlerGuard` com regras de baseline (100 requisições/min) e regras restritivas para autenticação (10 requisições/min por IP).
 - **Filtro de Exceções Global**: Tratamento centralizado de erros (`AllExceptionsFilter`) retornando respostas JSON amigáveis e stack traces detalhados apenas em modo de desenvolvimento.
+- **Controle de Acesso Baseado em Cargos (RBAC)**: Criação do decorador `@Roles()` e do `RolesGuard` integrado à injeção do `Reflector` do NestJS para autorizar rotas seletivamente.
+- **Validação de Variáveis de Ambiente**: Integração de esquema de validação estrita com Zod no startup da API, garantindo que o servidor crashe no boot caso parâmetros de configurações do JWT ou URL do Postgres estejam incorretos ou ausentes.
 
 ### Alterado
 
