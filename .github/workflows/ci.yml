@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD Verification Pipeline
 
 on:
   push:
@@ -9,7 +9,8 @@ on:
       - master
 
 jobs:
-  test:
+  build_and_test:
+    name: Build & Run Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -21,10 +22,10 @@ jobs:
         with:
           version: 9
 
-      - name: Setup Node.js
+      - name: Setup Node.js (LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -38,5 +39,5 @@ jobs:
         env:
           NEXT_DISABLE_ESLINT: 1
 
-      - name: Run backend unit tests
+      - name: Run backend unit and integration tests
         run: pnpm --filter @atlas/api test
