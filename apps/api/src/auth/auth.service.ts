@@ -1,6 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException, ConflictException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
 import { PrismaService } from "../common/prisma.service";
+import { RegisterDto } from "./dto/register.dto";
+import { LoginDto } from "./dto/login.dto";
 
 @Injectable()
 export class AuthService {
@@ -9,27 +12,99 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(dto: any) {
-    console.log(
-      "AuthService.login dependencies check:",
-      typeof this.prisma,
-      typeof this.jwtService,
-      typeof dto,
-    );
-    return { success: true };
+  async register(dto: RegisterDto) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException("E-mail já cadastrado");
+    }
+
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        password: hashedPassword,
+        role: dto.role || "EMPLOYEE",
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        isActive: true,
+        createdAt: true,
+      },
+    });
+
+    return user;
   }
 
-  async register(dto: any) {
-    console.log("AuthService.register dependencies check:", typeof this.prisma, typeof dto);
-    return { success: true };
+  async login(dto: LoginDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email, deletedAt: null },
+    });
+
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException("Credenciais inválidas");
+    }
+
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException("Credenciais inválidas");
+    }
+
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      ...tokens,
+    };
   }
 
   async refreshToken(token: string) {
-    console.log(
-      "AuthService.refreshToken dependencies check:",
-      typeof this.jwtService,
-      typeof token,
-    );
-    return { success: true };
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_REFRESH_SECRET || "super-secret-refresh-jwt-key",
+      });
+
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub, deletedAt: null },
+      });
+
+      if (!user || !user.isActive) {
+        throw new UnauthorizedException("Usuário inválido ou inativo");
+      }
+
+      const tokens = await this.generateTokens(user.id, user.email, user.role);
+      return tokens;
+    } catch {
+      throw new UnauthorizedException("Token de atualização inválido");
+    }
+  }
+
+  private async generateTokens(userId: string, email: string, role: string) {
+    const payload = { sub: userId, email, role };
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_SECRET || "super-secret-jwt-key",
+        expiresIn: (process.env.JWT_EXPIRATION as any) || "15m",
+      }),
+      this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_REFRESH_SECRET || "super-secret-refresh-jwt-key",
+        expiresIn: (process.env.JWT_REFRESH_EXPIRATION as any) || "7d",
+      }),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }
