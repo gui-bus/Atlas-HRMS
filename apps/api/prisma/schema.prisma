@@ -1,0 +1,192 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+  HR
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  role      UserRole   @default(EMPLOYEE)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+
+  employee      Employee?
+  auditLogs     AuditLog[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  ON_LEAVE
+  SUSPENDED
+}
+
+model Employee {
+  id              String         @id @default(uuid())
+  firstName       String
+  lastName        String
+  email           String         @unique
+  phone           String
+  status          EmployeeStatus @default(ACTIVE)
+  hireDate        DateTime
+  terminationDate DateTime?
+  salary          Decimal        @db.Decimal(10, 2)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+
+  // Relations
+  userId       String?     @unique
+  user         User?       @relation(fields: [userId], references: [id])
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  positionId   String?
+  position     Position?   @relation(fields: [positionId], references: [id])
+  vacations    Vacation[]
+  documents    Document[]
+
+  @@map("employees")
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  managerId    String?
+  employees    Employee[]
+  positions    Position[]
+  recruitments Recruitment[]
+
+  @@map("departments")
+}
+
+model Position {
+  id             String   @id @default(uuid())
+  title          String
+  salaryRangeMin Decimal  @db.Decimal(10, 2)
+  salaryRangeMax Decimal  @db.Decimal(10, 2)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  // Relations
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  employees    Employee[]
+
+  @@map("positions")
+}
+
+enum VacationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+model Vacation {
+  id        String         @id @default(uuid())
+  startDate DateTime
+  endDate   DateTime
+  status    VacationStatus @default(PENDING)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  employeeId    String
+  employee      Employee @relation(fields: [employeeId], references: [id])
+  approvedById  String?
+
+  @@map("vacations")
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  name      String
+  type      String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("documents")
+}
+
+enum RecruitmentStatus {
+  OPEN
+  CLOSED
+  ON_HOLD
+  DRAFT
+}
+
+model Recruitment {
+  id          String            @id @default(uuid())
+  title       String
+  status      RecruitmentStatus @default(OPEN)
+  description String
+  salary      Decimal           @db.Decimal(10, 2)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  deletedAt   DateTime?
+
+  // Relations
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  @@map("recruitments")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  details   String
+  timestamp DateTime @default(now())
+
+  // Relations
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
