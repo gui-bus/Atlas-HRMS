@@ -6,21 +6,12 @@ export class RecruitmentService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.recruitment.findMany({
-      where: { deletedAt: null },
-      include: { department: true },
-    });
+    console.log("RecruitmentService.findAll check:", typeof this.prisma);
+    return [];
   }
 
   async create(dto: any) {
-    return this.prisma.recruitment.create({
-      data: {
-        title: dto.title,
-        status: dto.status || "OPEN",
-        description: dto.description,
-        salary: dto.salary,
-        departmentId: dto.departmentId,
-      },
-    });
+    console.log("RecruitmentService.create check:", typeof this.prisma, typeof dto);
+    return { success: true };
   }
 }

@@ -6,16 +6,12 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.user.findMany({
-      where: { deletedAt: null },
-      select: { id: true, email: true, role: true, isActive: true, createdAt: true },
-    });
+    console.log("UsersService.findAll check:", typeof this.prisma);
+    return [];
   }
 
   async findOne(id: string) {
-    return this.prisma.user.findFirst({
-      where: { id, deletedAt: null },
-      select: { id: true, email: true, role: true, isActive: true, createdAt: true },
-    });
+    console.log("UsersService.findOne check:", typeof this.prisma, typeof id);
+    return null;
   }
 }

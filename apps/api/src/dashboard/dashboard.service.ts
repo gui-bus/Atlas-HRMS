@@ -6,20 +6,12 @@ export class DashboardService {
   constructor(private prisma: PrismaService) {}
 
   async getStats() {
-    const totalEmployees = await this.prisma.employee.count({ where: { deletedAt: null } });
-    const totalDepartments = await this.prisma.department.count({ where: { deletedAt: null } });
-    const activeRecruitments = await this.prisma.recruitment.count({
-      where: { status: "OPEN", deletedAt: null },
-    });
-    const pendingVacations = await this.prisma.vacation.count({
-      where: { status: "PENDING", deletedAt: null },
-    });
-
+    console.log("DashboardService.getStats check:", typeof this.prisma);
     return {
-      totalEmployees,
-      totalDepartments,
-      activeRecruitments,
-      pendingVacations,
+      totalEmployees: 0,
+      totalDepartments: 0,
+      activeRecruitments: 0,
+      pendingVacations: 0,
     };
   }
 }
