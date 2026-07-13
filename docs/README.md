@@ -14,7 +14,7 @@ O **Atlas HRMS** é construído sob uma arquitetura de monorepo estruturada para
 
 Navegue pelos módulos de documentação abaixo para obter informações detalhadas sobre áreas específicas do projeto:
 
-### 🏛️ [Arquitetura do Sistema](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/architecture.md)
+### 🏛️ [Arquitetura do Sistema](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/architecture.md)
 
 _Entenda a estrutura organizacional e o fluxo de dados da aplicação._
 
@@ -22,7 +22,7 @@ _Entenda a estrutura organizacional e o fluxo de dados da aplicação._
 - **Decisões Tecnológicas**: Detalhamento do ecossistema técnico e dos pacotes compartilhados em `packages/`.
 - **Diagramas de Fluxo**: Diagrama visual que exemplifica o tráfego de requisições de ponta a ponta (Cliente ↔ Servidor ↔ Banco de Dados).
 
-### 🗄️ [Modelagem de Banco de Dados](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/database.md)
+### 🗄️ [Modelagem de Banco de Dados](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/database.md)
 
 _Consulte o esquema de tabelas e as relações de dados do domínio._
 
@@ -30,7 +30,7 @@ _Consulte o esquema de tabelas e as relações de dados do domínio._
 - **Dicionário do Schema**: Descrição dos modelos de dados fundamentais (`User`, `Employee`, `AuditLog`, `Department`, `Vacation`, `Document`, `Recruitment`, `Notification`).
 - **Enums Globais**: Definição exata das constantes de status do sistema (como `UserRole` e `EmployeeStatus`).
 
-### 🔐 [Autenticação, Segurança e Permissões](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/authentication.md)
+### 🔐 [Autenticação, Segurança e Permissões](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/authentication.md)
 
 _O coração das diretrizes de conformidade e segurança do Atlas HRMS._
 
@@ -39,7 +39,7 @@ _O coração das diretrizes de conformidade e segurança do Atlas HRMS._
 - **RBAC (Role Based Access Control)**: Restrição de rotas automatizada usando o `RolesGuard` integrado à injeção de metadata do NestJS.
 - **Rate Limiting e Audit Trail**: Funcionamento do limite global contra DoS e a geração automática de logs de segurança.
 
-### 🧪 [Testes e CI/CD](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/cicd-testing.md)
+### 🧪 [Testes e CI/CD](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/cicd-testing.md)
 
 _Garantia de estabilidade da plataforma em ambientes locais e de nuvem._
 
@@ -51,5 +51,5 @@ _Garantia de estabilidade da plataforma em ambientes locais e de nuvem._
 
 ## 🛠️ Como Utilizar Esta Documentação
 
-1. **Leitura Sequencial**: Se você é um desenvolvedor recém-chegado ao projeto, comece pela [Arquitetura](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/architecture.md) e siga para o guia de [Banco de Dados](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/database.md).
+1. **Leitura Sequencial**: Se você é um desenvolvedor recém-chegado ao projeto, comece pela [Arquitetura](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/architecture.md) e siga para o guia de [Banco de Dados](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/database.md).
 2. **Atualização de Regras**: Lembre-se de manter estes guias sempre atualizados ao modificar tabelas do Prisma, fluxos de autenticação ou mudar dependências na esteira de integração.
