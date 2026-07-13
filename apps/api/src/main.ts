@@ -14,10 +14,22 @@ async function bootstrap() {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          styleSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"],
-          fontSrc: ["'self'", "fonts.gstatic.com"],
-          imgSrc: ["'self'", "data:", "cdn.jsdelivr.net"],
-          scriptSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "'unsafe-eval'"],
+          styleSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "cdn.jsdelivr.net",
+            "unpkg.com",
+            "fonts.googleapis.com",
+          ],
+          fontSrc: ["'self'", "fonts.gstatic.com", "cdn.jsdelivr.net", "unpkg.com"],
+          imgSrc: ["'self'", "data:", "cdn.jsdelivr.net", "unpkg.com"],
+          scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "cdn.jsdelivr.net",
+            "unpkg.com",
+            "'unsafe-eval'",
+          ],
         },
       },
     }),
@@ -50,7 +62,7 @@ async function bootstrap() {
     "/docs",
     apiReference({
       spec: {
-        content: () => document,
+        content: document,
       },
     }),
   );
