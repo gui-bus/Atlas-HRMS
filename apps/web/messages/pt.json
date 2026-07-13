@@ -1,0 +1,19 @@
+{
+  "Common": {
+    "title": "Atlas HRMS",
+    "dashboard": "Painel de Controle",
+    "employees": "Colaboradores",
+    "departments": "Departamentos",
+    "vacations": "Férias",
+    "recruitment": "Recrutamento",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+  "Dashboard": {
+    "welcome": "Bem-vindo ao Atlas HRMS",
+    "totalEmployees": "Total de Colaboradores",
+    "activeRecruitments": "Vagas Abertas",
+    "pendingVacations": "Solicitações de Férias",
+    "quickActions": "Ações Rápidas"
+  }
+}
