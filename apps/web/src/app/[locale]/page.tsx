@@ -1,46 +1,90 @@
 "use client";
 
+import React from "react";
 import { useTranslations } from "next-intl";
-import { LayoutDashboard } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
+import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
-  const common = useTranslations("Common");
+  const { user } = useAuthStore();
+
+  const renderRoleContent = () => {
+    if (!user) return null;
+
+    switch (user.role) {
+      case "ADMIN":
+        return (
+          <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
+            <h2 className="text-lg font-bold">Painel de Administração</h2>
+            <p className="text-muted-foreground text-sm">
+              Conteúdo para o Administrador
+            </p>
+          </div>
+        );
+      case "HR":
+        return (
+          <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
+            <h2 className="text-lg font-bold">Painel de Recursos Humanos</h2>
+            <p className="text-muted-foreground text-sm">
+              Conteúdo para o Recursos Humanos
+            </p>
+          </div>
+        );
+      case "MANAGER":
+        return (
+          <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
+            <h2 className="text-lg font-bold">Painel do Gestor</h2>
+            <p className="text-muted-foreground text-sm">
+              Conteúdo para o Gestor
+            </p>
+          </div>
+        );
+      case "EMPLOYEE":
+      default:
+        return (
+          <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
+            <h2 className="text-lg font-bold">Painel do Funcionário</h2>
+            <p className="text-muted-foreground text-sm">
+              Conteúdo para o Funcionário
+            </p>
+          </div>
+        );
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-slate-800 bg-slate-900/50 backdrop-blur-md flex flex-col p-6 space-y-6">
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
-            A
-          </div>
-          <span className="font-semibold text-lg tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-            {common("title")}
-          </span>
-        </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full max-w-[110rem] mx-auto relative bg-background text-foreground">
+        {/* App Sidebar from Shadcn */}
+        <AppSidebar />
 
-        <nav className="flex-1 space-y-1">
-          <a
-            href="#"
-            className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-slate-800 text-white font-medium transition-all duration-200"
-          >
-            <LayoutDashboard className="w-5 h-5 text-indigo-400" />
-            <span>{common("dashboard")}</span>
-          </a>
-        </nav>
-      </aside>
+        {/* Main content pane */}
+        <SidebarInset className="flex flex-col flex-1 w-full">
+          <header className="flex h-14 items-center gap-4 border-b px-6">
+            <SidebarTrigger />
+            <div className="flex-1">
+              <span className="font-semibold text-sm">Dashboard</span>
+            </div>
+          </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-10 space-y-8 overflow-y-auto flex flex-col justify-center items-center">
-        <div className="text-center space-y-4 max-w-md">
-          <h1 className="text-3xl font-bold tracking-tight text-white">{t("welcome")}</h1>
-          <p className="text-slate-400">
-            O painel de controle está pronto. Configure a autenticação e as rotas da API para
-            começar a carregar os dados.
-          </p>
-        </div>
-      </main>
-    </div>
+          <main className="flex-1 p-6 md:p-8 space-y-6">
+            <div className="space-y-1.5">
+              <h1 className="text-2xl font-bold tracking-tight">{t("welcome")}</h1>
+              <p className="text-muted-foreground text-sm">
+                O painel de controle está pronto. Configure a autenticação e as rotas da API para
+                começar a carregar os dados.
+              </p>
+            </div>
+
+            {/* Role-based conditional panel */}
+            <div className="max-w-3xl">
+              {renderRoleContent()}
+            </div>
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 }
