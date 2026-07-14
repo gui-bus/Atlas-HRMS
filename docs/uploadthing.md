@@ -33,5 +33,11 @@ UPLOADTHING_TOKEN="eyJhcGlLZXkiOiJza19saXZlX..."
 # Chave secreta de autenticação
 UPLOADTHING_SECRET="sk_live_..."
 ```
-> [!IMPORTANT]
-> Certifique-se de que a validação de Zod em `env.validation.ts` permaneça ativa para evitar que a API suba sem as chaves corretas de upload em produção.
+## Decisão de Arquitetura: Direct-to-Cloud Upload
+
+O projeto Atlas HRMS adota o padrão moderno de **Direct-to-Cloud Upload** (Upload Direto pelo Frontend para a Nuvem):
+
+1. **Desempenho da API (NestJS)**: Evita que os servidores de backend processem buffers pesados de Multipart/Form-data. A API NestJS fica livre de gargalos de memória RAM/CPU e limites de timeout de rede durante uploads.
+2. **Escala e Largura de Banda**: O tráfego de rede do upload vai diretamente da máquina do cliente (Frontend) para a CDN/Storage do UploadThing.
+3. **Segurança Integrada**: O backend continua sendo o guardião da segurança, validando as permissões e retornando chaves/rotas assinadas para que o frontend possa concluir o upload. Na criação de registros (ex: `leaves`), o backend valida apenas a URL persistida no banco e gerencia a deleção física de arquivos órfãos via `UTApi`.
+
