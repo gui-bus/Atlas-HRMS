@@ -42,6 +42,19 @@ describe("LoginPage Integration Tests", () => {
     });
   });
 
+  test("toggles password visibility", () => {
+    render(<LoginPage />);
+    const passwordInput = screen.getByLabelText("password") as HTMLInputElement;
+    expect(passwordInput.type).toBe("password");
+
+    const toggleBtn = screen.getByRole("button", { name: "" });
+    fireEvent.click(toggleBtn);
+    expect(passwordInput.type).toBe("text");
+
+    fireEvent.click(toggleBtn);
+    expect(passwordInput.type).toBe("password");
+  });
+
   test("displays backend error message on invalid credentials", async () => {
     render(<LoginPage />);
 

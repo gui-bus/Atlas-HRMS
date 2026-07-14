@@ -14,9 +14,10 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ### Adicionado
 
-- **Suíte de Testes no Frontend**: Configuração do Vitest, React Testing Library e MSW para testes de unidade e integração no front-end, garantindo simulação confiável da API NestJS sem acoplamento.
-- **Testes E2E com Playwright**: Estruturação de testes de navegador de ponta a ponta (E2E) para cobrir os fluxos de login, cadastro e usabilidade.
+- **Suíte de Testes no Frontend**: Configuração do Vitest, React Testing Library e MSW para testes de unidade e integração no front-end, com testes adicionais cobrindo força de senha, e-mail duplicado e alternância de exibição de senha.
+- **Testes E2E com Playwright**: Estruturação de testes de navegador de ponta a ponta (E2E) cobrindo fluxos de login com sucesso/falha interceptados com `page.route`, e usabilidade.
 - **Garantia de Qualidade no Pre-commit**: Configurado Git hook do Husky para executar automaticamente os testes rápidos de integração front-end (`vitest`) junto com os testes do backend antes de cada commit.
+- **Diretriz de Código Limpo**: Adicionada nova regra em `.agents/AGENTS.md` restringindo o uso de comentários explicativos/redundantes no código.
 
 ### Alterado
 
