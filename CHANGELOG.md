@@ -20,6 +20,9 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Transpilador SWC nos Testes**: Substituição do `ts-jest` pelo `@swc/jest` para suporte ao TypeScript 7 e ganho dramático na velocidade de execução dos testes.
 - **Git Hooks de Pré-commit**: Configuração do Husky local para executar automaticamente a bateria de testes de API e linter a cada tentativa de commit local, bloqueando commits caso ocorra falha.
 - **Integração Contínua (CI)**: Configuração do workflow GitHub Actions em `.github/workflows/ci.yml` para compilar e testar toda a aplicação a cada push/pull request na branch master.
+- **Autenticação no Frontend**: Interface premium para cadastro `/register` e login `/login` com validações React Hook Form + Zod e indicador visual de força de senha.
+- **Bootstrapping de Sessão e Interceptador HTTP**: Mecanismo de persistência que faz refresh silencioso de sessão via cookie em background em caso de expiração ou boot do app sem interromper o fluxo do usuário.
+- **Roteamento Protegido e RBAC no Frontend**: Guard de rotas no Next.js impedindo acesso a páginas privadas por usuários deslogados e suporte preliminar à renderização condicional baseada no cargo (`UserRole`).
 
 ### Alterado
 
@@ -28,7 +31,13 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
-## [0.1.0] - 2026-07-13
+## [0.2.1] - 2026-07-13
+
+### Alterado
+
+- **Layout Constraint**: Added `max-w-[110rem]` constraint to primary layout container and updated sidebar to use `variant="inset"` ensuring it respects the max width on large screens.
+- Updated `page.tsx` and `app-sidebar.tsx` to reflect new layout behavior.
+
 
 ### Adicionado
 
