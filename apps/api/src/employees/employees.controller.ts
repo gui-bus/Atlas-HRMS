@@ -27,7 +27,7 @@ import {
   ConflictErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
-@ApiTags("employees")
+@ApiTags("Employees")
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Controller("employees")

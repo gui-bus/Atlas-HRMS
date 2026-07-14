@@ -26,7 +26,7 @@ import {
   UnauthorizedErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
-@ApiTags("auth")
+@ApiTags("Auth")
 @Controller("auth")
 @ApiResponse({
   status: 400,

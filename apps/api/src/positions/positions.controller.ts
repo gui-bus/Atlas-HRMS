@@ -28,7 +28,7 @@ import {
   BadRequestErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
-@ApiTags("positions")
+@ApiTags("Positions")
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Controller("positions")

@@ -27,7 +27,7 @@ import {
   BadRequestErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
-@ApiTags("vacations")
+@ApiTags("Vacations")
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Controller("vacations")
@@ -116,6 +116,7 @@ export class VacationsController {
 
   @Get("leaves")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
+  @ApiTags("Leaves")
   @ApiOperation({ summary: "Listar todas as licenças e atestados pendentes/ativos" })
   @ApiResponse({ status: 200, type: [LeaveResponseDto] })
   async findAllLeaves() {
@@ -124,6 +125,7 @@ export class VacationsController {
 
   @Get("leaves/employee/:employeeId")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER, UserRole.EMPLOYEE)
+  @ApiTags("Leaves")
   @ApiOperation({ summary: "Listar atestados e licenças de um funcionário" })
   @ApiResponse({ status: 200, type: [LeaveResponseDto] })
   async findLeavesByEmployee(@Param("employeeId") employeeId: string, @Req() req: any) {
@@ -139,6 +141,7 @@ export class VacationsController {
 
   @Post("leaves")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE)
+  @ApiTags("Leaves")
   @ApiOperation({ summary: "Enviar atestado/solicitar licença (Funcionários, Admin, RH)" })
   @ApiResponse({ status: 201, type: LeaveResponseDto })
   @ApiResponse({ status: 400, type: BadRequestErrorResponseDto })
@@ -155,6 +158,7 @@ export class VacationsController {
 
   @Put("leaves/:id/status")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
+  @ApiTags("Leaves")
   @ApiOperation({ summary: "Aprovar ou rejeitar licença/atestado" })
   @ApiResponse({ status: 200, type: LeaveResponseDto })
   async updateLeaveStatus(
@@ -167,6 +171,7 @@ export class VacationsController {
 
   @Delete("leaves/:id")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE)
+  @ApiTags("Leaves")
   @ApiOperation({ summary: "Cancelar solicitação de licença" })
   @ApiResponse({ status: 200, type: LeaveResponseDto })
   async cancelLeave(@Param("id") id: string, @Req() req: any) {

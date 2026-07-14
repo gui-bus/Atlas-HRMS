@@ -12,7 +12,7 @@ import {
   NotFoundErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
-@ApiTags("users")
+@ApiTags("Users")
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Controller("users")
