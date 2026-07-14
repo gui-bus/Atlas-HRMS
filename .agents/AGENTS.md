@@ -11,6 +11,7 @@
 - Sempre que uma funcionalidade estrutural for implementada (ex: autenticação, RBAC, fluxos de banco de dados, fluxos de CI/CD), você deve criar ou atualizar o arquivo correspondente na pasta `/docs` na raiz do projeto.
 - Garanta que diagramas de arquitetura e entidade-relacionamento estejam descritos no formato Mermaid para renderização nativa de diagramas no GitHub.
 - Ao criar ou alterar controllers e DTOs da API, sempre decore as propriedades com `@ApiProperty()` (incluindo `example` e `description`) e as rotas com `@ApiResponse()`, informando detalhadamente os tipos e respostas esperadas para manter a documentação interativa (Swagger/Scalar) 100% preenchida.
+- Não utilize um DTO de erro genérico único para todas as rotas e códigos de status. Cada status de erro (ex: 400, 401, 403, 404, 409) deve utilizar DTOs específicos cujos exemplos reflitam fielmente as mensagens e estruturas reais de retorno daquele contexto (observando exceções intencionais de segurança, como ocultar detalhes específicos de credenciais no fluxo de login).
 
 ## 3. Diretriz de Código Limpo (Comentários)
 
