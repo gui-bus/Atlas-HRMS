@@ -22,10 +22,8 @@ import { CreateLeaveDto } from "./dto/create-leave.dto";
 import { UpdateLeaveStatusDto } from "./dto/update-leave-status.dto";
 import { VacationResponseDto, LeaveResponseDto } from "./dto/vacations-response.dto";
 import {
-  ValidationErrorResponseDto,
   UnauthorizedErrorResponseDto,
   ForbiddenErrorResponseDto,
-  NotFoundErrorResponseDto,
   BadRequestErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
