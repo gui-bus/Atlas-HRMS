@@ -91,6 +91,7 @@ model Department {
 model Position {
   id             String    @id @default(uuid())
   title          String
+  description    String?
   salaryRangeMin Decimal   @db.Decimal(10, 2)
   salaryRangeMax Decimal   @db.Decimal(10, 2)
   active         Boolean   @default(true)
