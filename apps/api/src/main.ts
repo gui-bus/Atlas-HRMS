@@ -73,12 +73,7 @@ async function bootstrap() {
   // Swagger setup
   const config = new DocumentBuilder()
     .setTitle("Atlas HRMS API")
-    .setDescription(
-      "API Corporativa do Atlas HRMS - Sistema de Gestão de Recursos Humanos. " +
-        "Esta documentação interativa detalha todas as operações de autenticação segura baseada em JWT (com fluxo silencioso de refresh tokens em cookies HTTP-Only), " +
-        "administração de contas de usuários (RBAC), gestão de funcionários (Employee) com dados aninhados (pessoais, bancários, endereços, emergência) e validações matemáticas de CPF, " +
-        "controle de departamentos e cargos organizacionais, além do gerenciamento de férias de funcionários e licenças/atestados com suporte a uploads via UploadThing.",
-    )
+    .setDescription("Documentação interativa das APIs corporativas do sistema Atlas HRMS.")
     .setVersion("1.0")
     .addBearerAuth()
     .build();

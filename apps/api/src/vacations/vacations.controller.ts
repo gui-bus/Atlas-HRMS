@@ -27,7 +27,6 @@ import {
   BadRequestErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
-@ApiTags("Vacations")
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Controller("vacations")
@@ -50,6 +49,7 @@ export class VacationsController {
 
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
+  @ApiTags("Vacations")
   @ApiOperation({ summary: "Listar todas as solicitações de férias (Apenas Admin, RH e Gestores)" })
   @ApiResponse({ status: 200, type: [VacationResponseDto] })
   async findAllVacations() {
@@ -58,6 +58,7 @@ export class VacationsController {
 
   @Get("employee/:employeeId")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER, UserRole.EMPLOYEE)
+  @ApiTags("Vacations")
   @ApiOperation({ summary: "Listar férias de um funcionário específico" })
   @ApiResponse({ status: 200, type: [VacationResponseDto] })
   async findVacationsByEmployee(@Param("employeeId") employeeId: string, @Req() req: any) {
@@ -74,6 +75,7 @@ export class VacationsController {
 
   @Post()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE)
+  @ApiTags("Vacations")
   @ApiOperation({ summary: "Solicitar férias (Funcionários, Admin, RH)" })
   @ApiResponse({ status: 201, type: VacationResponseDto })
   @ApiResponse({ status: 400, type: BadRequestErrorResponseDto })
@@ -90,6 +92,7 @@ export class VacationsController {
 
   @Put(":id/status")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
+  @ApiTags("Vacations")
   @ApiOperation({ summary: "Aprovar ou Rejeitar solicitação de férias (Admin, RH, Gestores)" })
   @ApiResponse({ status: 200, type: VacationResponseDto })
   @ApiResponse({ status: 400, type: BadRequestErrorResponseDto })
@@ -103,6 +106,7 @@ export class VacationsController {
 
   @Delete(":id")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE)
+  @ApiTags("Vacations")
   @ApiOperation({ summary: "Cancelar solicitação de férias" })
   @ApiResponse({ status: 200, type: VacationResponseDto })
   async cancelVacation(@Param("id") id: string, @Req() req: any) {
