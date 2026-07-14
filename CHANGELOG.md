@@ -10,6 +10,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 - **Queda do Backend por Conexão Ociosa**: Adicionado tratamento de erro (`pool.on("error")`) no pool de conexões do `pg` no `PrismaService` para evitar crash do backend do NestJS quando conexões do banco caem.
 - **Feedback de Login no Frontend**: Adicionado log de erros no console e tratamento específico de erros de rede/conexão na página de login, apresentando uma mensagem descritiva caso o servidor esteja fora do ar.
+- **Cintilação de Tema (Flash de Modo Claro)**: Introduzido script bloqueante inline no `<head>` do layout raiz para resolver a cintilação do tema ao atualizar a página e garantir a aplicação correta do tema escuro nas telas de login e cadastro.
 
 ## [0.2.0] - 2026-07-13
 
