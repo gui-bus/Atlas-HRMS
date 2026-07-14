@@ -19,12 +19,20 @@ import {
   LoginResponseDto,
   RefreshResponseDto,
   LogoutResponseDto,
-  ErrorResponseDto,
 } from "./dto/responses.dto";
+import {
+  ValidationErrorResponseDto,
+  ConflictErrorResponseDto,
+  UnauthorizedErrorResponseDto,
+} from "../common/dto/error-responses.dto";
 
 @ApiTags("auth")
 @Controller("auth")
-@ApiResponse({ status: 400, description: "Dados de requisição inválidos", type: ErrorResponseDto })
+@ApiResponse({
+  status: 400,
+  description: "Dados de requisição inválidos no payload",
+  type: ValidationErrorResponseDto,
+})
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -35,7 +43,7 @@ export class AuthController {
   @ApiResponse({
     status: 409,
     description: "E-mail já cadastrado no banco de dados",
-    type: ErrorResponseDto,
+    type: ConflictErrorResponseDto,
   })
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
@@ -49,17 +57,16 @@ export class AuthController {
   @ApiResponse({
     status: 401,
     description: "Credenciais inválidas fornecidas",
-    type: ErrorResponseDto,
+    type: UnauthorizedErrorResponseDto,
   })
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
     const result = await this.authService.login(dto);
 
-    // Save refresh token in a secure HttpOnly cookie
     response.cookie("refreshToken", result.refreshToken, {
       httpOnly: true,
-      secure: true, // Requires HTTPS (should be true in production, works on localhost in dev)
-      sameSite: "none", // Allows cross-site cookie sharing for separate Render domains
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days matching token expiration
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return {
@@ -75,7 +82,7 @@ export class AuthController {
   @ApiResponse({
     status: 401,
     description: "Token de atualização inválido ou ausente",
-    type: ErrorResponseDto,
+    type: UnauthorizedErrorResponseDto,
   })
   async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
     const refreshToken = request.cookies?.refreshToken;
@@ -85,7 +92,6 @@ export class AuthController {
 
     const result = await this.authService.refreshToken(refreshToken);
 
-    // Rotate refresh token in cookie
     response.cookie("refreshToken", result.refreshToken, {
       httpOnly: true,
       secure: true,
