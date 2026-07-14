@@ -25,9 +25,10 @@ model User {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
-  employee      Employee?
-  auditLogs     AuditLog[]
-  notifications Notification[]
+  employee           Employee?
+  auditLogs          AuditLog[]
+  notifications      Notification[]
+  createdRecruitments Recruitment[] @relation("CreatedRecruitments")
 
   @@map("users")
 }
@@ -169,6 +170,7 @@ model Position {
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
   employees    Employee[]
+  recruitments Recruitment[]
 
   @@map("positions")
 }
@@ -251,27 +253,134 @@ model Document {
 }
 
 enum RecruitmentStatus {
-  OPEN
-  CLOSED
-  ON_HOLD
   DRAFT
+  OPEN
+  PAUSED
+  CLOSED
+  FILLED
+}
+
+enum EmploymentType {
+  CLT
+  PJ
+  INTERNSHIP
+  TRAINEE
+  TEMPORARY
+}
+
+enum WorkModel {
+  ONSITE
+  HYBRID
+  REMOTE
+}
+
+enum Seniority {
+  INTERN
+  JUNIOR
+  MID
+  SENIOR
+  LEAD
+  SPECIALIST
 }
 
 model Recruitment {
-  id          String            @id @default(uuid())
-  title       String
-  status      RecruitmentStatus @default(OPEN)
-  description String
-  salary      Decimal           @db.Decimal(10, 2)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  deletedAt   DateTime?
+  id               String            @id @default(uuid())
+  title            String
+  slug             String            @unique
+  description      String
+  status           RecruitmentStatus @default(DRAFT)
+  employmentType   EmploymentType
+  workModel        WorkModel
+  seniority        Seniority
+  vacancies        Int               @default(1)
+  salaryMin        Decimal?          @db.Decimal(10, 2)
+  salaryMax        Decimal?          @db.Decimal(10, 2)
+  isSalaryVisible  Boolean           @default(false)
+  city             String?
+  state            String?
+  country          String?           @default("Brasil")
+  requirements     String?
+  responsibilities String?
+  benefits         String?
+  views            Int               @default(0)
+  publishedAt      DateTime?
+  expiresAt        DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
 
   // Relations
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
+  positionId   String
+  position     Position   @relation(fields: [positionId], references: [id])
+  createdById  String
+  createdBy    User       @relation("CreatedRecruitments", fields: [createdById], references: [id])
+  applications Application[]
 
+  @@index([status])
+  @@index([slug])
+  @@index([publishedAt])
+  @@index([departmentId])
   @@map("recruitments")
+}
+
+model Candidate {
+  id             String    @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String    @unique
+  phone          String
+  linkedinUrl    String?
+  githubUrl      String?
+  portfolioUrl   String?
+  currentSalary  Decimal?  @db.Decimal(10, 2)
+  expectedSalary Decimal?  @db.Decimal(10, 2)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  // Relations
+  applications Application[]
+
+  @@index([createdAt])
+  @@map("candidates")
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  SCREENING
+  HR_INTERVIEW
+  TECHNICAL_TEST
+  TECHNICAL_INTERVIEW
+  FINAL_INTERVIEW
+  OFFER
+  HIRED
+  REJECTED
+  WITHDRAWN
+}
+
+model Application {
+  id            String            @id @default(uuid())
+  resumeUrl     String
+  coverLetter   String?
+  status        ApplicationStatus @default(SUBMITTED)
+  feedback      String?
+  hiredAt       DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  recruitmentId String
+  recruitment   Recruitment @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
+  candidateId   String
+  candidate     Candidate   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([candidateId, recruitmentId])
+  @@index([status])
+  @@index([recruitmentId])
+  @@map("job_applications")
 }
 
 model Notification {

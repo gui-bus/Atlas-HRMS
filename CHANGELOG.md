@@ -4,6 +4,29 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [0.5.0] - 2026-07-14
+
+### Adicionado
+
+- **Módulo ATS/Recrutamento Completo (Backend)**: Implementação de ponta a ponta do sistema de recrutamento (Applicant Tracking System) com modelos Prisma enriquecidos: `Recruitment` (com slug, tipo de contratação, modelo de trabalho, senioridade, faixa salarial, localização, visualizações, expiração), `Candidate` (cadastro único por e-mail) e `Application` (candidatura com restrição única por candidato+vaga e pipeline de 10 estágios).
+- **Portal Público de Carreiras**: Rotas públicas sem autenticação para listagem paginada de vagas abertas (`GET /recruitments`) com filtros por departamento, senioridade, modelo de trabalho e tipo de contratação, busca textual insensível a maiúsculas, e detalhamento de vaga por slug (`GET /recruitments/:slug`) com contador de visualizações e controle de expiração automática.
+- **Candidatura Multipart (Apply)**: Endpoint público `POST /recruitments/:slug/apply` com upload de currículo via Multer + UploadThing, cadastro/upsert automático de candidato, prevenção de candidatura duplicada via constraint `@@unique([candidateId, recruitmentId])`.
+- **Administração de Vagas (RBAC)**: Endpoints autenticados para criação, edição e soft-delete de vagas (`POST/PUT/DELETE /recruitments/admin`), restritos a Admin e RH, com geração automática de slug, associação do criador (`createdById`), e publicação automática com `publishedAt`.
+- **Pipeline de Candidaturas**: Listagem paginada de candidaturas por vaga (`GET /recruitments/admin/:id/applications`), atualização de status no pipeline de 10 estágios (`PUT /recruitments/applications/:id/status`), e ação explícita de admissão (`POST /recruitments/applications/:id/hire`) que converte candidato em funcionário oficial com validação de duplicidade de e-mail.
+- **Controle de Visibilidade Salarial**: Campo `isSalaryVisible` que omite `salaryMin`/`salaryMax` das respostas públicas quando desabilitado.
+- **Auditoria de Recrutamento**: Enum centralizado `AuditAction` com 7 ações tipadas para rastreabilidade de criação, publicação, fechamento de vagas, recebimento de candidaturas, mudança de status e conversão de candidato em funcionário.
+- **Expansão do Schema Prisma**: 4 novos enums (`EmploymentType`, `WorkModel`, `Seniority`, `ApplicationStatus`), 3 modelos com índices de performance (`@@index`) e restrição de unicidade composta.
+- **Testes de Recrutamento**: Testes unitários (`recruitment.service.spec.ts`, `recruitment.controller.spec.ts`) e testes de integração (`recruitment.integration.spec.ts`) com 49 cenários cobrindo rotas públicas, RBAC, validação de payload, pipeline de candidaturas e fluxo de contratação.
+
+## [0.4.0] - 2026-07-14
+
+### Adicionado
+
+- **Módulo de Documentos (Backend)**: Implementado o CRUD completo para gestão de documentos de funcionários (`Document`), com validação de tipo via Enum (`CONTRACT`, `IDENTIFICATION`, `EDUCATION`, `ADDRESS_PROOF`, `OTHER`), integração com UploadThing para upload direto na nuvem e deleção automática de arquivos órfãos.
+- **RBAC Granular para Documentos**: Regras de permissão diferenciadas — funcionários podem criar e visualizar apenas seus próprios documentos; Gestores, RH e Admin podem visualizar todos; apenas Admin e RH podem excluir documentos.
+- **DTOs e Swagger de Documentos**: DTOs de criação (`CreateDocumentDto`) e resposta (`DocumentResponseDto`) com validações `class-validator` e decoradores Swagger detalhados para documentação interativa.
+- **Testes do Módulo de Documentos**: Testes unitários (`documents.service.spec.ts`, `documents.controller.spec.ts`) cobrindo ownership RBAC e integração com UploadThing, e testes de integração (`documents.integration.spec.ts`) com supertest validando permissões JWT para todos os cargos.
+
 ## [0.3.0] - 2026-07-14
 
 ### Adicionado
