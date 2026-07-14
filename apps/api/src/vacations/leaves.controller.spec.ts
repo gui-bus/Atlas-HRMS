@@ -1,20 +1,14 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { VacationsController } from "./vacations.controller";
+import { LeavesController } from "./leaves.controller";
 import { VacationsService } from "./vacations.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
-import { UserRole } from "@prisma/client";
 
-describe("VacationsController (Unit)", () => {
-  let controller: VacationsController;
+describe("LeavesController (Unit)", () => {
+  let controller: LeavesController;
   let service: VacationsService;
 
   const mockVacationsService = {
-    findAllVacations: jest.fn(),
-    findVacationsByEmployee: jest.fn(),
-    createVacation: jest.fn(),
-    updateVacationStatus: jest.fn(),
-    cancelVacation: jest.fn(),
     findAllLeaves: jest.fn(),
     findLeavesByEmployee: jest.fn(),
     createLeave: jest.fn(),
@@ -27,7 +21,7 @@ describe("VacationsController (Unit)", () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [VacationsController],
+      controllers: [LeavesController],
       providers: [
         { provide: VacationsService, useValue: mockVacationsService },
       ],
@@ -38,7 +32,7 @@ describe("VacationsController (Unit)", () => {
       .useValue(mockRolesGuard)
       .compile();
 
-    controller = module.get<VacationsController>(VacationsController);
+    controller = module.get<LeavesController>(LeavesController);
     service = module.get<VacationsService>(VacationsService);
   });
 
@@ -46,13 +40,12 @@ describe("VacationsController (Unit)", () => {
     expect(controller).toBeDefined();
   });
 
-  describe("findAllVacations", () => {
-    it("should call vacationsService.findAllVacations", async () => {
-      mockVacationsService.findAllVacations.mockResolvedValue([]);
-      const result = await controller.findAllVacations();
+  describe("findAllLeaves", () => {
+    it("should call vacationsService.findAllLeaves", async () => {
+      mockVacationsService.findAllLeaves.mockResolvedValue([]);
+      const result = await controller.findAllLeaves();
       expect(result).toEqual([]);
-      expect(service.findAllVacations).toHaveBeenCalled();
+      expect(service.findAllLeaves).toHaveBeenCalled();
     });
   });
-
 });

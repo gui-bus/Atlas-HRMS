@@ -16,19 +16,19 @@ import { AuthGuard } from "../auth/auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 import { VacationsService } from "./vacations.service";
-import { CreateVacationDto } from "./dto/create-vacation.dto";
-import { UpdateVacationStatusDto } from "./dto/update-vacation-status.dto";
-import { VacationResponseDto } from "./dto/vacations-response.dto";
+import { CreateLeaveDto } from "./dto/create-leave.dto";
+import { UpdateLeaveStatusDto } from "./dto/update-leave-status.dto";
+import { LeaveResponseDto } from "./dto/vacations-response.dto";
 import {
   UnauthorizedErrorResponseDto,
   ForbiddenErrorResponseDto,
   BadRequestErrorResponseDto,
 } from "../common/dto/error-responses.dto";
 
-@ApiTags("Vacations")
+@ApiTags("Leaves")
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
-@Controller("vacations")
+@Controller("vacations/leaves")
 @ApiResponse({
   status: 401,
   description: "Não autenticado",
@@ -39,68 +39,67 @@ import {
   description: "Acesso negado",
   type: ForbiddenErrorResponseDto,
 })
-export class VacationsController {
+export class LeavesController {
   constructor(private readonly vacationsService: VacationsService) {}
 
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
-  @ApiOperation({ summary: "Listar todas as solicitações de férias (Apenas Admin, RH e Gestores)" })
-  @ApiResponse({ status: 200, type: [VacationResponseDto] })
-  async findAllVacations() {
-    return this.vacationsService.findAllVacations();
+  @ApiOperation({ summary: "Listar todas as licenças e atestados pendentes/ativos" })
+  @ApiResponse({ status: 200, type: [LeaveResponseDto] })
+  async findAllLeaves() {
+    return this.vacationsService.findAllLeaves();
   }
 
   @Get("employee/:employeeId")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER, UserRole.EMPLOYEE)
-  @ApiOperation({ summary: "Listar férias de um funcionário específico" })
-  @ApiResponse({ status: 200, type: [VacationResponseDto] })
-  async findVacationsByEmployee(@Param("employeeId") employeeId: string, @Req() req: any) {
+  @ApiOperation({ summary: "Listar atestados e licenças de um funcionário" })
+  @ApiResponse({ status: 200, type: [LeaveResponseDto] })
+  async findLeavesByEmployee(@Param("employeeId") employeeId: string, @Req() req: any) {
     const user = req.user;
     if (user.role === UserRole.EMPLOYEE) {
       const isOwner = await this.checkEmployeeOwnership(employeeId, user.sub);
       if (!isOwner) {
-        throw new ForbiddenException("Você não tem acesso às férias deste funcionário");
+        throw new ForbiddenException("Você não tem acesso aos atestados deste funcionário");
       }
     }
-    return this.vacationsService.findVacationsByEmployee(employeeId);
+    return this.vacationsService.findLeavesByEmployee(employeeId);
   }
 
   @Post()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE)
-  @ApiOperation({ summary: "Solicitar férias (Funcionários, Admin, RH)" })
-  @ApiResponse({ status: 201, type: VacationResponseDto })
+  @ApiOperation({ summary: "Enviar atestado/solicitar licença (Funcionários, Admin, RH)" })
+  @ApiResponse({ status: 201, type: LeaveResponseDto })
   @ApiResponse({ status: 400, type: BadRequestErrorResponseDto })
-  async createVacation(@Body() dto: CreateVacationDto, @Req() req: any) {
+  async createLeave(@Body() dto: CreateLeaveDto, @Req() req: any) {
     const user = req.user;
     if (user.role === UserRole.EMPLOYEE) {
       const isOwner = await this.checkEmployeeOwnership(dto.employeeId, user.sub);
       if (!isOwner) {
-        throw new ForbiddenException("Não é permitido solicitar férias para outro funcionário");
+        throw new ForbiddenException("Não é permitido enviar atestados para outro funcionário");
       }
     }
-    return this.vacationsService.createVacation(dto);
+    return this.vacationsService.createLeave(dto);
   }
 
   @Put(":id/status")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
-  @ApiOperation({ summary: "Aprovar ou Rejeitar solicitação de férias (Admin, RH, Gestores)" })
-  @ApiResponse({ status: 200, type: VacationResponseDto })
-  @ApiResponse({ status: 400, type: BadRequestErrorResponseDto })
-  async updateVacationStatus(
+  @ApiOperation({ summary: "Aprovar ou rejeitar licença/atestado" })
+  @ApiResponse({ status: 200, type: LeaveResponseDto })
+  async updateLeaveStatus(
     @Param("id") id: string,
-    @Body() dto: UpdateVacationStatusDto,
+    @Body() dto: UpdateLeaveStatusDto,
     @Req() req: any,
   ) {
-    return this.vacationsService.updateVacationStatus(id, dto, req.user.sub);
+    return this.vacationsService.updateLeaveStatus(id, dto, req.user.sub);
   }
 
   @Delete(":id")
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE)
-  @ApiOperation({ summary: "Cancelar solicitação de férias" })
-  @ApiResponse({ status: 200, type: VacationResponseDto })
-  async cancelVacation(@Param("id") id: string, @Req() req: any) {
+  @ApiOperation({ summary: "Cancelar solicitação de licença" })
+  @ApiResponse({ status: 200, type: LeaveResponseDto })
+  async cancelLeave(@Param("id") id: string, @Req() req: any) {
     const isHrOrAdmin = req.user.role === UserRole.ADMIN || req.user.role === UserRole.HR;
-    return this.vacationsService.cancelVacation(id, req.user.sub, isHrOrAdmin);
+    return this.vacationsService.cancelLeave(id, req.user.sub, isHrOrAdmin);
   }
 
   private async checkEmployeeOwnership(employeeId: string, userId: string): Promise<boolean> {
