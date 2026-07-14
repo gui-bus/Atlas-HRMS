@@ -53,6 +53,7 @@ export default function LoginPage() {
         router.push(`/${locale}`);
       }
     } catch (err: any) {
+      console.error("Erro ao realizar login:", err);
       const responseError = err.response?.data;
       if (responseError?.message) {
         if (Array.isArray(responseError.message)) {
@@ -60,6 +61,10 @@ export default function LoginPage() {
         } else {
           setErrorMsg(responseError.message);
         }
+      } else if (err.request && !err.response) {
+        setErrorMsg(
+          "Não foi possível estabelecer conexão com o servidor. Tente novamente mais tarde.",
+        );
       } else {
         setErrorMsg("Ocorreu um erro ao tentar realizar o login. Tente novamente.");
       }
@@ -129,7 +134,9 @@ export default function LoginPage() {
                 </button>
               </div>
               {errors.password && (
-                <span className="text-xs text-destructive font-medium">{errors.password.message}</span>
+                <span className="text-xs text-destructive font-medium">
+                  {errors.password.message}
+                </span>
               )}
             </div>
 

@@ -4,6 +4,13 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [0.2.2] - 2026-07-13
+
+### Corrigido
+
+- **Queda do Backend por Conexão Ociosa**: Adicionado tratamento de erro (`pool.on("error")`) no pool de conexões do `pg` no `PrismaService` para evitar crash do backend do NestJS quando conexões do banco caem.
+- **Feedback de Login no Frontend**: Adicionado log de erros no console e tratamento específico de erros de rede/conexão na página de login, apresentando uma mensagem descritiva caso o servidor esteja fora do ar.
+
 ## [0.2.0] - 2026-07-13
 
 ### Adicionado
@@ -37,7 +44,6 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 - **Layout Constraint**: Added `max-w-[110rem]` constraint to primary layout container and updated sidebar to use `variant="inset"` ensuring it respects the max width on large screens.
 - Updated `page.tsx` and `app-sidebar.tsx` to reflect new layout behavior.
-
 
 ### Adicionado
 

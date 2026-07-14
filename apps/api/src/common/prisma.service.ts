@@ -7,6 +7,9 @@ import { Pool } from "pg";
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    pool.on("error", (err) => {
+      console.error("Unexpected error on idle database connection pool client:", err);
+    });
     const adapter = new PrismaPg(pool);
     super({ adapter });
   }

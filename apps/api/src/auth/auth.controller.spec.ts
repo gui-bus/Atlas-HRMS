@@ -4,7 +4,7 @@ import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { UserRole } from "@prisma/client";
-import { Response, Request } from "express";
+import { Response } from "express";
 
 describe("AuthController", () => {
   let controller: AuthController;
@@ -35,6 +35,7 @@ describe("AuthController", () => {
       const dto: RegisterDto = {
         email: "register@atlas.com",
         password: "Password123#",
+        confirmPassword: "Password123#",
         role: UserRole.EMPLOYEE,
       };
       const expectedUser = {
