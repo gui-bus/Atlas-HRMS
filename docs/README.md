@@ -30,6 +30,14 @@ _Consulte o esquema de tabelas e as relações de dados do domínio._
 - **Dicionário do Schema**: Descrição dos modelos de dados fundamentais (`User`, `Employee`, `AuditLog`, `Department`, `Vacation`, `Document`, `Recruitment`, `Notification`).
 - **Enums Globais**: Definição exata das constantes de status do sistema (como `UserRole` e `EmployeeStatus`).
 
+### 🏢 [Estrutura Organizacional](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/organization.md)
+
+_Consulte a hierarquia corporativa e o funcionamento do módulo de departamentos._
+
+- **Modelo de Atributos**: Definição detalhada dos campos, chaves e relacionamentos de departamentos.
+- **Workflow de Soft-Restore**: Descrição técnica e diagrama Mermaid mostrando a reativação de departamentos.
+- **Regras de RBAC**: Restrições aplicadas nas rotas do CRUD organizacional.
+
 ### 🔐 [Autenticação, Segurança e Permissões](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/authentication.md)
 
 _O coração das diretrizes de conformidade e segurança do Atlas HRMS._

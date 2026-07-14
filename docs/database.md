@@ -17,6 +17,7 @@ erDiagram
     employees ||--o{ vacations : "employeeId (1:N)"
     employees ||--o{ documents : "employeeId (1:N)"
     departments ||--o{ recruitments : "departmentId (1:N)"
+    departments }|--o| employees : "managerId (N:1)"
 
     users {
         string id PK
@@ -50,6 +51,11 @@ erDiagram
         string name UK
         string code UK
         string description
+        boolean active
+        string managerId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
     }
 
     audit_logs {
