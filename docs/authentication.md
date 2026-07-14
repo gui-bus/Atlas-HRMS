@@ -85,3 +85,37 @@ Todas as ações críticas no ciclo de vida de autenticação e segurança são 
 - **Logins com Sucesso**: Loga a entrada de usuários, permitindo histórico de logins.
 - **Logins Falhos**: Registra cada tentativa inválida indicando o e-mail alvo.
 - **Bloqueio de Contas (Lockout)**: Emite um log de alerta informando quando e por quanto tempo um usuário foi bloqueado.
+
+---
+
+## 💻 Integração e Fluxo no Frontend (Web App)
+
+O front-end (`@atlas/web`) foi projetado de forma coesa com a API NestJS, utilizando as melhores práticas de segurança e de gerenciamento de sessão.
+
+### 1. Gerenciamento de Estado de Autenticação (`useAuthStore`)
+
+- **Tecnologia**: Zustand.
+- **Funcionamento**: Centraliza as informações do usuário autenticado e o `accessToken` ativo em memória volátil.
+- **Segurança**: O token de acesso **nunca** é persistido no `localStorage` ou `sessionStorage`, eliminando a superfície de ataques XSS.
+
+### 2. Fluxo de Renovação de Sessão (Silent Refresh)
+
+Para manter o usuário autenticado sem comprometer a segurança:
+
+1. Ao inicializar o aplicativo, o front-end realiza uma chamada silenciosa para `POST /auth/refresh`.
+2. Como o `refreshToken` reside no cookie seguro `HttpOnly`, o navegador o trafega de forma automática e segura.
+3. Se válido, a API emite um novo `accessToken`, populando a store do Zustand.
+4. Caso o refresh falhe ou expire, o estado do Zustand é reiniciado e o usuário é redirecionado ao login.
+
+### 3. Proteção de Rotas (Guards de Autenticação)
+
+As rotas são protegidas no Next.js com o wrapper do `AuthProvider`:
+
+- Tentativas de acesso direto a rotas privadas sem autenticação ativa acionam o redirecionamento para o login injetando a query `?redirect=/caminho/original`.
+- Após a autenticação bem-sucedida, o usuário é retornado automaticamente à página de destino pretendida.
+- Os fluxos de transição utilizam navegação nativa do Next.js via componente `<Link>`, garantindo maior agilidade.
+
+### 4. Sincronia de Tema nas Telas de Autenticação
+
+- Para impedir cintilações visuais (flash do modo claro) ao acessar `/login` ou `/register` em modo escuro, o tema é lido síncronamente do `localStorage` e injetado diretamente como classe `.dark` via script no `<head>` do layout raiz.
+- Isso previne inconsistências de estilo no lado do cliente independentemente do estado da sessão do usuário.
