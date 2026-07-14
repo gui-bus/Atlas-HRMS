@@ -12,6 +12,12 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Feedback de Login no Frontend**: Adicionado log de erros no console e tratamento específico de erros de rede/conexão na página de login, apresentando uma mensagem descritiva caso o servidor esteja fora do ar.
 - **Cintilação de Tema (Flash de Modo Claro)**: Introduzido script bloqueante inline no `<head>` do layout raiz para resolver a cintilação do tema ao atualizar a página e garantir a aplicação correta do tema escuro nas telas de login e cadastro.
 
+### Adicionado
+
+- **Suíte de Testes no Frontend**: Configuração do Vitest, React Testing Library e MSW para testes de unidade e integração no front-end, garantindo simulação confiável da API NestJS sem acoplamento.
+- **Testes E2E com Playwright**: Estruturação de testes de navegador de ponta a ponta (E2E) para cobrir os fluxos de login, cadastro e usabilidade.
+- **Garantia de Qualidade no Pre-commit**: Configurado Git hook do Husky para executar automaticamente os testes rápidos de integração front-end (`vitest`) junto com os testes do backend antes de cada commit.
+
 ### Alterado
 
 - **Redirecionamento Pós-Login**: Usuários que tentam acessar rotas privadas sem autenticação agora são redirecionados de volta à rota original após o login bem-sucedido (utilizando parâmetro `?redirect` na URL).
