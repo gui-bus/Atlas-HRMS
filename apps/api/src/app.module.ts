@@ -15,6 +15,7 @@ import { RecruitmentModule } from "./recruitment/recruitment.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { AuditModule } from "./audit/audit.module";
 import { NotificationsModule } from "./notifications/notifications.module";
+import { UploadthingModule } from "./common/uploadthing/uploadthing.module";
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { NotificationsModule } from "./notifications/notifications.module";
     DashboardModule,
     AuditModule,
     NotificationsModule,
+    UploadthingModule,
   ],
   providers: [
     {

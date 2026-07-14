@@ -10,6 +10,8 @@ const envSchema = z.object({
   JWT_EXPIRATION: z.string().default("15m"),
   JWT_REFRESH_EXPIRATION: z.string().default("7d"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  UPLOADTHING_TOKEN: z.string().min(10, "UPLOADTHING_TOKEN é obrigatória e deve ser válida"),
+  UPLOADTHING_SECRET: z.string().min(10, "UPLOADTHING_SECRET é obrigatória"),
 });
 
 export function validateEnv(config: Record<string, any>) {

@@ -1,32 +1,236 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "../common/prisma.service";
+import { CreateVacationDto } from "./dto/create-vacation.dto";
+import { UpdateVacationStatusDto } from "./dto/update-vacation-status.dto";
+import { CreateLeaveDto } from "./dto/create-leave.dto";
+import { UpdateLeaveStatusDto } from "./dto/update-leave-status.dto";
+import { VacationStatus, LeaveStatus } from "@prisma/client";
 
 @Injectable()
 export class VacationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    console.log("VacationsService.findAll check:", typeof this.prisma);
-    return [];
+  // ==========================================
+  // VACATIONS LOR / BUSINESS LOGIC
+  // ==========================================
+
+  async findAllVacations() {
+    return this.prisma.vacation.findMany({
+      where: { deletedAt: null },
+      include: { employee: true },
+    });
   }
 
-  async findOne(id: string) {
-    console.log("VacationsService.findOne check:", typeof this.prisma, typeof id);
-    return null;
+  async findVacationsByEmployee(employeeId: string) {
+    return this.prisma.vacation.findMany({
+      where: { employeeId, deletedAt: null },
+    });
   }
 
-  async create(dto: any) {
-    console.log("VacationsService.create check:", typeof this.prisma, typeof dto);
-    return { success: true };
+  async createVacation(dto: CreateVacationDto) {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id: dto.employeeId },
+    });
+    if (!employee) {
+      throw new NotFoundException("Funcionário não encontrado");
+    }
+
+    const start = new Date(dto.startDate);
+    const end = new Date(dto.endDate);
+
+    if (start >= end) {
+      throw new BadRequestException("A data de início deve ser anterior à data de término");
+    }
+
+    // Verify 12 months working history (CLT period rule)
+    const diffTime = Math.abs(new Date().getTime() - new Date(employee.hireDate).getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 365) {
+      throw new BadRequestException("O funcionário ainda não completou o período aquisitivo de 12 meses");
+    }
+
+    // Check overlap vacations
+    const overlapping = await this.prisma.vacation.findFirst({
+      where: {
+        employeeId: dto.employeeId,
+        deletedAt: null,
+        status: { in: [VacationStatus.PENDING, VacationStatus.APPROVED] },
+        OR: [
+          { startDate: { lte: end }, endDate: { gte: start } },
+        ],
+      },
+    });
+
+    if (overlapping) {
+      throw new BadRequestException("Já existe uma solicitação de férias aprovada ou pendente para este período");
+    }
+
+    return this.prisma.vacation.create({
+      data: {
+        startDate: start,
+        endDate: end,
+        employeeId: dto.employeeId,
+      },
+    });
   }
 
-  async update(id: string, dto: any) {
-    console.log("VacationsService.update check:", typeof this.prisma, typeof id, typeof dto);
-    return { success: true };
+  async updateVacationStatus(id: string, dto: UpdateVacationStatusDto, approvedById: string) {
+    const vacation = await this.prisma.vacation.findUnique({
+      where: { id },
+    });
+    if (!vacation || vacation.deletedAt) {
+      throw new NotFoundException("Solicitação de férias não encontrada");
+    }
+
+    if (vacation.status !== VacationStatus.PENDING) {
+      throw new BadRequestException("Apenas solicitações pendentes podem ter seu status alterado");
+    }
+
+    if (dto.status === VacationStatus.REJECTED && !dto.rejectionReason) {
+      throw new BadRequestException("É necessário informar o motivo da rejeição");
+    }
+
+    return this.prisma.vacation.update({
+      where: { id },
+      data: {
+        status: dto.status,
+        rejectionReason: dto.status === VacationStatus.REJECTED ? dto.rejectionReason : null,
+        approvedById,
+      },
+    });
   }
 
-  async remove(id: string) {
-    console.log("VacationsService.remove check:", typeof this.prisma, typeof id);
-    return { success: true };
+  async cancelVacation(id: string, requesterUserId: string, isHrOrAdmin: boolean) {
+    const vacation = await this.prisma.vacation.findUnique({
+      where: { id },
+      include: { employee: true },
+    });
+
+    if (!vacation || vacation.deletedAt) {
+      throw new NotFoundException("Férias não encontradas");
+    }
+
+    // Verify ownership
+    if (!isHrOrAdmin && vacation.employee.userId !== requesterUserId) {
+      throw new ForbiddenException("Você não tem permissão para cancelar estas férias");
+    }
+
+    return this.prisma.vacation.update({
+      where: { id },
+      data: {
+        status: VacationStatus.CANCELLED,
+        deletedAt: new Date(),
+      },
+    });
+  }
+
+  // ==========================================
+  // LEAVES LOR / BUSINESS LOGIC (ATTESTED / REASONS)
+  // ==========================================
+
+  async findAllLeaves() {
+    return this.prisma.leave.findMany({
+      where: { deletedAt: null },
+      include: { employee: true },
+    });
+  }
+
+  async findLeavesByEmployee(employeeId: string) {
+    return this.prisma.leave.findMany({
+      where: { employeeId, deletedAt: null },
+    });
+  }
+
+  async createLeave(dto: CreateLeaveDto) {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id: dto.employeeId },
+    });
+    if (!employee) {
+      throw new NotFoundException("Funcionário não encontrado");
+    }
+
+    const start = new Date(dto.startDate);
+    const end = new Date(dto.endDate);
+
+    if (start >= end) {
+      throw new BadRequestException("A data de início deve ser anterior à data de término");
+    }
+
+    // Check overlap leaves
+    const overlapping = await this.prisma.leave.findFirst({
+      where: {
+        employeeId: dto.employeeId,
+        deletedAt: null,
+        status: { in: [LeaveStatus.PENDING, LeaveStatus.APPROVED] },
+        OR: [
+          { startDate: { lte: end }, endDate: { gte: start } },
+        ],
+      },
+    });
+
+    if (overlapping) {
+      throw new BadRequestException("Já existe uma licença ativa ou pendente para este período");
+    }
+
+    return this.prisma.leave.create({
+      data: {
+        startDate: start,
+        endDate: end,
+        type: dto.type,
+        description: dto.description || null,
+        attachmentUrl: dto.attachmentUrl || null,
+        employeeId: dto.employeeId,
+      },
+    });
+  }
+
+  async updateLeaveStatus(id: string, dto: UpdateLeaveStatusDto, approvedById: string) {
+    const leave = await this.prisma.leave.findUnique({
+      where: { id },
+    });
+    if (!leave || leave.deletedAt) {
+      throw new NotFoundException("Solicitação de licença não encontrada");
+    }
+
+    if (leave.status !== LeaveStatus.PENDING) {
+      throw new BadRequestException("Apenas solicitações pendentes podem ter seu status alterado");
+    }
+
+    if (dto.status === LeaveStatus.REJECTED && !dto.rejectionReason) {
+      throw new BadRequestException("É necessário informar o motivo da rejeição");
+    }
+
+    return this.prisma.leave.update({
+      where: { id },
+      data: {
+        status: dto.status,
+        rejectionReason: dto.status === LeaveStatus.REJECTED ? dto.rejectionReason : null,
+        approvedById,
+      },
+    });
+  }
+
+  async cancelLeave(id: string, requesterUserId: string, isHrOrAdmin: boolean) {
+    const leave = await this.prisma.leave.findUnique({
+      where: { id },
+      include: { employee: true },
+    });
+
+    if (!leave || leave.deletedAt) {
+      throw new NotFoundException("Licença não encontrada");
+    }
+
+    // Verify ownership
+    if (!isHrOrAdmin && leave.employee.userId !== requesterUserId) {
+      throw new ForbiddenException("Você não tem permissão para cancelar esta licença");
+    }
+
+    return this.prisma.leave.update({
+      where: { id },
+      data: {
+        status: LeaveStatus.CANCELLED,
+        deletedAt: new Date(),
+      },
+    });
   }
 }

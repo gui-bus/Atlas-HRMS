@@ -60,8 +60,9 @@ model Employee {
   department   Department? @relation(fields: [departmentId], references: [id])
   positionId   String?
   position     Position?   @relation(fields: [positionId], references: [id])
-  vacations    Vacation[]
-  documents    Document[]
+  vacations         Vacation[]
+  leaves            Leave[]
+  documents         Document[]
 
   personalData      EmployeePersonalData?
   address           EmployeeAddress?
@@ -180,20 +181,57 @@ enum VacationStatus {
 }
 
 model Vacation {
-  id        String         @id @default(uuid())
-  startDate DateTime
-  endDate   DateTime
-  status    VacationStatus @default(PENDING)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  deletedAt DateTime?
+  id              String         @id @default(uuid())
+  startDate       DateTime
+  endDate         DateTime
+  status          VacationStatus @default(PENDING)
+  rejectionReason String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
 
   // Relations
   employeeId   String
-  employee     Employee @relation(fields: [employeeId], references: [id])
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   approvedById String?
 
   @@map("vacations")
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum LeaveType {
+  MEDICAL
+  PARENTAL
+  LEGAL
+  UNPAID
+  OTHER
+}
+
+model Leave {
+  id              String      @id @default(uuid())
+  startDate       DateTime
+  endDate         DateTime
+  type            LeaveType
+  description     String?
+  status          LeaveStatus @default(PENDING)
+  rejectionReason String?
+  attachmentUrl   String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  deletedAt       DateTime?
+
+  // Relations
+  employeeId   String
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  approvedById String?
+
+  @@map("leaves")
 }
 
 model Document {
