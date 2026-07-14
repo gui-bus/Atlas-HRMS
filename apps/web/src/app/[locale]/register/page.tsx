@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Check, X, Eye, EyeOff } from "lucide-react";
 import { api } from "@/lib/api";
@@ -241,7 +242,9 @@ export default function RegisterPage() {
               )}
 
               {errors.password && (
-                <span className="text-xs text-destructive font-medium">{errors.password.message}</span>
+                <span className="text-xs text-destructive font-medium">
+                  {errors.password.message}
+                </span>
               )}
             </div>
 
@@ -264,7 +267,11 @@ export default function RegisterPage() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               {errors.confirmPassword && (
@@ -289,12 +296,12 @@ export default function RegisterPage() {
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
               {t("alreadyHaveAccount")}{" "}
-              <a
+              <Link
                 href={`/${locale}/login`}
                 className="text-primary font-semibold hover:underline"
               >
                 {t("signIn")}
-              </a>
+              </Link>
             </p>
           </div>
         </div>

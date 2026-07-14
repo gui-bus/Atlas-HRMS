@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -24,6 +25,7 @@ export default function LoginPage() {
   const t = useTranslations("Auth");
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const setAuth = useAuthStore((state) => state.setAuth);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -50,7 +52,13 @@ export default function LoginPage() {
         setAuth(user, accessToken);
         const segments = pathname.split("/");
         const locale = segments[1] || "pt";
-        router.push(`/${locale}`);
+        const redirect = searchParams.get("redirect");
+
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push(`/${locale}`);
+        }
       }
     } catch (err: any) {
       console.error("Erro ao realizar login:", err);
@@ -155,12 +163,12 @@ export default function LoginPage() {
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
               {t("noAccount")}{" "}
-              <a
+              <Link
                 href={`/${locale}/register`}
                 className="text-primary font-semibold hover:underline"
               >
                 {t("signUp")}
-              </a>
+              </Link>
             </p>
           </div>
         </div>

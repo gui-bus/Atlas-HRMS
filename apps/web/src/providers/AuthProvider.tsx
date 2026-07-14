@@ -54,7 +54,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       // Mantendo o prefixo de locale (ex: /pt)
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
-      router.push(`/${locale}/login`);
+      router.push(`/${locale}/login?redirect=${encodeURIComponent(pathname)}`);
     } else if (isAuthenticated && isPublicRoute) {
       // Se já autenticado e acessando tela de login/cadastro, manda para o dashboard raiz
       const segments = pathname.split("/");
