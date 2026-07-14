@@ -18,6 +18,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Testes E2E com Playwright**: Estruturação de testes de navegador de ponta a ponta (E2E) cobrindo fluxos de login com sucesso/falha interceptados com `page.route`, e usabilidade.
 - **Garantia de Qualidade no Pre-commit**: Configurado Git hook do Husky para executar automaticamente os testes rápidos de integração front-end (`vitest`) junto com os testes do backend antes de cada commit.
 - **Diretriz de Código Limpo**: Adicionada nova regra em `.agents/AGENTS.md` restringindo o uso de comentários explicativos/redundantes no código.
+- **Migração do Banco de Dados**: Adicionado campo `description` opcional e relacionamento de gerente (`manager`) no modelo `Department` no Prisma schema e executada a migração do banco de dados correspondente.
 
 ### Alterado
 
