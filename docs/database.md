@@ -18,6 +18,8 @@ erDiagram
     employees ||--o{ documents : "employeeId (1:N)"
     departments ||--o{ recruitments : "departmentId (1:N)"
     departments }|--o| employees : "managerId (N:1)"
+    employees }|--o| positions : "positionId (N:1)"
+    positions }|--|| departments : "departmentId (N:1)"
 
     users {
         string id PK
@@ -53,6 +55,19 @@ erDiagram
         string description
         boolean active
         string managerId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    positions {
+        string id PK
+        string title
+        string description
+        decimal salaryRangeMin
+        decimal salaryRangeMax
+        boolean active
+        string departmentId FK
         datetime createdAt
         datetime updatedAt
         datetime deletedAt

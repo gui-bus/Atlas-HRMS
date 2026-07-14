@@ -4,6 +4,16 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [0.3.0] - 2026-07-14
+
+### Adicionado
+
+- **Módulo de Departamentos (Backend)**: Implementado o CRUD completo (`Department`) no NestJS com validações no payload (`class-validator`), segurança baseada em cargos (RBAC) e DTOs de erros específicos para documentação da API.
+- **Workflow de Soft-Restore**: Lógica inteligente capaz de restaurar departamentos logicamente deletados em vez de violar chaves únicas do banco.
+- **Testes Unitários de Departamentos**: Cobertura robusta de testes para `DepartmentsService` e `DepartmentsController`.
+- **Módulo de Cargos (Backend)**: Implementado o CRUD completo (`Position`) no NestJS com restrições e faixas salariais, reativação via Soft-Restore, validação de unicidade de título dentro do mesmo departamento, segurança RBAC e documentação com DTOs granulares.
+- **Testes Unitários de Cargos**: Bateria de testes Jest para `PositionsService` e `PositionsController`.
+
 ## [0.2.2] - 2026-07-13
 
 ### Corrigido

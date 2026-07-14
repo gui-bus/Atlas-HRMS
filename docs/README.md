@@ -38,6 +38,15 @@ _Consulte a hierarquia corporativa e o funcionamento do módulo de departamentos
 - **Workflow de Soft-Restore**: Descrição técnica e diagrama Mermaid mostrando a reativação de departamentos.
 - **Regras de RBAC**: Restrições aplicadas nas rotas do CRUD organizacional.
 
+### 💼 [Gestão de Cargos](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/positions.md)
+
+_Consulte a modelagem, faixas salariais e regras de cargos (Positions)._
+
+- **Atributos de Faixa Salarial**: Validações de salário mínimo e máximo.
+- **Unicidade de Cargo**: Restrição de cargo único dentro de um mesmo departamento.
+- **Restauração Inteligente**: Reativação de registros de cargos deletados.
+- **Regras de RBAC**: Acesso restrito a cargos para Administradores e RH.
+
 ### 🔐 [Autenticação, Segurança e Permissões](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/authentication.md)
 
 _O coração das diretrizes de conformidade e segurança do Atlas HRMS._
