@@ -43,8 +43,8 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ### Alterado
 
-- **Layout Constraint**: Added `max-w-[110rem]` constraint to primary layout container and updated sidebar to use `variant="inset"` ensuring it respects the max width on large screens.
-- Updated `page.tsx` and `app-sidebar.tsx` to reflect new layout behavior.
+- **Restrição de Layout (Layout Constraint)**: Adicionada a restrição `max-w-[110rem]` ao contêiner principal de layout e atualizada a sidebar para usar `variant="inset"`, garantindo o respeito ao limite de largura máxima em telas grandes.
+- Atualizados os arquivos `page.tsx` e `app-sidebar.tsx` para refletir o novo comportamento de layout.
 
 ### Adicionado
 
