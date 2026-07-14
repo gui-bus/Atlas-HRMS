@@ -63,9 +63,74 @@ model Employee {
   vacations    Vacation[]
   documents    Document[]
 
+  personalData      EmployeePersonalData?
+  address           EmployeeAddress?
+  bankAccount       EmployeeBankAccount?
+  emergencyContacts EmergencyContact[]
+
   managedDepartments Department[] @relation("DepartmentManager")
 
   @@map("employees")
+}
+
+model EmployeePersonalData {
+  id           String    @id @default(uuid())
+  employeeId   String    @unique
+  employee     Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  cpf          String    @unique
+  rg           String?
+  birthDate    DateTime
+  gender       String?
+  maritalStatus String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("employee_personal_data")
+}
+
+model EmployeeAddress {
+  id           String   @id @default(uuid())
+  employeeId   String   @unique
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  cep          String
+  street       String
+  number       String
+  complement   String?
+  neighborhood String
+  city         String
+  state        String   @db.VarChar(2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("employee_addresses")
+}
+
+model EmployeeBankAccount {
+  id          String   @id @default(uuid())
+  employeeId  String   @unique
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  bankCode    String
+  bankAgency  String
+  bankAccount String
+  accountType String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("employee_bank_accounts")
+}
+
+model EmergencyContact {
+  id           String   @id @default(uuid())
+  employeeId   String
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  name         String
+  phone        String
+  relationship String
+  isPrimary    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("emergency_contacts")
 }
 
 model Department {

@@ -8,6 +8,12 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ### Adicionado
 
+- **Refatoração Modular de Funcionários**: Reestruturação do modelo `Employee` no banco de dados, separando os dados em tabelas correlacionadas `1:1` e `1:N` para otimizar desempenho (`employee_personal_data`, `employee_addresses`, `employee_bank_accounts` e `emergency_contacts`).
+- **Validação com Algoritmo de CPF**: Validador algorítmico personalizado de CPF em NestJS que rejeita números repetidos ou inválidos matematicamente.
+- **CRUD e API de Funcionários**: Endpoints transacionais `/employees` completos, protegidos por RBAC (`ADMIN`, `HR`, `MANAGER`) e decorados com dados ricos para Swagger.
+- **Suíte de Testes para Funcionários**: Testes unitários (`employees.service.spec.ts`, `employees.controller.spec.ts`) e testes de integração de ponta a ponta (`employees.integration.spec.ts`).
+- **Documentação de Funcionários**: Criação do guia `docs/employees.md` detalhando as relações de banco e acessos RBAC.
+
 - **Módulo de Departamentos (Backend)**: Implementado o CRUD completo (`Department`) no NestJS com validações no payload (`class-validator`), segurança baseada em cargos (RBAC) e DTOs de erros específicos para documentação da API.
 - **Workflow de Soft-Restore**: Lógica inteligente capaz de restaurar departamentos logicamente deletados em vez de violar chaves únicas do banco.
 - **Testes Unitários de Departamentos**: Cobertura robusta de testes para `DepartmentsService` e `DepartmentsController`.
