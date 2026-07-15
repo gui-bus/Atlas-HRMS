@@ -1,0 +1,48 @@
+{
+  "Common": {
+    "title": "Atlas HRMS",
+    "dashboard": "Dashboard",
+    "employees": "Employees",
+    "departments": "Departments",
+    "vacations": "Vacations",
+    "recruitment": "Recruitment",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "Dashboard": {
+    "welcome": "Welcome to Atlas HRMS",
+    "totalEmployees": "Total Employees",
+    "activeRecruitments": "Open Roles",
+    "pendingVacations": "Vacation Requests",
+    "quickActions": "Quick Actions"
+  },
+  "Auth": {
+    "welcomeBack": "Welcome back",
+    "enterDetails": "Please enter your credentials to access the panel",
+    "emailAddress": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordsMustMatch": "Passwords must match",
+    "signIn": "Sign In",
+    "signingIn": "Signing In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "createAccount": "Create New Account",
+    "fillRegisterDetails": "Fill the details below to register",
+    "alreadyHaveAccount": "Already have an account?",
+    "registering": "Registering",
+    "forgotPasswordLink": "Forgot password",
+    "forgotPasswordTitle": "Recover password",
+    "forgotPasswordDesc": "Enter your email to receive instructions and reset token",
+    "sendInstructions": "Send Instructions",
+    "sending": "Sending",
+    "backToLogin": "Back to login",
+    "resetPasswordTitle": "Reset Password",
+    "resetPasswordDesc": "Enter the token sent to your email and choose your new password",
+    "tokenPlaceholder": "Paste the received token here",
+    "newPasswordPlaceholder": "New password",
+    "confirmNewPasswordPlaceholder": "Confirm new password",
+    "resetting": "Resetting",
+    "resetSuccess": "Password reset successfully! You can sign in now."
+  }
+}

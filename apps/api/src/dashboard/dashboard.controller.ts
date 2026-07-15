@@ -1,10 +1,5 @@
 import { Controller, Get, UseGuards, Query } from "@nestjs/common";
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
 import { AuthGuard } from "../auth/auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
@@ -23,7 +18,8 @@ export class DashboardController {
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
   @ApiOperation({
-    summary: "Obter métricas consolidadas do painel administrativo com filtros (Admin, RH e Gestores)",
+    summary:
+      "Obter métricas consolidadas do painel administrativo com filtros (Admin, RH e Gestores)",
   })
   @ApiResponse({
     status: 200,

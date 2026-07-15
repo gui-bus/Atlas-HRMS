@@ -22,3 +22,8 @@
 - Sempre que criar um novo endpoint, serviço, controller ou refatorar lógica essencial, você **deve** atualizar ou criar os testes unitários (`.spec.ts`) e de integração correspondentes.
 - Garanta que todos os testes passem com `pnpm --filter api test` antes de concluir a execução de qualquer tarefa.
 
+## 5. Diretrizes do Frontend (Internacionalização e Estilo)
+
+- **Internacionalização Obrigatória (i18n)**: Todo e qualquer texto visível para o usuário final nas telas, modais, placeholders, mensagens de erro, validações e alertas deve ser traduzido usando os arquivos de localização (`messages/pt.json`, `messages/en.json`, `messages/es.json`). É estritamente proibido o uso de strings literal fixas (hardcoded) no código de componentes do frontend.
+- **Design minimalista e Shadcn**: Siga os padrões estéticos definidos para o projeto, utilizando os componentes base da biblioteca **shadcn/ui** de forma a manter uma identidade visual limpa, premium, profissional e minimalista.
+

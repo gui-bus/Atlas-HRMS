@@ -32,7 +32,6 @@ Todos os registros de alterações relevantes para este projeto serão documenta
   - Geração e disparo automático de notificações internas nos fluxos de negócios (férias aprovadas/rejeitadas, licenças avaliadas e boas-vindas pós-admissão).
   - Otimização e limpeza automática de arquivos físicos órfãos hospedados no UploadThing para licenças médicas canceladas ou rejeitadas pelo RH.
 
-
 ## [0.6.0] - 2026-07-15
 
 ### Adicionado
@@ -43,7 +42,6 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Documentação Técnica de Auditoria**: Página `docs/audit.md` com diagrama de arquitetura Mermaid, modelo de dados, especificação do endpoint, fluxo RBAC e tabela de referência das ações tipadas do enum `AuditAction`.
 - **Módulo de Dashboard de Métricas**: Endpoint agregador `GET /dashboard` que realiza 9 consultas de agregação de forma paralela usando `Promise.all` para retornar estatísticas de funcionários ativos, departamentos, ausências atuais de escala e funil de recrutamento. Acesso restrito a perfis administrativamente habilitados (`ADMIN`, `HR` e `MANAGER`).
 - **Testes e Documentação do Dashboard**: Testes unitários e de integração (`dashboard.service.spec.ts`, `dashboard.integration.spec.ts`) com 11 cenários de cobertura, e documentação detalhada em `docs/dashboard.md`.
-
 
 ## [0.5.0] - 2026-07-14
 

@@ -1,4 +1,10 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+  BadRequestException,
+  NotFoundException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../common/prisma.service";
@@ -226,7 +232,9 @@ export class AuthService {
 
     try {
       const { Resend } = await import("resend");
-      const resend = new Resend(process.env.RESEND_API_KEY || "re_TiJDQ5q8_CjTiDPPAUKxcEJYx29N1r5GF");
+      const resend = new Resend(
+        process.env.RESEND_API_KEY || "re_TiJDQ5q8_CjTiDPPAUKxcEJYx29N1r5GF",
+      );
       await resend.emails.send({
         from: "onboarding@resend.dev",
         to: email,

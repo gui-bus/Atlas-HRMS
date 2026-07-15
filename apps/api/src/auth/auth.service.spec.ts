@@ -1,6 +1,11 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { JwtService } from "@nestjs/jwt";
-import { UnauthorizedException, ConflictException, BadRequestException, NotFoundException } from "@nestjs/common";
+import {
+  UnauthorizedException,
+  ConflictException,
+  BadRequestException,
+  NotFoundException,
+} from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { AuthService } from "./auth.service";
 import { PrismaService } from "../common/prisma.service";
@@ -247,7 +252,7 @@ describe("AuthService", () => {
     it("should generate hex token, save and return message", async () => {
       prisma.user.findUnique.mockResolvedValue({ id: "u-1", email: "known@email.com" });
       prisma.user.update.mockResolvedValue({ id: "u-1" });
-      
+
       // Mock process.env.RESEND_API_KEY to trigger mockResend
       const originalApiKey = process.env.RESEND_API_KEY;
       process.env.RESEND_API_KEY = "dummy_key";
@@ -255,7 +260,7 @@ describe("AuthService", () => {
       const result = await service.forgotPassword("known@email.com");
       expect(result).toHaveProperty("message");
       expect(prisma.user.update).toHaveBeenCalled();
-      
+
       process.env.RESEND_API_KEY = originalApiKey;
     });
   });
@@ -263,7 +268,9 @@ describe("AuthService", () => {
   describe("resetPassword", () => {
     it("should throw BadRequestException if token is invalid or expired", async () => {
       prisma.user.findFirst.mockResolvedValue(null);
-      await expect(service.resetPassword("bad-token", "NewPassword123#")).rejects.toThrow(BadRequestException);
+      await expect(service.resetPassword("bad-token", "NewPassword123#")).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it("should update password, clear token and reset failedAttempts", async () => {
@@ -273,14 +280,16 @@ describe("AuthService", () => {
 
       const result = await service.resetPassword("good-token", "NewPassword123#");
       expect(result).toHaveProperty("message");
-      expect(prisma.user.update).toHaveBeenCalledWith(expect.objectContaining({
-        data: expect.objectContaining({
-          password: "hashed-pass",
-          resetToken: null,
-          resetTokenExp: null,
-          failedAttempts: 0,
+      expect(prisma.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            password: "hashed-pass",
+            resetToken: null,
+            resetTokenExp: null,
+            failedAttempts: 0,
+          }),
         }),
-      }));
+      );
     });
   });
 });

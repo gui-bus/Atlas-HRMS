@@ -1,11 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../common/prisma.service";
-import {
-  VacationStatus,
-  LeaveStatus,
-  RecruitmentStatus,
-  ApplicationStatus,
-} from "@prisma/client";
+import { VacationStatus, LeaveStatus, RecruitmentStatus, ApplicationStatus } from "@prisma/client";
 
 import { QueryDashboardDto } from "./dto/query-dashboard.dto";
 import { Prisma } from "@prisma/client";

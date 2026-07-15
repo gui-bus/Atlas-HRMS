@@ -214,7 +214,11 @@ export class EmployeesService {
         phone: dto.phone,
         status: dto.status,
         hireDate: dto.hireDate ? new Date(dto.hireDate) : undefined,
-        terminationDate: dto.terminationDate ? new Date(dto.terminationDate) : dto.terminationDate === null ? null : undefined,
+        terminationDate: dto.terminationDate
+          ? new Date(dto.terminationDate)
+          : dto.terminationDate === null
+            ? null
+            : undefined,
         salary: dto.salary,
         userId: dto.userId !== undefined ? dto.userId : undefined,
         departmentId: dto.departmentId !== undefined ? dto.departmentId : undefined,
@@ -222,12 +226,16 @@ export class EmployeesService {
       };
 
       if (dto.personalData) {
-        const cpfClean = dto.personalData.cpf ? dto.personalData.cpf.replace(/[^\d]/g, "") : undefined;
+        const cpfClean = dto.personalData.cpf
+          ? dto.personalData.cpf.replace(/[^\d]/g, "")
+          : undefined;
         updateData.personalData = {
           update: {
             cpf: cpfClean,
             rg: dto.personalData.rg,
-            birthDate: dto.personalData.birthDate ? new Date(dto.personalData.birthDate) : undefined,
+            birthDate: dto.personalData.birthDate
+              ? new Date(dto.personalData.birthDate)
+              : undefined,
             gender: dto.personalData.gender,
             maritalStatus: dto.personalData.maritalStatus,
             avatarUrl: dto.personalData.avatarUrl,

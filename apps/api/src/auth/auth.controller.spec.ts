@@ -142,7 +142,10 @@ describe("AuthController", () => {
       const serviceResult = { message: "Senha alterada" };
       (service as any).resetPassword = jest.fn().mockResolvedValue(serviceResult);
 
-      const result = await controller.resetPassword({ token: "t-123", password: "NewPassword123#" });
+      const result = await controller.resetPassword({
+        token: "t-123",
+        password: "NewPassword123#",
+      });
       expect(result).toEqual(serviceResult);
       expect((service as any).resetPassword).toHaveBeenCalledWith("t-123", "NewPassword123#");
     });

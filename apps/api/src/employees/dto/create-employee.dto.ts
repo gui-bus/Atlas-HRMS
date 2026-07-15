@@ -1,4 +1,15 @@
-import { IsString, IsNotEmpty, IsEmail, IsDateString, IsEnum, IsOptional, ValidateNested, IsBoolean, Matches, Length } from "class-validator";
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  ValidateNested,
+  IsBoolean,
+  Matches,
+  Length,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { EmployeeStatus } from "@prisma/client";
@@ -30,7 +41,11 @@ export class CreatePersonalDataDto {
   @IsOptional()
   maritalStatus?: string;
 
-  @ApiProperty({ description: "URL do avatar do funcionário", example: "https://utfs.io/f/avatar.png", required: false })
+  @ApiProperty({
+    description: "URL do avatar do funcionário",
+    example: "https://utfs.io/f/avatar.png",
+    required: false,
+  })
   @IsString()
   @IsOptional()
   avatarUrl?: string;
@@ -38,7 +53,9 @@ export class CreatePersonalDataDto {
 
 export class CreateAddressDto {
   @ApiProperty({ description: "CEP do endereço", example: "30130-010" })
-  @Matches(/^\d{5}-?\d{3}$/, { message: "CEP inválido. Use o formato 00000-000 ou 8 dígitos numéricos" })
+  @Matches(/^\d{5}-?\d{3}$/, {
+    message: "CEP inválido. Use o formato 00000-000 ou 8 dígitos numéricos",
+  })
   @IsNotEmpty()
   cep!: string;
 
@@ -112,7 +129,11 @@ export class CreateEmergencyContactDto {
   @IsNotEmpty()
   relationship!: string;
 
-  @ApiProperty({ description: "Define se é o contato de emergência prioritário", example: true, required: false })
+  @ApiProperty({
+    description: "Define se é o contato de emergência prioritário",
+    example: true,
+    required: false,
+  })
   @IsBoolean()
   @IsOptional()
   isPrimary?: boolean;
@@ -159,17 +180,29 @@ export class CreateEmployeeDto {
   @IsNotEmpty()
   salary!: string;
 
-  @ApiProperty({ description: "ID do usuário associado (opcional)", example: "d7b6a4a6-7a13-43ef-b209-efdb17eddfb1", required: false })
+  @ApiProperty({
+    description: "ID do usuário associado (opcional)",
+    example: "d7b6a4a6-7a13-43ef-b209-efdb17eddfb1",
+    required: false,
+  })
   @IsString()
   @IsOptional()
   userId?: string;
 
-  @ApiProperty({ description: "ID do departamento vinculado (opcional)", example: "a7b6a4a6-7a13-43ef-b209-efdb17eddfb1", required: false })
+  @ApiProperty({
+    description: "ID do departamento vinculado (opcional)",
+    example: "a7b6a4a6-7a13-43ef-b209-efdb17eddfb1",
+    required: false,
+  })
   @IsString()
   @IsOptional()
   departmentId?: string;
 
-  @ApiProperty({ description: "ID do cargo vinculado (opcional)", example: "b7b6a4a6-7a13-43ef-b209-efdb17eddfb1", required: false })
+  @ApiProperty({
+    description: "ID do cargo vinculado (opcional)",
+    example: "b7b6a4a6-7a13-43ef-b209-efdb17eddfb1",
+    required: false,
+  })
   @IsString()
   @IsOptional()
   positionId?: string;
@@ -192,7 +225,11 @@ export class CreateEmployeeDto {
   @IsNotEmpty()
   bankAccount!: CreateBankAccountDto;
 
-  @ApiProperty({ type: [CreateEmergencyContactDto], description: "Contatos de emergência do funcionário", required: false })
+  @ApiProperty({
+    type: [CreateEmergencyContactDto],
+    description: "Contatos de emergência do funcionário",
+    required: false,
+  })
   @ValidateNested({ each: true })
   @Type(() => CreateEmergencyContactDto)
   @IsOptional()

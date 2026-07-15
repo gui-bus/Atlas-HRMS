@@ -16,10 +16,7 @@ describe("DashboardService (Unit)", () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        DashboardService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [DashboardService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<DashboardService>(DashboardService);
@@ -34,16 +31,10 @@ describe("DashboardService (Unit)", () => {
     it("should return all 8 aggregated metrics", async () => {
       mockPrisma.employee.count.mockResolvedValue(142);
       mockPrisma.department.count.mockResolvedValue(12);
-      mockPrisma.vacation.count
-        .mockResolvedValueOnce(8)
-        .mockResolvedValueOnce(10);
-      mockPrisma.leave.count
-        .mockResolvedValueOnce(3)
-        .mockResolvedValueOnce(5);
+      mockPrisma.vacation.count.mockResolvedValueOnce(8).mockResolvedValueOnce(10);
+      mockPrisma.leave.count.mockResolvedValueOnce(3).mockResolvedValueOnce(5);
       mockPrisma.recruitment.count.mockResolvedValue(5);
-      mockPrisma.application.count
-        .mockResolvedValueOnce(87)
-        .mockResolvedValueOnce(12);
+      mockPrisma.application.count.mockResolvedValueOnce(87).mockResolvedValueOnce(12);
 
       const result = await service.getStats({});
 
@@ -82,12 +73,8 @@ describe("DashboardService (Unit)", () => {
     it("should calculate activeAbsences as sum of active vacations and leaves", async () => {
       mockPrisma.employee.count.mockResolvedValue(10);
       mockPrisma.department.count.mockResolvedValue(2);
-      mockPrisma.vacation.count
-        .mockResolvedValueOnce(0)
-        .mockResolvedValueOnce(7);
-      mockPrisma.leave.count
-        .mockResolvedValueOnce(0)
-        .mockResolvedValueOnce(3);
+      mockPrisma.vacation.count.mockResolvedValueOnce(0).mockResolvedValueOnce(7);
+      mockPrisma.leave.count.mockResolvedValueOnce(0).mockResolvedValueOnce(3);
       mockPrisma.recruitment.count.mockResolvedValue(0);
       mockPrisma.application.count.mockResolvedValue(0);
 

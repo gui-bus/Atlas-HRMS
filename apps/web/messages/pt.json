@@ -30,6 +30,19 @@
     "createAccount": "Criar Nova Conta",
     "fillRegisterDetails": "Preencha as informações abaixo para se cadastrar",
     "alreadyHaveAccount": "Já tem uma conta?",
-    "registering": "Cadastrando"
+    "registering": "Cadastrando",
+    "forgotPasswordLink": "Esqueci minha senha",
+    "forgotPasswordTitle": "Recuperar senha",
+    "forgotPasswordDesc": "Informe seu e-mail para receber as instruções e o token de redefinição",
+    "sendInstructions": "Enviar Instruções",
+    "sending": "Enviando",
+    "backToLogin": "Voltar para o login",
+    "resetPasswordTitle": "Redefinir Senha",
+    "resetPasswordDesc": "Informe o token enviado por e-mail e escolha sua nova senha",
+    "tokenPlaceholder": "Cole o token recebido aqui",
+    "newPasswordPlaceholder": "Nova senha",
+    "confirmNewPasswordPlaceholder": "Confirme a nova senha",
+    "resetting": "Redefinindo",
+    "resetSuccess": "Senha redefinida com sucesso! Você pode realizar o login agora."
   }
 }

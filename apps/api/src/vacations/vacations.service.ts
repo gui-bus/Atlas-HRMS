@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from "@nestjs/common";
 import { PrismaService } from "../common/prisma.service";
 import { CreateVacationDto } from "./dto/create-vacation.dto";
 import { UpdateVacationStatusDto } from "./dto/update-vacation-status.dto";
@@ -52,7 +57,9 @@ export class VacationsService {
     const diffTime = Math.abs(new Date().getTime() - new Date(employee.hireDate).getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays < 365) {
-      throw new BadRequestException("O funcionário ainda não completou o período aquisitivo de 12 meses");
+      throw new BadRequestException(
+        "O funcionário ainda não completou o período aquisitivo de 12 meses",
+      );
     }
 
     // Check overlap vacations
@@ -61,14 +68,14 @@ export class VacationsService {
         employeeId: dto.employeeId,
         deletedAt: null,
         status: { in: [VacationStatus.PENDING, VacationStatus.APPROVED] },
-        OR: [
-          { startDate: { lte: end }, endDate: { gte: start } },
-        ],
+        OR: [{ startDate: { lte: end }, endDate: { gte: start } }],
       },
     });
 
     if (overlapping) {
-      throw new BadRequestException("Já existe uma solicitação de férias aprovada ou pendente para este período");
+      throw new BadRequestException(
+        "Já existe uma solicitação de férias aprovada ou pendente para este período",
+      );
     }
 
     return this.prisma.vacation.create({
@@ -107,7 +114,8 @@ export class VacationsService {
     });
 
     const statusText = dto.status === VacationStatus.APPROVED ? "aprovada" : "rejeitada";
-    const reasonText = dto.status === VacationStatus.REJECTED ? ` Motivo: ${dto.rejectionReason}` : "";
+    const reasonText =
+      dto.status === VacationStatus.REJECTED ? ` Motivo: ${dto.rejectionReason}` : "";
     if (updated.employee.userId) {
       await this.notificationsService.create(
         updated.employee.userId,
@@ -180,9 +188,7 @@ export class VacationsService {
         employeeId: dto.employeeId,
         deletedAt: null,
         status: { in: [LeaveStatus.PENDING, LeaveStatus.APPROVED] },
-        OR: [
-          { startDate: { lte: end }, endDate: { gte: start } },
-        ],
+        OR: [{ startDate: { lte: end }, endDate: { gte: start } }],
       },
     });
 

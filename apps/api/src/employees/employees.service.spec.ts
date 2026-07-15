@@ -31,10 +31,7 @@ describe("EmployeesService (Unit)", () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        EmployeesService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [EmployeesService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<EmployeesService>(EmployeesService);
@@ -61,9 +58,11 @@ describe("EmployeesService (Unit)", () => {
         limit: 10,
         totalPages: 1,
       });
-      expect(mockPrisma.employee.findMany).toHaveBeenCalledWith(expect.objectContaining({
-        where: { deletedAt: null },
-      }));
+      expect(mockPrisma.employee.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { deletedAt: null },
+        }),
+      );
     });
   });
 
@@ -143,19 +142,23 @@ describe("EmployeesService (Unit)", () => {
       mockPrisma.employee.update.mockResolvedValue({ ...mockEmp, deletedAt: new Date() });
 
       await service.remove("emp-1");
-      expect(mockPrisma.employee.update).toHaveBeenCalledWith(expect.objectContaining({
-        where: { id: "emp-1" },
-        data: expect.objectContaining({
-          status: EmployeeStatus.INACTIVE,
+      expect(mockPrisma.employee.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "emp-1" },
+          data: expect.objectContaining({
+            status: EmployeeStatus.INACTIVE,
+          }),
         }),
-      }));
-      expect(mockPrisma.user.update).toHaveBeenCalledWith(expect.objectContaining({
-        where: { id: "user-1" },
-        data: expect.objectContaining({
-          isActive: false,
-          deletedAt: expect.any(Date),
+      );
+      expect(mockPrisma.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "user-1" },
+          data: expect.objectContaining({
+            isActive: false,
+            deletedAt: expect.any(Date),
+          }),
         }),
-      }));
+      );
     });
   });
 });
