@@ -2,9 +2,10 @@ import { Module } from "@nestjs/common";
 import { RecruitmentService } from "./recruitment.service";
 import { RecruitmentController } from "./recruitment.controller";
 import { AuthModule } from "../auth/auth.module";
+import { NotificationsModule } from "../notifications/notifications.module";
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, NotificationsModule],
   controllers: [RecruitmentController],
   providers: [RecruitmentService],
   exports: [RecruitmentService],

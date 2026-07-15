@@ -14,6 +14,7 @@ import { QueryRecruitmentDto } from "./dto/query-recruitment.dto";
 import { ApplyToRecruitmentDto } from "./dto/apply-recruitment.dto";
 import { UpdateApplicationStatusDto } from "./dto/update-application-status.dto";
 import { RecruitmentStatus, ApplicationStatus, Prisma } from "@prisma/client";
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Injectable()
 export class RecruitmentService {
@@ -21,6 +22,7 @@ export class RecruitmentService {
     private readonly prisma: PrismaService,
     private readonly uploadthingService: UploadthingService,
     private readonly auditService: AuditService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async create(dto: CreateRecruitmentDto, userId: string) {
@@ -468,6 +470,18 @@ export class RecruitmentService {
         `Candidato ${application.candidate.firstName} ${application.candidate.lastName} contratado como funcionário (Employee ID: ${employee.id}) via vaga "${application.recruitment.title}"`,
       );
 
+      return employee;
+    }).then(async (employee) => {
+      // Find user matching the candidate's email if already created, or schedule a welcome notification if user exists
+      const associatedUser = await this.prisma.user.findFirst({
+        where: { email: employee.email, deletedAt: null },
+      });
+      if (associatedUser) {
+        await this.notificationsService.create(
+          associatedUser.id,
+          `Boas-vindas ao Atlas HRMS! Sua admissão para o cargo de ${application.recruitment.position.title} foi concluída com sucesso.`,
+        );
+      }
       return employee;
     });
   }

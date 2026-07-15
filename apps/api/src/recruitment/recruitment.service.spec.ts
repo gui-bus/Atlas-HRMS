@@ -12,6 +12,8 @@ import {
   ApplicationStatus,
 } from "@prisma/client";
 
+import { NotificationsService } from "../notifications/notifications.service";
+
 describe("RecruitmentService (Unit)", () => {
   let service: RecruitmentService;
 
@@ -40,6 +42,9 @@ describe("RecruitmentService (Unit)", () => {
     employee: {
       findUnique: jest.fn(),
       create: jest.fn(),
+    },
+    user: {
+      findFirst: jest.fn(),
     },
     $transaction: jest.fn((cb) => cb(mockPrisma)),
   };
@@ -70,6 +75,10 @@ describe("RecruitmentService (Unit)", () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: UploadthingService, useValue: mockUploadthing },
         { provide: AuditService, useValue: mockAudit },
+        {
+          provide: NotificationsService,
+          useValue: { create: jest.fn().mockResolvedValue({ id: "n-1" }) },
+        },
       ],
     }).compile();
 

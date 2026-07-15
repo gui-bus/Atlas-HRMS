@@ -2,6 +2,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { VacationsService } from "./vacations.service";
 import { PrismaService } from "../common/prisma.service";
 import { NotFoundException, BadRequestException, ForbiddenException } from "@nestjs/common";
+import { NotificationsService } from "../notifications/notifications.service";
+import { UploadthingService } from "../common/uploadthing/uploadthing.service";
 import { VacationStatus, LeaveStatus, LeaveType } from "@prisma/client";
 
 describe("VacationsService (Unit)", () => {
@@ -33,6 +35,14 @@ describe("VacationsService (Unit)", () => {
       providers: [
         VacationsService,
         { provide: PrismaService, useValue: mockPrisma },
+        {
+          provide: NotificationsService,
+          useValue: { create: jest.fn().mockResolvedValue({ id: "n-1" }) },
+        },
+        {
+          provide: UploadthingService,
+          useValue: { deleteFile: jest.fn().mockResolvedValue({ success: true }) },
+        },
       ],
     }).compile();
 

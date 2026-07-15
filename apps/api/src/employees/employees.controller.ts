@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpStatus,
   HttpCode,
+  Query,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
@@ -18,6 +19,7 @@ import { Roles } from "../auth/roles.decorator";
 import { EmployeesService } from "./employees.service";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
+import { QueryEmployeeDto } from "./dto/query-employee.dto";
 import { EmployeeResponseDto } from "./dto/employee-response.dto";
 import {
   ValidationErrorResponseDto,
@@ -46,14 +48,13 @@ export class EmployeesController {
 
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
-  @ApiOperation({ summary: "Listar todos os funcionários ativos (Apenas Admin, RH e Gestores)" })
+  @ApiOperation({ summary: "Listar todos os funcionários ativos com paginação e filtros (Apenas Admin, RH e Gestores)" })
   @ApiResponse({
     status: 200,
-    description: "Lista de funcionários recuperada com sucesso",
-    type: [EmployeeResponseDto],
+    description: "Lista paginada de funcionários recuperada com sucesso",
   })
-  async findAll() {
-    return this.employeesService.findAll();
+  async findAll(@Query() query: QueryEmployeeDto) {
+    return this.employeesService.findAll(query);
   }
 
   @Get(":id")

@@ -2,24 +2,64 @@ import { Injectable, NotFoundException, ConflictException } from "@nestjs/common
 import { PrismaService } from "../common/prisma.service";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
-import { EmployeeStatus } from "@prisma/client";
+import { QueryEmployeeDto } from "./dto/query-employee.dto";
+import { Prisma, EmployeeStatus } from "@prisma/client";
 
 @Injectable()
 export class EmployeesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.employee.findMany({
-      where: { deletedAt: null },
-      include: {
-        personalData: true,
-        address: true,
-        bankAccount: true,
-        emergencyContacts: true,
-        department: true,
-        position: true,
-      },
-    });
+  async findAll(query: QueryEmployeeDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.EmployeeWhereInput = {
+      deletedAt: null,
+    };
+
+    if (query.departmentId) {
+      where.departmentId = query.departmentId;
+    }
+
+    if (query.status) {
+      where.status = query.status as EmployeeStatus;
+    }
+
+    if (query.search) {
+      const searchLower = query.search.toLowerCase();
+      where.OR = [
+        { firstName: { contains: searchLower, mode: "insensitive" } },
+        { lastName: { contains: searchLower, mode: "insensitive" } },
+        { email: { contains: searchLower, mode: "insensitive" } },
+      ];
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.employee.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: {
+          personalData: true,
+          address: true,
+          bankAccount: true,
+          emergencyContacts: true,
+          department: true,
+          position: true,
+        },
+      }),
+      this.prisma.employee.count({ where }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string) {

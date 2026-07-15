@@ -56,7 +56,7 @@ describe("AuditController (Unit)", () => {
       ];
       mockService.findAll.mockResolvedValue(mockLogs);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll({});
       expect(result).toEqual(mockLogs);
       expect(service.findAll).toHaveBeenCalledTimes(1);
     });

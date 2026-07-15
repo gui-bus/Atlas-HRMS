@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, UseGuards, Query } from "@nestjs/common";
 import {
   ApiTags,
   ApiOperation,
@@ -11,6 +11,7 @@ import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 import { AuditService } from "./audit.service";
 import { AuditLogResponseDto } from "./dto/audit-log-response.dto";
+import { QueryAuditLogDto } from "./dto/query-audit-log.dto";
 
 @ApiTags("Audit")
 @ApiBearerAuth()
@@ -22,12 +23,11 @@ export class AuditController {
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR)
   @ApiOperation({
-    summary: "Listar todos os logs de auditoria (Apenas Admin e RH)",
+    summary: "Listar todos os logs de auditoria com paginação e filtros (Apenas Admin e RH)",
   })
   @ApiResponse({
     status: 200,
-    description: "Lista de logs de auditoria ordenados do mais recente ao mais antigo",
-    type: [AuditLogResponseDto],
+    description: "Lista paginada de logs de auditoria ordenados do mais recente ao mais antigo",
   })
   @ApiResponse({
     status: 401,
@@ -37,7 +37,7 @@ export class AuditController {
     status: 403,
     description: "Permissão insuficiente — apenas ADMIN e HR podem acessar",
   })
-  async findAll() {
-    return this.auditService.findAll();
+  async findAll(@Query() query: QueryAuditLogDto) {
+    return this.auditService.findAll(query);
   }
 }

@@ -5,10 +5,16 @@ import { UpdateVacationStatusDto } from "./dto/update-vacation-status.dto";
 import { CreateLeaveDto } from "./dto/create-leave.dto";
 import { UpdateLeaveStatusDto } from "./dto/update-leave-status.dto";
 import { VacationStatus, LeaveStatus } from "@prisma/client";
+import { NotificationsService } from "../notifications/notifications.service";
+import { UploadthingService } from "../common/uploadthing/uploadthing.service";
 
 @Injectable()
 export class VacationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+    private readonly uploadthingService: UploadthingService,
+  ) {}
 
   // ==========================================
   // VACATIONS LOR / BUSINESS LOGIC
@@ -90,14 +96,24 @@ export class VacationsService {
       throw new BadRequestException("É necessário informar o motivo da rejeição");
     }
 
-    return this.prisma.vacation.update({
+    const updated = await this.prisma.vacation.update({
       where: { id },
       data: {
         status: dto.status,
         rejectionReason: dto.status === VacationStatus.REJECTED ? dto.rejectionReason : null,
         approvedById,
       },
+      include: { employee: true },
     });
+
+    const statusText = dto.status === VacationStatus.APPROVED ? "aprovada" : "rejeitada";
+    const reasonText = dto.status === VacationStatus.REJECTED ? ` Motivo: ${dto.rejectionReason}` : "";
+    await this.notificationsService.create(
+      updated.employee.userId,
+      `Sua solicitação de férias para o período de ${updated.startDate.toLocaleDateString()} a ${updated.endDate.toLocaleDateString()} foi ${statusText}.${reasonText}`,
+    );
+
+    return updated;
   }
 
   async cancelVacation(id: string, requesterUserId: string, isHrOrAdmin: boolean) {
@@ -200,14 +216,36 @@ export class VacationsService {
       throw new BadRequestException("É necessário informar o motivo da rejeição");
     }
 
-    return this.prisma.leave.update({
+    const updated = await this.prisma.leave.update({
       where: { id },
       data: {
         status: dto.status,
         rejectionReason: dto.status === LeaveStatus.REJECTED ? dto.rejectionReason : null,
         approvedById,
       },
+      include: { employee: true },
     });
+
+    const statusText = dto.status === LeaveStatus.APPROVED ? "aprovada" : "rejeitada";
+    const reasonText = dto.status === LeaveStatus.REJECTED ? ` Motivo: ${dto.rejectionReason}` : "";
+    await this.notificationsService.create(
+      updated.employee.userId,
+      `Sua solicitação de licença/afastamento para o período de ${updated.startDate.toLocaleDateString()} a ${updated.endDate.toLocaleDateString()} foi ${statusText}.${reasonText}`,
+    );
+
+    // If rejected and had an attachment, delete it from UploadThing
+    if (dto.status === LeaveStatus.REJECTED && updated.attachmentUrl) {
+      try {
+        const fileKey = updated.attachmentUrl.split("/f/").pop();
+        if (fileKey) {
+          await this.uploadthingService.deleteFile(fileKey);
+        }
+      } catch (err) {
+        console.error("Falha ao deletar arquivo de licença rejeitada do UploadThing", err);
+      }
+    }
+
+    return updated;
   }
 
   async cancelLeave(id: string, requesterUserId: string, isHrOrAdmin: boolean) {
@@ -225,12 +263,26 @@ export class VacationsService {
       throw new ForbiddenException("Você não tem permissão para cancelar esta licença");
     }
 
-    return this.prisma.leave.update({
+    const updated = await this.prisma.leave.update({
       where: { id },
       data: {
         status: LeaveStatus.CANCELLED,
         deletedAt: new Date(),
       },
     });
+
+    // Delete attachment if cancelled
+    if (updated.attachmentUrl) {
+      try {
+        const fileKey = updated.attachmentUrl.split("/f/").pop();
+        if (fileKey) {
+          await this.uploadthingService.deleteFile(fileKey);
+        }
+      } catch (err) {
+        console.error("Falha ao deletar arquivo de licença cancelada do UploadThing", err);
+      }
+    }
+
+    return updated;
   }
 }

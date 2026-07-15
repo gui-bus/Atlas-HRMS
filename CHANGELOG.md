@@ -11,6 +11,11 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Sistema de Notificações Internas**: Módulo completo para criação, listagem e marcação de alertas em banco de dados para os usuários.
 - **Segurança de Notificações (JWT/RBAC)**: Proteção em todas as rotas limitando leitura apenas ao proprietário (`userId === req.user.sub`) usando `@CurrentUser()`. Endpoint `POST` para disparo de novas mensagens restrito a perfis administrativos (`ADMIN` e `HR`).
 - **Testes e Documentação de Notificações**: Testes unitários (`notifications.service.spec.ts`, `notifications.controller.spec.ts`) e testes de integração (`notifications.integration.spec.ts`) validando regras de propriedade e JWT. Documentação detalhada criada em `docs/notifications.md` e indexada no README central.
+- **Polimento e Otimização do Backend**:
+  - Paginação e busca insensível a maiúsculas (Query Params) implementadas nas rotas de listagem de funcionários (`GET /employees`) e logs de auditoria (`GET /audit`).
+  - Geração e disparo automático de notificações internas nos fluxos de negócios (férias aprovadas/rejeitadas, licenças avaliadas e boas-vindas pós-admissão).
+  - Otimização e limpeza automática de arquivos físicos órfãos hospedados no UploadThing para licenças médicas canceladas ou rejeitadas pelo RH.
+
 
 ## [0.6.0] - 2026-07-15
 

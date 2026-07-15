@@ -15,6 +15,7 @@ describe("EmployeesService (Unit)", () => {
       findUnique: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
+      count: jest.fn(),
     },
     employeePersonalData: {
       findUnique: jest.fn(),
@@ -47,12 +48,19 @@ describe("EmployeesService (Unit)", () => {
   });
 
   describe("findAll", () => {
-    it("should return all active employees", async () => {
+    it("should return paginated active employees list", async () => {
       const mockList = [{ id: "emp-1", firstName: "John", deletedAt: null }];
       mockPrisma.employee.findMany.mockResolvedValue(mockList);
+      mockPrisma.employee.count.mockResolvedValue(1);
 
-      const result = await service.findAll();
-      expect(result).toEqual(mockList);
+      const result = await service.findAll({ page: 1, limit: 10 });
+      expect(result).toEqual({
+        data: mockList,
+        total: 1,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      });
       expect(mockPrisma.employee.findMany).toHaveBeenCalledWith(expect.objectContaining({
         where: { deletedAt: null },
       }));

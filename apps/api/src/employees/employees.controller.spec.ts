@@ -42,10 +42,10 @@ describe("EmployeesController (Unit)", () => {
 
   describe("findAll", () => {
     it("should return a list of employees", async () => {
-      const mockResult = [{ id: "1", firstName: "Maria" }];
+      const mockResult = { data: [{ id: "1", firstName: "Maria" }], total: 1 };
       mockEmployeesService.findAll.mockResolvedValue(mockResult);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll({});
       expect(result).toEqual(mockResult);
     });
   });

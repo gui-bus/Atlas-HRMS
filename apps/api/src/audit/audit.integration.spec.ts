@@ -33,6 +33,7 @@ describe("Audit Integration Tests (Supertest)", () => {
     auditLog: {
       create: jest.fn(),
       findMany: jest.fn(),
+      count: jest.fn(),
     },
   };
 
@@ -72,25 +73,28 @@ describe("Audit Integration Tests (Supertest)", () => {
   describe("GET /audit", () => {
     it("should allow ADMIN to list audit logs", async () => {
       mockPrisma.auditLog.findMany.mockResolvedValue(mockAuditLogs);
+      mockPrisma.auditLog.count.mockResolvedValue(2);
 
       const response = await request(app.getHttpServer())
         .get("/audit")
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toBeInstanceOf(Array);
-      expect(response.body).toHaveLength(2);
+      expect(response.body.data).toBeInstanceOf(Array);
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.total).toBe(2);
     });
 
     it("should allow HR to list audit logs", async () => {
       mockPrisma.auditLog.findMany.mockResolvedValue(mockAuditLogs);
+      mockPrisma.auditLog.count.mockResolvedValue(2);
 
       const response = await request(app.getHttpServer())
         .get("/audit")
         .set("Authorization", `Bearer ${hrToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toBeInstanceOf(Array);
+      expect(response.body.data).toBeInstanceOf(Array);
     });
 
     it("should forbid MANAGER from accessing audit logs", async () => {
@@ -117,26 +121,28 @@ describe("Audit Integration Tests (Supertest)", () => {
 
     it("should return logs with user relationship (nullable)", async () => {
       mockPrisma.auditLog.findMany.mockResolvedValue(mockAuditLogs);
+      mockPrisma.auditLog.count.mockResolvedValue(2);
 
       const response = await request(app.getHttpServer())
         .get("/audit")
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body[0].user).toBeDefined();
-      expect(response.body[0].user.email).toBe("admin@atlas.com");
-      expect(response.body[1].user).toBeNull();
+      expect(response.body.data[0].user).toBeDefined();
+      expect(response.body.data[0].user.email).toBe("admin@atlas.com");
+      expect(response.body.data[1].user).toBeNull();
     });
 
     it("should return empty array when no logs exist", async () => {
       mockPrisma.auditLog.findMany.mockResolvedValue([]);
+      mockPrisma.auditLog.count.mockResolvedValue(0);
 
       const response = await request(app.getHttpServer())
         .get("/audit")
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual([]);
+      expect(response.body.data).toEqual([]);
     });
   });
 });

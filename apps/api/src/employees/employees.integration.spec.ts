@@ -21,6 +21,7 @@ describe("Employees Integration Tests (Supertest)", () => {
       findUnique: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
+      count: jest.fn(),
     },
     employeePersonalData: {
       findUnique: jest.fn(),
@@ -64,13 +65,15 @@ describe("Employees Integration Tests (Supertest)", () => {
     it("should allow HR access and return employees", async () => {
       const mockList = [{ id: "emp-1", firstName: "Maria", email: "maria@atlas.com" }];
       mockPrisma.employee.findMany.mockResolvedValue(mockList);
+      mockPrisma.employee.count.mockResolvedValue(1);
 
       const response = await request(app.getHttpServer())
         .get("/employees")
         .set("Authorization", `Bearer ${hrToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockList);
+      expect(response.body.data).toEqual(mockList);
+      expect(response.body.total).toBe(1);
     });
 
     it("should forbid Employee access", async () => {

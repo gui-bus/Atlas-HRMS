@@ -24,6 +24,8 @@ const POS_ID = "b7b6a4a6-7a13-43ef-b209-efdb17eddfb1";
 const REC_ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
 const APP_ID = "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f";
 
+import { NotificationsService } from "../notifications/notifications.service";
+
 describe("Recruitment Integration Tests (Supertest)", () => {
   let app: INestApplication;
   let jwtService: JwtService;
@@ -36,6 +38,7 @@ describe("Recruitment Integration Tests (Supertest)", () => {
       findMany: jest.fn(),
       update: jest.fn(),
       count: jest.fn(),
+      user: { findFirst: jest.fn() },
     },
     candidate: {
       findUnique: jest.fn(),
@@ -53,6 +56,9 @@ describe("Recruitment Integration Tests (Supertest)", () => {
     employee: {
       findUnique: jest.fn(),
       create: jest.fn(),
+    },
+    user: {
+      findFirst: jest.fn().mockResolvedValue({ id: "user-1", email: "candidate@email.com" }),
     },
     $transaction: jest.fn((cb: any) => cb(mockPrisma)),
   };
@@ -80,6 +86,8 @@ describe("Recruitment Integration Tests (Supertest)", () => {
       .useValue(mockUploadthing)
       .overrideProvider(AuditService)
       .useValue(mockAudit)
+      .overrideProvider(NotificationsService)
+      .useValue({ create: jest.fn().mockResolvedValue({ id: "n-1" }) })
       .compile();
 
     app = moduleFixture.createNestApplication();
