@@ -12,6 +12,7 @@ import { api } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const registerSchema = z
   .object({
@@ -133,9 +134,14 @@ export default function RegisterPage() {
   const locale = segments[1] || "pt";
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-6">
-      <div className="w-full max-w-sm space-y-8">
-        {/* Title Header */}
+    <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-6 relative">
+      {/* Dynamic Selector Placement in Header Top Corner */}
+      <div className="absolute top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
+
+      <div className="w-full max-w-sm space-y-8 animate-fade-in">
+        {/* Logo/Icon Area */}
         <div className="flex flex-col items-center space-y-4">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-xl">
             A

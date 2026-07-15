@@ -4,32 +4,34 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff } from "lucide-react";
-import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-const loginSchema = z.object({
-  email: z.string().email("E-mail inválido"),
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, "O token é obrigatório"),
   password: z.string().min(6, "A senha deve conter no mínimo 6 caracteres"),
+  confirmPassword: z.string().min(6, "Confirmação de senha é obrigatória"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["confirmPassword"],
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const t = useTranslations("Auth");
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const setAuth = useAuthStore((state) => state.setAuth);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -37,45 +39,36 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: ResetPasswordFormData) => {
     setLoading(true);
     setErrorMsg(null);
+    setSuccessMsg(null);
 
     try {
-      const response = await api.post("/auth/login", data);
-      const { user, accessToken } = response.data;
+      const response = await api.post("/auth/reset-password", {
+        token: data.token,
+        password: data.password,
+      });
+      setSuccessMsg(response.data.message || t("resetSuccess"));
+      
+      const segments = pathname.split("/");
+      const locale = segments[1] || "pt";
 
-      if (user && accessToken) {
-        setAuth(user, accessToken);
-        const segments = pathname.split("/");
-        const locale = segments[1] || "pt";
-        const redirect = searchParams.get("redirect");
-
-        if (redirect) {
-          router.push(redirect);
-        } else {
-          router.push(`/${locale}`);
-        }
-      }
+      // Redirect back to login screen on success
+      setTimeout(() => {
+        router.push(`/${locale}/login`);
+      }, 3000);
     } catch (err: any) {
-      console.error("Erro ao realizar login:", err);
+      console.error("Erro ao resetar senha:", err);
       const responseError = err.response?.data;
       if (responseError?.message) {
-        if (Array.isArray(responseError.message)) {
-          setErrorMsg(responseError.message[0]);
-        } else {
-          setErrorMsg(responseError.message);
-        }
-      } else if (err.request && !err.response) {
-        setErrorMsg(
-          "Não foi possível estabelecer conexão com o servidor. Tente novamente mais tarde.",
-        );
+        setErrorMsg(Array.isArray(responseError.message) ? responseError.message[0] : responseError.message);
       } else {
-        setErrorMsg("Ocorreu um erro ao tentar realizar o login. Tente novamente.");
+        setErrorMsg("Ocorreu um erro ao processar sua solicitação.");
       }
     } finally {
       setLoading(false);
@@ -87,24 +80,21 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-6 relative">
-      {/* Dynamic Selector Placement in Header Top Corner */}
       <div className="absolute top-4 right-4 z-50">
         <LanguageSwitcher />
       </div>
 
       <div className="w-full max-w-sm space-y-8">
-        {/* Logo/Icon Area */}
         <div className="flex flex-col items-center space-y-4">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-xl">
             A
           </div>
           <div className="text-center space-y-1.5">
-            <h1 className="text-2xl font-bold tracking-tight">{t("welcomeBack")}</h1>
-            <p className="text-sm text-muted-foreground">{t("enterDetails")}</p>
+            <h1 className="text-2xl font-bold tracking-tight">{t("resetPasswordTitle")}</h1>
+            <p className="text-sm text-muted-foreground">{t("resetPasswordDesc")}</p>
           </div>
         </div>
 
-        {/* Minimal Form body */}
         <div className="space-y-6">
           {errorMsg && (
             <div className="bg-destructive/15 border border-destructive/30 text-destructive text-sm px-4 py-3 rounded-lg text-center font-medium">
@@ -112,31 +102,29 @@ export default function LoginPage() {
             </div>
           )}
 
+          {successMsg && (
+            <div className="bg-primary/15 border border-primary/30 text-primary text-sm px-4 py-3 rounded-lg text-center font-medium">
+              {successMsg}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{t("emailAddress")}</Label>
+              <Label htmlFor="token">Token</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="exemplo@atlas.com"
-                {...register("email")}
-                className={errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
+                id="token"
+                type="text"
+                placeholder={t("tokenPlaceholder")}
+                {...register("token")}
+                className={errors.token ? "border-destructive focus-visible:ring-destructive" : ""}
               />
-              {errors.email && (
-                <span className="text-xs text-destructive font-medium">{errors.email.message}</span>
+              {errors.token && (
+                <span className="text-xs text-destructive font-medium">{errors.token.message}</span>
               )}
             </div>
 
             <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label htmlFor="password">{t("password")}</Label>
-                <Link
-                  href={`/${locale}/forgot-password`}
-                  className="text-xs text-primary hover:underline font-medium"
-                >
-                  {t("forgotPasswordLink")}
-                </Link>
-              </div>
+              <Label htmlFor="password">{t("newPasswordPlaceholder")}</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -162,28 +150,39 @@ export default function LoginPage() {
               )}
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">{t("confirmNewPasswordPlaceholder")}</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                {...register("confirmPassword")}
+                className={errors.confirmPassword ? "border-destructive focus-visible:ring-destructive" : ""}
+              />
+              {errors.confirmPassword && (
+                <span className="text-xs text-destructive font-medium">{errors.confirmPassword.message}</span>
+              )}
+            </div>
+
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? (
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-4 h-4 rounded-full border-2 border-primary-foreground/20 border-t-primary-foreground animate-spin" />
-                  <span>{t("signingIn")}...</span>
+                  <span>{t("resetting")}...</span>
                 </div>
               ) : (
-                <span>{t("signIn")}</span>
+                <span>{t("resetPasswordTitle")}</span>
               )}
             </Button>
           </form>
 
           <div className="text-center">
-            <p className="text-sm text-muted-foreground">
-              {t("noAccount")}{" "}
-              <Link
-                href={`/${locale}/register`}
-                className="text-primary font-semibold hover:underline"
-              >
-                {t("signUp")}
-              </Link>
-            </p>
+            <Link
+              href={`/${locale}/login`}
+              className="text-sm text-primary font-semibold hover:underline"
+            >
+              {t("backToLogin")}
+            </Link>
           </div>
         </div>
       </div>

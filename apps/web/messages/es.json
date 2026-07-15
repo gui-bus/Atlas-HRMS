@@ -1,0 +1,48 @@
+{
+  "Common": {
+    "title": "Atlas HRMS",
+    "dashboard": "Panel de Control",
+    "employees": "Empleados",
+    "departments": "Departamentos",
+    "vacations": "Vacaciones",
+    "recruitment": "Reclutamiento",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión"
+  },
+  "Dashboard": {
+    "welcome": "Bienvenido a Atlas HRMS",
+    "totalEmployees": "Total de Empleados",
+    "activeRecruitments": "Vacantes Abiertas",
+    "pendingVacations": "Solicitudes de Vacaciones",
+    "quickActions": "Acciones Rápidas"
+  },
+  "Auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "enterDetails": "Por favor, introduzca sus credenciales para acceder al panel",
+    "emailAddress": "Dirección de Correo Electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "passwordsMustMatch": "Las contraseñas deben ser idénticas",
+    "signIn": "Iniciar Sesión",
+    "signingIn": "Iniciando sesión",
+    "noAccount": "¿No tiene una cuenta?",
+    "signUp": "Registrarse",
+    "createAccount": "Crear Nueva Cuenta",
+    "fillRegisterDetails": "Complete la información a continuación para registrarse",
+    "alreadyHaveAccount": "¿Ya tiene una cuenta?",
+    "registering": "Registrando",
+    "forgotPasswordLink": "Olvidé mi contraseña",
+    "forgotPasswordTitle": "Recuperar contraseña",
+    "forgotPasswordDesc": "Ingrese su correo electrónico para recibir las instrucciones y el token de restablecimiento",
+    "sendInstructions": "Enviar Instrucciones",
+    "sending": "Enviando",
+    "backToLogin": "Volver al inicio de sesión",
+    "resetPasswordTitle": "Restablecer Contraseña",
+    "resetPasswordDesc": "Ingrese el token enviado por correo electrónico y elija su nueva contraseña",
+    "tokenPlaceholder": "Pegue el token recibido aquí",
+    "newPasswordPlaceholder": "Nueva contraseña",
+    "confirmNewPasswordPlaceholder": "Confirmar nueva contraseña",
+    "resetting": "Restableciendo",
+    "resetSuccess": "¡Contraseña restablecida con éxito! Puede iniciar sesión ahora."
+  }
+}
