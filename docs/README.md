@@ -87,3 +87,10 @@ _Entenda o sistema de Audit Trail e como rastrear ações do sistema._
 - **Ações Tipadas**: Enum centralizado `AuditAction` com 7 ações rastreáveis.
 - **Fluxo RBAC**: Diagrama de decisão para controle de acesso aos logs.
 
+### 📊 [Dashboard de Métricas](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/dashboard.md)
+
+_Consulte os agregadores e o funcionamento do painel consolidado do RH._
+
+- **Endpoint Agregador**: Consolidação de 9 queries de contagem rodando em paralelo no Postgres via `Promise.all`.
+- **RBAC**: Acesso restrito a `ADMIN`, `HR` e `MANAGER`.
+

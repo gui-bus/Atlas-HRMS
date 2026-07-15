@@ -12,6 +12,9 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **DTO de Resposta de Auditoria**: `AuditLogResponseDto` com campos `id`, `action`, `details`, `timestamp` e `user` (nullable), decorados com `@ApiProperty` para documentação Swagger interativa.
 - **Testes do Módulo de Auditoria**: Testes unitários (`audit.controller.spec.ts`) e testes de integração (`audit.integration.spec.ts`) com 10 cenários validando RBAC (ADMIN e HR permitidos, MANAGER e EMPLOYEE bloqueados com 403), autenticação obrigatória (401), e tratamento de logs com/sem usuário vinculado.
 - **Documentação Técnica de Auditoria**: Página `docs/audit.md` com diagrama de arquitetura Mermaid, modelo de dados, especificação do endpoint, fluxo RBAC e tabela de referência das ações tipadas do enum `AuditAction`.
+- **Módulo de Dashboard de Métricas**: Endpoint agregador `GET /dashboard` que realiza 9 consultas de agregação de forma paralela usando `Promise.all` para retornar estatísticas de funcionários ativos, departamentos, ausências atuais de escala e funil de recrutamento. Acesso restrito a perfis administrativamente habilitados (`ADMIN`, `HR` e `MANAGER`).
+- **Testes e Documentação do Dashboard**: Testes unitários e de integração (`dashboard.service.spec.ts`, `dashboard.integration.spec.ts`) com 11 cenários de cobertura, e documentação detalhada em `docs/dashboard.md`.
+
 
 ## [0.5.0] - 2026-07-14
 
