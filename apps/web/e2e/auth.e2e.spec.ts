@@ -82,4 +82,47 @@ test.describe("Authentication E2E Flow", () => {
     await toggleBtn.click();
     await expect(passwordInput).toHaveAttribute("type", "password");
   });
+
+  test("should request password reset instructions successfully and show countdown", async ({ page }) => {
+    await page.route("**/auth/forgot-password", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          message: "Token enviado para o e-mail informado",
+        }),
+      });
+    });
+
+    await page.goto("/pt/forgot-password");
+    await page.fill("input[type='email']", "user@atlas.com");
+    await page.click("button[type='submit']");
+
+    await expect(page.locator("text=Instruções enviadas com sucesso! Verifique seu e-mail.")).toBeVisible();
+    await expect(page.locator("text=Você será redirecionado para a tela de login")).toBeVisible();
+  });
+
+  test("should render reset-password page and submit password reset request successfully", async ({ page }) => {
+    await page.route("**/auth/reset-password", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          message: "Senha alterada com sucesso",
+        }),
+      });
+    });
+
+    await page.goto("/pt/reset-password?token=mock-token-xyz");
+
+    const newPassword = page.locator("input[id='password']");
+    const confirmPassword = page.locator("input[id='confirmPassword']");
+
+    await newPassword.fill("ComplexPassword123!");
+    await confirmPassword.fill("ComplexPassword123!");
+
+    await page.click("button[type='submit']");
+
+    await expect(page.locator("text=Senha alterada com sucesso")).toBeVisible();
+  });
 });

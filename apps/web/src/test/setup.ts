@@ -18,12 +18,18 @@ vi.mock("next/navigation", () => {
       prefetch: vi.fn(),
     }),
     usePathname: () => "/pt/login",
-    useSearchParams: () => ({
-      get: vi.fn((key: string) => null),
-    }),
+    useSearchParams: () => new URLSearchParams(window.location.search),
   };
 });
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
+}));
+
+vi.mock("@/providers/ThemeProvider", () => ({
+  useTheme: () => ({
+    theme: "light",
+    setTheme: vi.fn(),
+    toggleTheme: vi.fn(),
+  }),
 }));
