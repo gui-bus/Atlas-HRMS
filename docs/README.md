@@ -94,3 +94,11 @@ _Consulte os agregadores e o funcionamento do painel consolidado do RH._
 - **Endpoint Agregador**: Consolidação de 9 queries de contagem rodando em paralelo no Postgres via `Promise.all`.
 - **RBAC**: Acesso restrito a `ADMIN`, `HR` e `MANAGER`.
 
+### 🔔 [Notificações Internas](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/notifications.md)
+
+_Consulte o ecossistema de disparo e consumo de notificações internas._
+
+- **Filtro de Leitura**: Mapeamento do usuário autenticado no token JWT via `@CurrentUser()`.
+- **RBAC**: Permissão de criação restrita a `ADMIN` e `HR`. Donos podem marcar como lidas.
+
+

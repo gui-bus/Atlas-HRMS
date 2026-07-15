@@ -4,6 +4,14 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [0.7.0] - 2026-07-15
+
+### Adicionado
+
+- **Sistema de Notificações Internas**: Módulo completo para criação, listagem e marcação de alertas em banco de dados para os usuários.
+- **Segurança de Notificações (JWT/RBAC)**: Proteção em todas as rotas limitando leitura apenas ao proprietário (`userId === req.user.sub`) usando `@CurrentUser()`. Endpoint `POST` para disparo de novas mensagens restrito a perfis administrativos (`ADMIN` e `HR`).
+- **Testes e Documentação de Notificações**: Testes unitários (`notifications.service.spec.ts`, `notifications.controller.spec.ts`) e testes de integração (`notifications.integration.spec.ts`) validando regras de propriedade e JWT. Documentação detalhada criada em `docs/notifications.md` e indexada no README central.
+
 ## [0.6.0] - 2026-07-15
 
 ### Adicionado
