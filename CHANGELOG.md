@@ -4,6 +4,22 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [0.8.0] - 2026-07-15
+
+### Adicionado
+
+- **Restauração de Sessão (`GET /auth/me`)**: Novo endpoint para obter detalhes do perfil do usuário autenticado a partir do token JWT. Mapeia de forma aninhada o `avatarUrl` do perfil do funcionário.
+- **Recuperação de Senha via Resend**: Fluxos completos para solicitações de esquecimento de senha (`POST /auth/forgot-password`) e redefinição segura (`POST /auth/reset-password`), com geração de tokens expiráveis de 15 minutos e envios de e-mails via API do **Resend**.
+- **Filtros Dinâmicos no Dashboard**: Adicionado suporte a parâmetros de busca opcionais no endpoint `GET /dashboard` (`departmentId`, `startDate`, e `endDate`) para filtragem dinâmica de métricas.
+- **Bloqueio de Login Cascateado**: Implementada a inativação automática (`isActive = false`) e soft-delete (`deletedAt`) do usuário associado ao desligar um funcionário.
+- **Suporte a Foto de Perfil (`avatarUrl`)**: Adicionado o campo `avatarUrl` na tabela `EmployeePersonalData` via migração do Prisma e DTOs de criação/edição de funcionários.
+
+### Alterado
+
+- **Infraestrutura de Banco de Dados**: Executado sincronismo (`npx prisma db push`) adicionando suporte a fotos de perfil, tokens e expirações.
+
+---
+
 ## [0.7.0] - 2026-07-15
 
 ### Adicionado

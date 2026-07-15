@@ -29,6 +29,11 @@ export class CreatePersonalDataDto {
   @IsString()
   @IsOptional()
   maritalStatus?: string;
+
+  @ApiProperty({ description: "URL do avatar do funcionário", example: "https://utfs.io/f/avatar.png", required: false })
+  @IsString()
+  @IsOptional()
+  avatarUrl?: string;
 }
 
 export class CreateAddressDto {

@@ -10,7 +10,6 @@ import { AuthGuard } from "../auth/auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 import { AuditService } from "./audit.service";
-import { AuditLogResponseDto } from "./dto/audit-log-response.dto";
 import { QueryAuditLogDto } from "./dto/query-audit-log.dto";
 
 @ApiTags("Audit")

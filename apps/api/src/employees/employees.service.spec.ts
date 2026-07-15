@@ -151,7 +151,10 @@ describe("EmployeesService (Unit)", () => {
       }));
       expect(mockPrisma.user.update).toHaveBeenCalledWith(expect.objectContaining({
         where: { id: "user-1" },
-        data: { isActive: false },
+        data: expect.objectContaining({
+          isActive: false,
+          deletedAt: expect.any(Date),
+        }),
       }));
     });
   });

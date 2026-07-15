@@ -7,12 +7,33 @@ import {
   ApplicationStatus,
 } from "@prisma/client";
 
+import { QueryDashboardDto } from "./dto/query-dashboard.dto";
+import { Prisma } from "@prisma/client";
+
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getStats() {
-    const now = new Date();
+  async getStats(query: QueryDashboardDto) {
+    const departmentId = query.departmentId;
+    const startFilter = query.startDate ? new Date(query.startDate) : new Date();
+    const endFilter = query.endDate ? new Date(query.endDate) : new Date();
+
+    const employeeWhere: Prisma.EmployeeWhereInput = { deletedAt: null };
+    const departmentWhere: Prisma.DepartmentWhereInput = { deletedAt: null };
+    const vacationWhere: Prisma.VacationWhereInput = { deletedAt: null };
+    const leaveWhere: Prisma.LeaveWhereInput = { deletedAt: null };
+    const recruitmentWhere: Prisma.RecruitmentWhereInput = { deletedAt: null };
+    const applicationWhere: Prisma.ApplicationWhereInput = { deletedAt: null };
+
+    if (departmentId) {
+      employeeWhere.departmentId = departmentId;
+      departmentWhere.id = departmentId;
+      vacationWhere.employee = { departmentId };
+      leaveWhere.employee = { departmentId };
+      recruitmentWhere.departmentId = departmentId;
+      applicationWhere.recruitment = { departmentId };
+    }
 
     const [
       totalEmployees,
@@ -25,53 +46,61 @@ export class DashboardService {
       totalApplications,
       hiredCount,
     ] = await Promise.all([
-      this.prisma.employee.count({
-        where: { deletedAt: null },
-      }),
+      this.prisma.employee.count({ where: employeeWhere }),
 
-      this.prisma.department.count({
-        where: { deletedAt: null },
-      }),
-
-      this.prisma.vacation.count({
-        where: { status: VacationStatus.PENDING, deletedAt: null },
-      }),
-
-      this.prisma.leave.count({
-        where: { status: LeaveStatus.PENDING, deletedAt: null },
-      }),
+      this.prisma.department.count({ where: departmentWhere }),
 
       this.prisma.vacation.count({
         where: {
-          status: VacationStatus.APPROVED,
-          deletedAt: null,
-          startDate: { lte: now },
-          endDate: { gte: now },
+          ...vacationWhere,
+          status: VacationStatus.PENDING,
         },
       }),
 
       this.prisma.leave.count({
         where: {
+          ...leaveWhere,
+          status: LeaveStatus.PENDING,
+        },
+      }),
+
+      this.prisma.vacation.count({
+        where: {
+          ...vacationWhere,
+          status: VacationStatus.APPROVED,
+          startDate: { lte: endFilter },
+          endDate: { gte: startFilter },
+        },
+      }),
+
+      this.prisma.leave.count({
+        where: {
+          ...leaveWhere,
           status: LeaveStatus.APPROVED,
-          deletedAt: null,
-          startDate: { lte: now },
-          endDate: { gte: now },
+          startDate: { lte: endFilter },
+          endDate: { gte: startFilter },
         },
       }),
 
       this.prisma.recruitment.count({
-        where: { status: RecruitmentStatus.OPEN, deletedAt: null },
-      }),
-
-      this.prisma.application.count({
         where: {
-          status: { not: ApplicationStatus.WITHDRAWN },
-          deletedAt: null,
+          ...recruitmentWhere,
+          status: RecruitmentStatus.OPEN,
         },
       }),
 
       this.prisma.application.count({
-        where: { status: ApplicationStatus.HIRED, deletedAt: null },
+        where: {
+          ...applicationWhere,
+          status: { not: ApplicationStatus.WITHDRAWN },
+        },
+      }),
+
+      this.prisma.application.count({
+        where: {
+          ...applicationWhere,
+          status: ApplicationStatus.HIRED,
+        },
       }),
     ]);
 

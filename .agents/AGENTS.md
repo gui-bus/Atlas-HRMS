@@ -16,3 +16,9 @@
 ## 3. Diretriz de Código Limpo (Comentários)
 
 - Evite incluir comentários explicativos ou redundantes no código de produção ou testes. Priorize código limpo, legível e autoexplicativo.
+
+## 4. Cobertura de Testes Obrigatória
+
+- Sempre que criar um novo endpoint, serviço, controller ou refatorar lógica essencial, você **deve** atualizar ou criar os testes unitários (`.spec.ts`) e de integração correspondentes.
+- Garanta que todos os testes passem com `pnpm --filter api test` antes de concluir a execução de qualquer tarefa.
+

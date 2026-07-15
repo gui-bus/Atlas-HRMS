@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { JwtService } from "@nestjs/jwt";
-import { UnauthorizedException, ConflictException, BadRequestException } from "@nestjs/common";
+import { UnauthorizedException, ConflictException, BadRequestException, NotFoundException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { AuthService } from "./auth.service";
 import { PrismaService } from "../common/prisma.service";
@@ -17,6 +17,7 @@ interface MockPrismaService {
     findUnique: jest.Mock;
     create: jest.Mock;
     update: jest.Mock;
+    findFirst: jest.Mock;
   };
 }
 
@@ -32,6 +33,7 @@ describe("AuthService", () => {
         findUnique: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
+        findFirst: jest.fn(),
       },
     };
 
@@ -196,6 +198,89 @@ describe("AuthService", () => {
         "USER_LOGIN_LOCKED",
         expect.any(String),
       );
+    });
+  });
+
+  describe("findMe", () => {
+    it("should throw UnauthorizedException if user not found", async () => {
+      prisma.user.findFirst.mockResolvedValue(null);
+      await expect(service.findMe("non-existing")).rejects.toThrow(UnauthorizedException);
+    });
+
+    it("should return profile details including employee avatarUrl if present", async () => {
+      const userProfile = {
+        id: "u-1",
+        email: "u1@atlas.com",
+        role: UserRole.ADMIN,
+        isActive: true,
+        employee: {
+          id: "emp-1",
+          firstName: "John",
+          lastName: "Doe",
+          personalData: { avatarUrl: "https://photo.png" },
+        },
+      };
+      prisma.user.findFirst.mockResolvedValue(userProfile);
+
+      const result = await service.findMe("u-1");
+      expect(result).toEqual({
+        id: "u-1",
+        email: "u1@atlas.com",
+        role: UserRole.ADMIN,
+        isActive: true,
+        employee: {
+          id: "emp-1",
+          firstName: "John",
+          lastName: "Doe",
+          avatarUrl: "https://photo.png",
+        },
+      });
+    });
+  });
+
+  describe("forgotPassword", () => {
+    it("should throw NotFoundException if email does not exist", async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+      await expect(service.forgotPassword("unknown@email.com")).rejects.toThrow(NotFoundException);
+    });
+
+    it("should generate hex token, save and return message", async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: "u-1", email: "known@email.com" });
+      prisma.user.update.mockResolvedValue({ id: "u-1" });
+      
+      // Mock process.env.RESEND_API_KEY to trigger mockResend
+      const originalApiKey = process.env.RESEND_API_KEY;
+      process.env.RESEND_API_KEY = "dummy_key";
+
+      const result = await service.forgotPassword("known@email.com");
+      expect(result).toHaveProperty("message");
+      expect(prisma.user.update).toHaveBeenCalled();
+      
+      process.env.RESEND_API_KEY = originalApiKey;
+    });
+  });
+
+  describe("resetPassword", () => {
+    it("should throw BadRequestException if token is invalid or expired", async () => {
+      prisma.user.findFirst.mockResolvedValue(null);
+      await expect(service.resetPassword("bad-token", "NewPassword123#")).rejects.toThrow(BadRequestException);
+    });
+
+    it("should update password, clear token and reset failedAttempts", async () => {
+      prisma.user.findFirst.mockResolvedValue({ id: "u-1", email: "known@email.com" });
+      prisma.user.update.mockResolvedValue({ id: "u-1" });
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-pass");
+
+      const result = await service.resetPassword("good-token", "NewPassword123#");
+      expect(result).toHaveProperty("message");
+      expect(prisma.user.update).toHaveBeenCalledWith(expect.objectContaining({
+        data: expect.objectContaining({
+          password: "hashed-pass",
+          resetToken: null,
+          resetTokenExp: null,
+          failedAttempts: 0,
+        }),
+      }));
     });
   });
 });

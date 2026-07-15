@@ -131,6 +131,7 @@ export class EmployeesService {
               birthDate: new Date(dto.personalData.birthDate),
               gender: dto.personalData.gender || null,
               maritalStatus: dto.personalData.maritalStatus || null,
+              avatarUrl: dto.personalData.avatarUrl || null,
             },
           },
           address: {
@@ -229,6 +230,7 @@ export class EmployeesService {
             birthDate: dto.personalData.birthDate ? new Date(dto.personalData.birthDate) : undefined,
             gender: dto.personalData.gender,
             maritalStatus: dto.personalData.maritalStatus,
+            avatarUrl: dto.personalData.avatarUrl,
           },
         };
       }
@@ -300,11 +302,14 @@ export class EmployeesService {
         },
       });
 
-      // If user linked, deactivate the user
+      // If user linked, soft delete and deactivate the user
       if (employee.userId) {
         await tx.user.update({
           where: { id: employee.userId },
-          data: { isActive: false },
+          data: {
+            isActive: false,
+            deletedAt: new Date(),
+          },
         });
       }
 

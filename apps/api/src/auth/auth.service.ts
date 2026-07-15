@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from "@nestjs/common";
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../common/prisma.service";
@@ -168,6 +168,113 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException("Token de atualização inválido");
     }
+  }
+
+  async findMe(userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId, deletedAt: null },
+      include: {
+        employee: {
+          include: {
+            personalData: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException("Usuário inválido ou inexistente");
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      employee: user.employee
+        ? {
+            id: user.employee.id,
+            firstName: user.employee.firstName,
+            lastName: user.employee.lastName,
+            avatarUrl: user.employee.personalData?.avatarUrl || null,
+          }
+        : null,
+    };
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email, deletedAt: null },
+    });
+
+    if (!user) {
+      throw new NotFoundException("E-mail não cadastrado");
+    }
+
+    const crypto = await import("crypto");
+    const token = crypto.randomBytes(20).toString("hex");
+    const expiration = new Date();
+    expiration.setMinutes(expiration.getMinutes() + 15); // 15 mins validity
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetToken: token,
+        resetTokenExp: expiration,
+      },
+    });
+
+    try {
+      const { Resend } = await import("resend");
+      const resend = new Resend(process.env.RESEND_API_KEY || "re_TiJDQ5q8_CjTiDPPAUKxcEJYx29N1r5GF");
+      await resend.emails.send({
+        from: "onboarding@resend.dev",
+        to: email,
+        subject: "Atlas HRMS - Recuperação de Senha",
+        html: `<p>Você solicitou a alteração de sua senha no Atlas HRMS.</p>
+               <p>Use o seguinte token para redefinir sua senha: <strong>${token}</strong></p>
+               <p>Este token expira em 15 minutos.</p>`,
+      });
+    } catch (err) {
+      console.error("Falha ao enviar e-mail via Resend:", err);
+    }
+
+    return { message: "Token enviado para o e-mail informado" };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExp: { gte: new Date() },
+        deletedAt: null,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException("Token inválido ou expirado");
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExp: null,
+        failedAttempts: 0,
+        lockoutUntil: null,
+      },
+    });
+
+    await this.auditService.logAction(
+      user.id,
+      "USER_PASSWORD_RESET",
+      `Senha redefinida com sucesso para o e-mail ${user.email}`,
+    );
+
+    return { message: "Senha alterada com sucesso" };
   }
 
   private async generateTokens(userId: string, email: string, role: string) {

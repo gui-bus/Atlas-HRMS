@@ -119,3 +119,21 @@ As rotas são protegidas no Next.js com o wrapper do `AuthProvider`:
 
 - Para impedir cintilações visuais (flash do modo claro) ao acessar `/login` ou `/register` em modo escuro, o tema é lido síncronamente do `localStorage` e injetado diretamente como classe `.dark` via script no `<head>` do layout raiz.
 - Isso previne inconsistências de estilo no lado do cliente independentemente do estado da sessão do usuário.
+
+---
+
+## 🔐 Novas Funcionalidades de Polimento
+
+### 1. Rota de Restauração de Sessão (`GET /auth/me`)
+
+Permite que o frontend recupere o perfil do usuário logado decodificando o token do cabeçalho `Authorization: Bearer <token>`. Retorna informações essenciais:
+
+- ID, e-mail e cargo (Role).
+- Foto do perfil (`avatarUrl`) mapeada diretamente do `EmployeePersonalData`.
+
+### 2. Recuperação de Senha via Resend
+
+Fluxo completo de alteração segura de senhas esquecidas:
+
+- **Solicitação (`POST /auth/forgot-password`)**: Gera um token hexadecimal criptograficamente seguro e data de expiração de 15 minutos. Envia as instruções e o token via e-mail utilizando a plataforma **Resend**.
+- **Redefinição (`POST /auth/reset-password`)**: Valida o token, atualiza o hash da senha (bcrypt), limpa os metadados do token temporário, reinicia contadores de tentativas falhas e registra a alteração em logs de auditoria.

@@ -45,7 +45,7 @@ describe("DashboardService (Unit)", () => {
         .mockResolvedValueOnce(87)
         .mockResolvedValueOnce(12);
 
-      const result = await service.getStats();
+      const result = await service.getStats({});
 
       expect(result).toEqual({
         totalEmployees: 142,
@@ -67,7 +67,7 @@ describe("DashboardService (Unit)", () => {
       mockPrisma.recruitment.count.mockResolvedValue(0);
       mockPrisma.application.count.mockResolvedValue(0);
 
-      const result = await service.getStats();
+      const result = await service.getStats({});
 
       expect(result.totalEmployees).toBe(0);
       expect(result.totalDepartments).toBe(0);
@@ -91,7 +91,7 @@ describe("DashboardService (Unit)", () => {
       mockPrisma.recruitment.count.mockResolvedValue(0);
       mockPrisma.application.count.mockResolvedValue(0);
 
-      const result = await service.getStats();
+      const result = await service.getStats({});
 
       expect(result.activeAbsences).toBe(10);
     });
@@ -104,7 +104,7 @@ describe("DashboardService (Unit)", () => {
       mockPrisma.recruitment.count.mockResolvedValue(0);
       mockPrisma.application.count.mockResolvedValue(0);
 
-      await service.getStats();
+      await service.getStats({});
 
       expect(mockPrisma.employee.count).toHaveBeenCalledTimes(1);
       expect(mockPrisma.department.count).toHaveBeenCalledTimes(1);

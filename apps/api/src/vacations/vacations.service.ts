@@ -108,10 +108,12 @@ export class VacationsService {
 
     const statusText = dto.status === VacationStatus.APPROVED ? "aprovada" : "rejeitada";
     const reasonText = dto.status === VacationStatus.REJECTED ? ` Motivo: ${dto.rejectionReason}` : "";
-    await this.notificationsService.create(
-      updated.employee.userId,
-      `Sua solicitação de férias para o período de ${updated.startDate.toLocaleDateString()} a ${updated.endDate.toLocaleDateString()} foi ${statusText}.${reasonText}`,
-    );
+    if (updated.employee.userId) {
+      await this.notificationsService.create(
+        updated.employee.userId,
+        `Sua solicitação de férias para o período de ${updated.startDate.toLocaleDateString()} a ${updated.endDate.toLocaleDateString()} foi ${statusText}.${reasonText}`,
+      );
+    }
 
     return updated;
   }
@@ -228,10 +230,12 @@ export class VacationsService {
 
     const statusText = dto.status === LeaveStatus.APPROVED ? "aprovada" : "rejeitada";
     const reasonText = dto.status === LeaveStatus.REJECTED ? ` Motivo: ${dto.rejectionReason}` : "";
-    await this.notificationsService.create(
-      updated.employee.userId,
-      `Sua solicitação de licença/afastamento para o período de ${updated.startDate.toLocaleDateString()} a ${updated.endDate.toLocaleDateString()} foi ${statusText}.${reasonText}`,
-    );
+    if (updated.employee.userId) {
+      await this.notificationsService.create(
+        updated.employee.userId,
+        `Sua solicitação de licença/afastamento para o período de ${updated.startDate.toLocaleDateString()} a ${updated.endDate.toLocaleDateString()} foi ${statusText}.${reasonText}`,
+      );
+    }
 
     // If rejected and had an attachment, delete it from UploadThing
     if (dto.status === LeaveStatus.REJECTED && updated.attachmentUrl) {

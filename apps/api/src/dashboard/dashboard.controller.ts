@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, UseGuards, Query } from "@nestjs/common";
 import {
   ApiTags,
   ApiOperation,
@@ -11,6 +11,7 @@ import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 import { DashboardService } from "./dashboard.service";
 import { DashboardStatsResponseDto } from "./dto/dashboard-stats-response.dto";
+import { QueryDashboardDto } from "./dto/query-dashboard.dto";
 
 @ApiTags("Dashboard")
 @ApiBearerAuth()
@@ -22,7 +23,7 @@ export class DashboardController {
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
   @ApiOperation({
-    summary: "Obter métricas consolidadas do painel administrativo (Admin, RH e Gestores)",
+    summary: "Obter métricas consolidadas do painel administrativo com filtros (Admin, RH e Gestores)",
   })
   @ApiResponse({
     status: 200,
@@ -37,7 +38,7 @@ export class DashboardController {
     status: 403,
     description: "Permissão insuficiente — funcionários comuns (EMPLOYEE) são bloqueados",
   })
-  async getStats() {
-    return this.dashboardService.getStats();
+  async getStats(@Query() query: QueryDashboardDto) {
+    return this.dashboardService.getStats(query);
   }
 }

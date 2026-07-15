@@ -7,13 +7,18 @@ import {
   UnauthorizedException,
   HttpCode,
   HttpStatus,
+  Get,
+  UseGuards,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { Throttle } from "@nestjs/throttler";
+import { AuthGuard } from "./auth.guard";
+import { CurrentUser } from "./current-user.decorator";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
+import { ForgotPasswordDto, ResetPasswordDto } from "./dto/password-reset.dto";
 import {
   UserResponseDto,
   LoginResponseDto,
@@ -115,5 +120,30 @@ export class AuthController {
       sameSite: "none",
     });
     return { success: true };
+  }
+
+  @Get("me")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Obter perfil do usuário autenticado para restaurar sessão" })
+  @ApiResponse({ status: 200, description: "Perfil do usuário retornado com sucesso" })
+  async findMe(@CurrentUser() user: { sub: string }) {
+    return this.authService.findMe(user.sub);
+  }
+
+  @Post("forgot-password")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Solicitar token de recuperação de senha por e-mail" })
+  @ApiResponse({ status: 200, description: "E-mail de recuperação enviado com sucesso" })
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto.email);
+  }
+
+  @Post("reset-password")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Redefinir senha do usuário utilizando o token" })
+  @ApiResponse({ status: 200, description: "Senha alterada com sucesso" })
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto.token, dto.password);
   }
 }

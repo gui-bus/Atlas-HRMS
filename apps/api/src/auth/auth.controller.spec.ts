@@ -6,6 +6,8 @@ import { LoginDto } from "./dto/login.dto";
 import { UserRole } from "@prisma/client";
 import { Response } from "express";
 
+import { JwtService } from "@nestjs/jwt";
+
 describe("AuthController", () => {
   let controller: AuthController;
   let service: jest.Mocked<AuthService>;
@@ -19,7 +21,13 @@ describe("AuthController", () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [{ provide: AuthService, useValue: authServiceMock }],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        {
+          provide: JwtService,
+          useValue: { verifyAsync: jest.fn(), signAsync: jest.fn() },
+        },
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
@@ -104,6 +112,39 @@ describe("AuthController", () => {
         }),
       );
       expect(result).toEqual({ success: true });
+    });
+  });
+
+  describe("findMe", () => {
+    it("should return the profile details for authenticated user", async () => {
+      const mockProfile = { id: "u-1", email: "me@atlas.com", role: UserRole.EMPLOYEE };
+      (service as any).findMe = jest.fn().mockResolvedValue(mockProfile);
+
+      const result = await controller.findMe({ sub: "u-1" });
+      expect(result).toEqual(mockProfile);
+      expect((service as any).findMe).toHaveBeenCalledWith("u-1");
+    });
+  });
+
+  describe("forgotPassword", () => {
+    it("should request password reset link and token", async () => {
+      const serviceResult = { message: "Token enviado" };
+      (service as any).forgotPassword = jest.fn().mockResolvedValue(serviceResult);
+
+      const result = await controller.forgotPassword({ email: "forgot@email.com" });
+      expect(result).toEqual(serviceResult);
+      expect((service as any).forgotPassword).toHaveBeenCalledWith("forgot@email.com");
+    });
+  });
+
+  describe("resetPassword", () => {
+    it("should submit new password with token", async () => {
+      const serviceResult = { message: "Senha alterada" };
+      (service as any).resetPassword = jest.fn().mockResolvedValue(serviceResult);
+
+      const result = await controller.resetPassword({ token: "t-123", password: "NewPassword123#" });
+      expect(result).toEqual(serviceResult);
+      expect((service as any).resetPassword).toHaveBeenCalledWith("t-123", "NewPassword123#");
     });
   });
 });
