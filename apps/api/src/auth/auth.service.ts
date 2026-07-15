@@ -237,7 +237,7 @@ export class AuthService {
       );
       await resend.emails.send({
         from: "onboarding@resend.dev",
-        to: "delivered@resend.dev", // Resend Free sandbox constraint only allows sending to unverified addresses if it is delivered@resend.dev or the account owner's registered email. We will log it in console as fallback.
+        to: email, // Reverted to actual email parameter to allow sending to user's registered account owner email.
         subject: "Atlas HRMS - Recuperação de Senha",
         html: `<p>Você solicitou a alteração de sua senha no Atlas HRMS.</p>
                <p>Use o seguinte token para redefinir sua senha: <strong>${token}</strong></p>
