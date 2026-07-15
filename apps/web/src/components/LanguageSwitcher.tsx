@@ -34,8 +34,8 @@ export function LanguageSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-accent focus:ring-0">
+      <DropdownMenuTrigger render={
+        <div className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-accent focus:ring-0 cursor-pointer select-none">
           <Image
             src={activeLang.icon}
             alt={activeLang.name}
@@ -44,8 +44,8 @@ export function LanguageSwitcher() {
             className="rounded-sm object-cover"
           />
           <span className="text-sm font-medium text-muted-foreground uppercase">{activeLang.code}</span>
-        </Button>
-      </DropdownMenuTrigger>
+        </div>
+      } />
       <DropdownMenuContent align="end" className="w-36 bg-popover border border-border rounded-lg shadow-lg">
         {languages.map((lang) => (
           <DropdownMenuItem

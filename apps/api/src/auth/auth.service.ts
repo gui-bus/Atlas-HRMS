@@ -237,12 +237,13 @@ export class AuthService {
       );
       await resend.emails.send({
         from: "onboarding@resend.dev",
-        to: email,
+        to: "delivered@resend.dev", // Resend Free sandbox constraint only allows sending to unverified addresses if it is delivered@resend.dev or the account owner's registered email. We will log it in console as fallback.
         subject: "Atlas HRMS - Recuperação de Senha",
         html: `<p>Você solicitou a alteração de sua senha no Atlas HRMS.</p>
                <p>Use o seguinte token para redefinir sua senha: <strong>${token}</strong></p>
                <p>Este token expira em 15 minutos.</p>`,
       });
+      console.log(`[Resend Sandbox] Token de recuperação para ${email}: ${token}`);
     } catch (err) {
       console.error("Falha ao enviar e-mail via Resend:", err);
     }
