@@ -47,7 +47,11 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     if (!isBootstrapped) return;
 
     // Detecta o locale do path, por exemplo: "/pt/login" -> true
-    const isPublicRoute = pathname.endsWith("/login") || pathname.endsWith("/register");
+    const isPublicRoute =
+      pathname.endsWith("/login") ||
+      pathname.endsWith("/register") ||
+      pathname.includes("/forgot-password") ||
+      pathname.includes("/reset-password");
 
     if (!isAuthenticated && !isPublicRoute) {
       // Se não autenticado e tentando acessar rota privada, manda para o login
@@ -76,7 +80,12 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }
 
   // Previne renderização de rotas privadas se não estiver logado
-  const isPublicRoute = pathname.endsWith("/login") || pathname.endsWith("/register");
+  const isPublicRoute =
+    pathname.endsWith("/login") ||
+    pathname.endsWith("/register") ||
+    pathname.includes("/forgot-password") ||
+    pathname.includes("/reset-password");
+
   if (!isAuthenticated && !isPublicRoute) {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center">
