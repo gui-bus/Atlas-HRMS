@@ -67,8 +67,15 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     }
   }, [isAuthenticated, isBootstrapped, pathname, router]);
 
-  // Tela de carregamento premium enquanto restaura a sessão
-  if (!isBootstrapped) {
+  // Previne a tela de bloqueio de boot se estiver em uma rota pública
+  const isPublicRoute =
+    pathname.endsWith("/login") ||
+    pathname.endsWith("/register") ||
+    pathname.includes("/forgot-password") ||
+    pathname.includes("/reset-password");
+
+  // Tela de carregamento premium enquanto restaura a sessão (apenas se for rota privada)
+  if (!isBootstrapped && !isPublicRoute) {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center space-y-4">
         <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
