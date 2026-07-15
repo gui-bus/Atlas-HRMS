@@ -78,3 +78,12 @@ _Entenda a estrutura de candidaturas públicas, portal de carreiras e admissão 
 - **Portal Público (Careers)**: Listagem e aplicação de currículos via multipart sem necessidade de autenticação.
 - **Pipeline Completo**: Etapas seletivas detalhadas.
 - **Conversão Automática**: Como uma candidatura aceita gera o perfil do funcionário (`Employee`) no banco.
+
+### 📋 [Auditoria do Sistema](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/audit.md)
+
+_Entenda o sistema de Audit Trail e como rastrear ações do sistema._
+
+- **Endpoint Protegido**: Acesso restrito a `ADMIN` e `HR` via `AuthGuard` + `RolesGuard`.
+- **Ações Tipadas**: Enum centralizado `AuditAction` com 7 ações rastreáveis.
+- **Fluxo RBAC**: Diagrama de decisão para controle de acesso aos logs.
+

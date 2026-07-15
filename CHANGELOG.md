@@ -4,6 +4,15 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [0.6.0] - 2026-07-15
+
+### Adicionado
+
+- **Visualização de Logs de Auditoria**: Endpoint `GET /audit` protegido com `AuthGuard` + `RolesGuard`, restrito exclusivamente a usuários `ADMIN` e `HR`. Retorna a lista cronológica de todas as ações de auditoria do sistema, incluindo o relacionamento com o usuário executor (tratando ações públicas/anônimas com `user: null`).
+- **DTO de Resposta de Auditoria**: `AuditLogResponseDto` com campos `id`, `action`, `details`, `timestamp` e `user` (nullable), decorados com `@ApiProperty` para documentação Swagger interativa.
+- **Testes do Módulo de Auditoria**: Testes unitários (`audit.controller.spec.ts`) e testes de integração (`audit.integration.spec.ts`) com 10 cenários validando RBAC (ADMIN e HR permitidos, MANAGER e EMPLOYEE bloqueados com 403), autenticação obrigatória (401), e tratamento de logs com/sem usuário vinculado.
+- **Documentação Técnica de Auditoria**: Página `docs/audit.md` com diagrama de arquitetura Mermaid, modelo de dados, especificação do endpoint, fluxo RBAC e tabela de referência das ações tipadas do enum `AuditAction`.
+
 ## [0.5.0] - 2026-07-14
 
 ### Adicionado
