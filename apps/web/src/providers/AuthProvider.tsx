@@ -87,12 +87,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }
 
   // Previne renderização de rotas privadas se não estiver logado
-  const isPublicRoute =
-    pathname.endsWith("/login") ||
-    pathname.endsWith("/register") ||
-    pathname.includes("/forgot-password") ||
-    pathname.includes("/reset-password");
-
   if (!isAuthenticated && !isPublicRoute) {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center">
