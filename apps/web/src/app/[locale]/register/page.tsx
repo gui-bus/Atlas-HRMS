@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 const registerSchema = z
   .object({
@@ -136,7 +137,8 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-6 relative">
       {/* Dynamic Selector Placement in Header Top Corner */}
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-4 right-4 z-50 flex items-center space-x-2">
+        <ThemeSwitcher />
         <LanguageSwitcher />
       </div>
 

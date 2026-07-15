@@ -7,6 +7,7 @@ import { LayoutDashboard } from "lucide-react";
 import { Sun, Moon, SignOut, CaretUpDown } from "@phosphor-icons/react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
+import { useTheme } from "@/providers/ThemeProvider";
 import {
   Sidebar,
   SidebarContent,
@@ -32,32 +33,10 @@ export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const [loggingOut, setLoggingOut] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const { theme, toggleTheme } = useTheme();
 
   const segments = pathname.split("/");
   const locale = segments[1] || "pt";
-
-  // Inicializa o tema do localStorage/DOM no client-side
-  useEffect(() => {
-    const savedTheme = (localStorage.getItem("theme") as "light" | "dark") || "dark";
-    setTheme(savedTheme);
-    if (savedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    if (nextTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   const handleLogout = async () => {
     setLoggingOut(true);

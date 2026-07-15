@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -48,10 +49,10 @@ export default function ForgotPasswordPage() {
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
       
-      // Auto-redirect to reset password screen after a delay so they can input the token
+      // Auto-redirect to login screen after 5 seconds delay
       setTimeout(() => {
-        router.push(`/${locale}/reset-password`);
-      }, 3000);
+        router.push(`/${locale}/login`);
+      }, 5000);
     } catch (err: any) {
       console.error("Erro ao enviar email de recuperacao:", err);
       const responseError = err.response?.data;
@@ -70,7 +71,8 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-6 relative">
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-4 right-4 z-50 flex items-center space-x-2">
+        <ThemeSwitcher />
         <LanguageSwitcher />
       </div>
 
