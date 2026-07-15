@@ -18,27 +18,21 @@ export default function DashboardPage() {
         return (
           <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
             <h2 className="text-lg font-bold">Painel de Administração</h2>
-            <p className="text-muted-foreground text-sm">
-              Conteúdo para o Administrador
-            </p>
+            <p className="text-muted-foreground text-sm">Conteúdo para o Administrador</p>
           </div>
         );
       case "HR":
         return (
           <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
             <h2 className="text-lg font-bold">Painel de Recursos Humanos</h2>
-            <p className="text-muted-foreground text-sm">
-              Conteúdo para o Recursos Humanos
-            </p>
+            <p className="text-muted-foreground text-sm">Conteúdo para o Recursos Humanos</p>
           </div>
         );
       case "MANAGER":
         return (
           <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
             <h2 className="text-lg font-bold">Painel do Gestor</h2>
-            <p className="text-muted-foreground text-sm">
-              Conteúdo para o Gestor
-            </p>
+            <p className="text-muted-foreground text-sm">Conteúdo para o Gestor</p>
           </div>
         );
       case "EMPLOYEE":
@@ -46,9 +40,7 @@ export default function DashboardPage() {
         return (
           <div className="border rounded-lg p-6 space-y-2 bg-card text-card-foreground">
             <h2 className="text-lg font-bold">Painel do Funcionário</h2>
-            <p className="text-muted-foreground text-sm">
-              Conteúdo para o Funcionário
-            </p>
+            <p className="text-muted-foreground text-sm">Conteúdo para o Funcionário</p>
           </div>
         );
     }
@@ -56,7 +48,7 @@ export default function DashboardPage() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full max-w-[110rem] mx-auto relative bg-background text-foreground">
+      <div className="flex  w-full max-w-[110rem] mx-auto relative bg-background text-foreground">
         {/* App Sidebar from Shadcn */}
         <AppSidebar />
 
@@ -79,9 +71,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Role-based conditional panel */}
-            <div className="max-w-3xl">
-              {renderRoleContent()}
-            </div>
+            <div className="max-w-3xl">{renderRoleContent()}</div>
           </main>
         </SidebarInset>
       </div>

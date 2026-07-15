@@ -38,7 +38,9 @@ export default async function LocaleLayout({
           <ThemeProvider>
             <QueryProvider>
               <AuthProvider>
-                <TooltipProvider>{children}</TooltipProvider>
+                <TooltipProvider>
+                  <main className="w-full max-w-[110rem] mx-auto">{children}</main>
+                </TooltipProvider>
               </AuthProvider>
             </QueryProvider>
           </ThemeProvider>

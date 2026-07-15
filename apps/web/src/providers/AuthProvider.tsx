@@ -77,7 +77,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   // Tela de carregamento premium enquanto restaura a sessão (apenas se for rota privada)
   if (!isBootstrapped && !isPublicRoute) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center space-y-4">
+      <div className=" bg-background text-foreground flex flex-col justify-center items-center space-y-4">
         <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
         <span className="text-muted-foreground text-sm font-medium animate-pulse">
           Carregando Atlas...
@@ -89,7 +89,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   // Previne renderização de rotas privadas se não estiver logado
   if (!isAuthenticated && !isPublicRoute) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center">
+      <div className=" bg-background text-foreground flex flex-col justify-center items-center">
         <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
       </div>
     );

@@ -7,7 +7,10 @@
     "vacations": "Férias",
     "recruitment": "Recrutamento",
     "settings": "Configurações",
-    "logout": "Sair"
+    "logout": "Sair",
+    "lang_pt": "Português",
+    "lang_en": "Inglês",
+    "lang_es": "Espanhol"
   },
   "Dashboard": {
     "welcome": "Bem-vindo ao Atlas HRMS",
@@ -43,6 +46,8 @@
     "newPasswordPlaceholder": "Nova senha",
     "confirmNewPasswordPlaceholder": "Confirme a nova senha",
     "resetting": "Redefinindo",
-    "resetSuccess": "Senha redefinida com sucesso! Você pode realizar o login agora."
+    "resetSuccess": "Senha redefinida com sucesso! Você pode realizar o login agora.",
+    "recoveryEmailSent": "Instruções enviadas com sucesso! Verifique seu e-mail.",
+    "redirectingToLogin": "Você será redirecionado para a tela de login em {seconds} segundos."
   }
 }

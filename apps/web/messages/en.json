@@ -7,7 +7,10 @@
     "vacations": "Vacations",
     "recruitment": "Recruitment",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "lang_pt": "Portuguese",
+    "lang_en": "English",
+    "lang_es": "Spanish"
   },
   "Dashboard": {
     "welcome": "Welcome to Atlas HRMS",
@@ -43,6 +46,8 @@
     "newPasswordPlaceholder": "New password",
     "confirmNewPasswordPlaceholder": "Confirm new password",
     "resetting": "Resetting",
-    "resetSuccess": "Password reset successfully! You can sign in now."
+    "resetSuccess": "Password reset successfully! You can sign in now.",
+    "recoveryEmailSent": "Instructions sent successfully! Please check your email.",
+    "redirectingToLogin": "You will be redirected to the sign in screen in {seconds} seconds."
   }
 }

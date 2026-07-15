@@ -11,18 +11,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-const languages = [
-  { code: "pt", name: "Português", icon: "/idiomas/pt.webp" },
-  { code: "en", name: "English", icon: "/idiomas/en.webp" },
-  { code: "es", name: "Español", icon: "/idiomas/es.webp" },
-];
+import { useTranslations } from "next-intl";
 
 export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("Common");
 
   const segments = pathname.split("/");
   const currentLocale = segments[1] || "pt";
+
+  const languages = [
+    { code: "pt", name: t("lang_pt"), icon: "/lang/pt.svg" },
+    { code: "en", name: t("lang_en"), icon: "/lang/en.svg" },
+    { code: "es", name: t("lang_es"), icon: "/lang/es.svg" },
+  ];
 
   const handleLanguageChange = (localeCode: string) => {
     const updatedSegments = [...segments];
@@ -34,19 +37,26 @@ export function LanguageSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={
-        <div className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-accent focus:ring-0 cursor-pointer select-none">
-          <Image
-            src={activeLang.icon}
-            alt={activeLang.name}
-            width={20}
-            height={20}
-            className="rounded-sm object-cover"
-          />
-          <span className="text-sm font-medium text-muted-foreground uppercase">{activeLang.code}</span>
-        </div>
-      } />
-      <DropdownMenuContent align="end" className="w-36 bg-popover border border-border rounded-lg shadow-lg">
+      <DropdownMenuTrigger
+        render={
+          <div className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-accent focus:ring-0 cursor-pointer select-none">
+            <Image
+              src={activeLang.icon}
+              alt={activeLang.name}
+              width={20}
+              height={20}
+              className="rounded-sm object-cover"
+            />
+            <span className="text-sm font-medium text-muted-foreground uppercase">
+              {activeLang.code}
+            </span>
+          </div>
+        }
+      />
+      <DropdownMenuContent
+        align="end"
+        className="w-36 bg-popover border border-border rounded-lg shadow-lg"
+      >
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}

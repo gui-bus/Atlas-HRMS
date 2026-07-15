@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { useTheme } from "@/providers/ThemeProvider";
 
 const resetPasswordSchema = z
   .object({
@@ -119,7 +120,7 @@ export default function ResetPasswordPage() {
         password: data.password,
       });
       setSuccessMsg(response.data.message || t("resetSuccess"));
-      
+
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
 
@@ -130,7 +131,9 @@ export default function ResetPasswordPage() {
       console.error("Erro ao resetar senha:", err);
       const responseError = err.response?.data;
       if (responseError?.message) {
-        setErrorMsg(Array.isArray(responseError.message) ? responseError.message[0] : responseError.message);
+        setErrorMsg(
+          Array.isArray(responseError.message) ? responseError.message[0] : responseError.message,
+        );
       } else {
         setErrorMsg("Ocorreu um erro ao processar sua solicitação.");
       }
@@ -142,19 +145,32 @@ export default function ResetPasswordPage() {
   const segments = pathname.split("/");
   const locale = segments[1] || "pt";
 
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const logoSrc =
+    mounted && theme === "light" ? "/utils/logo_black.webp" : "/utils/logo_white.webp";
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-6 relative">
-      <div className="absolute top-4 right-4 z-50 flex items-center space-x-2">
-        <ThemeSwitcher />
-        <LanguageSwitcher />
-      </div>
-
-      <div className="w-full max-w-sm space-y-8">
+      <div className="w-full max-w-sm space-y-8 animate-fade-in">
         <div className="flex flex-col items-center space-y-4">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-xl">
-            A
+          {mounted && (
+            <img
+              src={logoSrc}
+              alt="Atlas HRMS Logo"
+              className="h-20 w-auto object-contain transition-opacity duration-300"
+            />
+          )}
+          <div className="flex items-center space-x-2 pt-1">
+            <ThemeSwitcher />
+            <LanguageSwitcher />
           </div>
-          <div className="text-center space-y-1.5">
+          <div className="text-center space-y-2">
             <h1 className="text-2xl font-bold tracking-tight">{t("resetPasswordTitle")}</h1>
             <p className="text-sm text-muted-foreground">{t("resetPasswordDesc")}</p>
           </div>
@@ -259,7 +275,9 @@ export default function ResetPasswordPage() {
                     placeholder="••••••••"
                     {...register("confirmPassword")}
                     className={`pr-10 ${
-                      errors.confirmPassword ? "border-destructive focus-visible:ring-destructive" : ""
+                      errors.confirmPassword
+                        ? "border-destructive focus-visible:ring-destructive"
+                        : ""
                     }`}
                   />
                   <button
@@ -267,11 +285,17 @@ export default function ResetPasswordPage() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <span className="text-xs text-destructive font-medium">{errors.confirmPassword.message}</span>
+                  <span className="text-xs text-destructive font-medium">
+                    {errors.confirmPassword.message}
+                  </span>
                 )}
               </div>
 

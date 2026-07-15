@@ -14,41 +14,51 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-      <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
-    </NextThemesProvider>
-  );
-}
-
-function ThemeProviderWrapper({ children }: { children: React.ReactNode }) {
-  const { theme, setTheme } = useNextTheme();
+  const [theme, setThemeState] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as Theme;
+    const initialTheme = savedTheme || "light";
+    setThemeState(initialTheme);
+
+    if (initialTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
     setMounted(true);
   }, []);
+
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
+    localStorage.setItem("theme", newTheme);
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const value = {
-    theme: (theme as Theme) || "dark",
-    setTheme: (t: Theme) => setTheme(t),
+    theme,
+    setTheme,
     toggleTheme,
   };
 
-  // Previne flickering renderizando o conteúdo apenas após a hidratação no cliente
   if (!mounted) {
-    return <div className="invisible">{children}</div>;
+    return (
+      <ThemeContext.Provider value={value}>
+        <div className="invisible">{children}</div>
+      </ThemeContext.Provider>
+    );
   }
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {
