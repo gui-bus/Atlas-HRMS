@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff } from "lucide-react";
@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const resetPasswordSchema = z.object({
-  token: z.string().min(1, "O token é obrigatório"),
   password: z.string().min(6, "A senha deve conter no mínimo 6 caracteres"),
   confirmPassword: z.string().min(6, "Confirmação de senha é obrigatória"),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -29,6 +28,8 @@ export default function ResetPasswordPage() {
   const t = useTranslations("Auth");
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token") || "";
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -44,13 +45,18 @@ export default function ResetPasswordPage() {
   });
 
   const onSubmit = async (data: ResetPasswordFormData) => {
+    if (!token) {
+      setErrorMsg("Token de recuperação ausente ou inválido na URL.");
+      return;
+    }
+
     setLoading(true);
     setErrorMsg(null);
     setSuccessMsg(null);
 
     try {
       const response = await api.post("/auth/reset-password", {
-        token: data.token,
+        token: token,
         password: data.password,
       });
       setSuccessMsg(response.data.message || t("resetSuccess"));
@@ -108,20 +114,13 @@ export default function ResetPasswordPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="token">Token</Label>
-              <Input
-                id="token"
-                type="text"
-                placeholder={t("tokenPlaceholder")}
-                {...register("token")}
-                className={errors.token ? "border-destructive focus-visible:ring-destructive" : ""}
-              />
-              {errors.token && (
-                <span className="text-xs text-destructive font-medium">{errors.token.message}</span>
-              )}
+          {!token && (
+            <div className="bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-500 text-sm px-4 py-3 rounded-lg text-center font-medium">
+              Por favor, utilize o link de redefinição enviado para seu e-mail.
             </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
             <div className="space-y-2">
               <Label htmlFor="password">{t("newPasswordPlaceholder")}</Label>

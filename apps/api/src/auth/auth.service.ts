@@ -235,13 +235,15 @@ export class AuthService {
       const resend = new Resend(
         process.env.RESEND_API_KEY || "re_TiJDQ5q8_CjTiDPPAUKxcEJYx29N1r5GF",
       );
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
       await resend.emails.send({
         from: "onboarding@resend.dev",
-        to: email, // Reverted to actual email parameter to allow sending to user's registered account owner email.
+        to: email,
         subject: "Atlas HRMS - Recuperação de Senha",
         html: `<p>Você solicitou a alteração de sua senha no Atlas HRMS.</p>
-               <p>Use o seguinte token para redefinir sua senha: <strong>${token}</strong></p>
-               <p>Este token expira em 15 minutos.</p>`,
+               <p>Clique no link a seguir para redefinir sua senha:</p>
+               <p><a href="${frontendUrl}/pt/reset-password?token=${token}">Redefinir minha senha</a></p>
+               <p>Este link expira em 15 minutos.</p>`,
       });
       console.log(`[Resend Sandbox] Token de recuperação para ${email}: ${token}`);
     } catch (err) {
