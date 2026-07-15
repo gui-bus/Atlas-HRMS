@@ -63,20 +63,18 @@ _Garantia de estabilidade da plataforma em ambientes locais e de nuvem._
 - **Stack de Testes**: Como Jest, Supertest, `@nestjs/testing` e `@swc/jest` são configurados na API.
 - **Git Hooks locais (Husky)**: Configurações de pré-commit para validar formatação (Prettier), regras de estilo (ESLint) e execução de testes obrigatórios antes de registrar alterações no Git.
 - **Integração Contínua**: Guia completo sobre o pipeline do GitHub Actions executando no Node 24 (detalhando compilação com Webpack privado e bypass de linter no CI).
-66: 
-67: ### 🗂️ [Módulo de Documentos](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/documents.md)
-68: 
-69: _Consulte as regras de upload direct-to-cloud e deleção do UploadThing._
-70: 
-71: - **Upload e Exclusão**: Processo assíncrono para apagar arquivos órfãos na nuvem via `UploadthingService`.
-72: - **Controle de Acesso**: Trava RBAC para visualização privada de arquivos pessoais.
-73: 
-74: ### 📢 [Recrutamento e ATS](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/recruitment.md)
-75: 
-76: _Entenda a estrutura de candidaturas públicas, portal de carreiras e admissão do funcionário._
-77: 
-78: - **Portal Público (Careers)**: Listagem e aplicação de currículos via multipart sem necessidade de autenticação.
-79: - **Pipeline Completo**: Etapas seletivas detalhadas.
-80: - **Conversão Automática**: Como uma candidatura aceita gera o perfil do funcionário (`Employee`) no banco.
-81: 
 
+### 🗂️ [Módulo de Documentos](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/documents.md)
+
+_Consulte as regras de upload direct-to-cloud e deleção do UploadThing._
+
+- **Upload e Exclusão**: Processo assíncrono para apagar arquivos órfãos na nuvem via `UploadthingService`.
+- **Controle de Acesso**: Trava RBAC para visualização privada de arquivos pessoais.
+
+### 📢 [Recrutamento e ATS](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/recruitment.md)
+
+_Entenda a estrutura de candidaturas públicas, portal de carreiras e admissão do funcionário._
+
+- **Portal Público (Careers)**: Listagem e aplicação de currículos via multipart sem necessidade de autenticação.
+- **Pipeline Completo**: Etapas seletivas detalhadas.
+- **Conversão Automática**: Como uma candidatura aceita gera o perfil do funcionário (`Employee`) no banco.
