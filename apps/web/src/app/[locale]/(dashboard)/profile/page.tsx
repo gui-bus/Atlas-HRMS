@@ -146,6 +146,24 @@ export default function ProfilePage() {
     },
   });
 
+  const updateAvatarMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append("avatar", file);
+      return api.put("/users/me", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+    onSuccess: async () => {
+      toast("Imagem de perfil atualizada com sucesso!", "success");
+      await refreshUser();
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message || "Erro ao atualizar avatar.";
+      toast(msg, "error");
+    },
+  });
+
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateProfileMutation.mutate();
@@ -154,8 +172,8 @@ export default function ProfilePage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setAvatarFile(file);
       setAvatarPreview(URL.createObjectURL(file));
+      updateAvatarMutation.mutate(file);
     }
   };
 
@@ -171,6 +189,11 @@ export default function ProfilePage() {
         <div className="md:col-span-1 space-y-6">
           <div className="bg-muted/10 p-6 rounded-3xl flex flex-col items-center text-center space-y-4">
             <div className="relative w-24 h-24 rounded-full overflow-hidden bg-muted/40 flex items-center justify-center border-0">
+              {updateAvatarMutation.isPending && (
+                <div className="absolute inset-0 bg-background/55 flex items-center justify-center z-10">
+                  <CircleNotch className="w-6 h-6 animate-spin text-primary" />
+                </div>
+              )}
               {avatarPreview ? (
                 <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
