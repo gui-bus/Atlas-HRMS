@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   ChevronDown,
   Users,
@@ -42,6 +42,7 @@ interface DesktopNavProps {
 export function DesktopNav({ locale }: DesktopNavProps) {
   const { user } = useAuthStore();
   const userRole = user?.role || "EMPLOYEE";
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
 
   const allCategories: MenuCategory[] = [
     {
@@ -51,35 +52,35 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           label: "Colaboradores",
           desc: "Base cadastral de funcionários e perfis.",
           href: `/${locale}/employees`,
-          icon: <Users className="w-6 h-6 text-primary shrink-0" />,
+          icon: <Users className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Novo Cadastro",
           desc: "Adicionar novos colaboradores ao sistema.",
           href: `/${locale}/employees/new`,
-          icon: <UserPlus className="w-6 h-6 text-primary shrink-0" />,
+          icon: <UserPlus className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
           label: "Férias",
           desc: "Controle e aprovação de ausências de férias.",
           href: `/${locale}/absences/vacations`,
-          icon: <Calendar className="w-6 h-6 text-primary shrink-0" />,
+          icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Atestados & Licenças",
           desc: "Controle de licenças e afastamentos.",
           href: `/${locale}/absences/leaves`,
-          icon: <Calendar className="w-6 h-6 text-primary shrink-0" />,
+          icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Documentos",
           desc: "Termos, contratos e comprovantes.",
           href: `/${locale}/documents`,
-          icon: <FileText className="w-6 h-6 text-primary shrink-0" />,
+          icon: <FileText className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
       ],
@@ -91,14 +92,14 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           label: "Quadro de Vagas",
           desc: "Processos seletivos e candidatos ativos.",
           href: `/${locale}/recruitment`,
-          icon: <Briefcase className="w-6 h-6 text-primary shrink-0" />,
+          icon: <Briefcase className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Nova Vaga",
           desc: "Criar e publicar processos seletivos públicos.",
           href: `/${locale}/recruitment/new`,
-          icon: <FilePlus className="w-6 h-6 text-primary shrink-0" />,
+          icon: <FilePlus className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
       ],
@@ -110,21 +111,21 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           label: "Departamentos",
           desc: "Listar e gerenciar departamentos da empresa.",
           href: `/${locale}/organization/departments`,
-          icon: <Building className="w-6 h-6 text-primary shrink-0" />,
+          icon: <Building className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Cargos",
           desc: "Definir cargos e faixas salariais.",
           href: `/${locale}/organization/positions`,
-          icon: <Building className="w-6 h-6 text-primary shrink-0" />,
+          icon: <Building className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Logs de Auditoria",
           desc: "Monitore o histórico de operações críticas.",
           href: `/${locale}/audit`,
-          icon: <ClipboardList className="w-6 h-6 text-primary shrink-0" />,
+          icon: <ClipboardList className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
       ],
@@ -142,7 +143,6 @@ export function DesktopNav({ locale }: DesktopNavProps) {
   return (
     <nav className="hidden lg:flex items-center space-x-1">
       {menuCategories.map((category) => {
-        // --- Enhancing RBAC Header menus ---
         // If only 1 item inside the category is available for this role,
         // render a direct link instead of a dropdown/mega-menu
         if (category.items.length === 1) {
@@ -159,45 +159,59 @@ export function DesktopNav({ locale }: DesktopNavProps) {
         }
 
         return (
-          <DropdownMenu key={category.label}>
-            <DropdownMenuTrigger
-              render={
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
-                >
-                  <span>{category.label}</span>
-                  <ChevronDown className="w-3.5 h-3.5 opacity-60 transition-transform duration-200" />
-                </div>
-              }
-            />
-            <DropdownMenuContent
-              className="p-4 w-[480px] grid grid-cols-2 gap-4 border-0 shadow-xl"
-              align="start"
-              side="bottom"
+          <div
+            key={category.label}
+            onMouseEnter={() => setOpenCategory(category.label)}
+            onMouseLeave={() => setOpenCategory(null)}
+            className="relative"
+          >
+            <DropdownMenu
+              open={openCategory === category.label}
+              onOpenChange={(isOpen) => {
+                if (!isOpen) setOpenCategory(null);
+              }}
             >
-              <DropdownMenuGroup className="grid grid-cols-2 gap-4 col-span-2">
-                {category.items.map((item) => (
-                  <DropdownMenuItem
-                    key={item.label}
-                    render={<a href={item.href} />}
-                    className="flex items-start space-x-3.5 p-3.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer border-0"
+              <DropdownMenuTrigger
+                render={
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
                   >
-                    <div className="p-2.5 rounded-xl bg-muted/65 text-primary shrink-0 flex items-center justify-center">
-                      {item.icon}
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold leading-none">{item.label}</p>
-                      <p className="text-xs text-muted-foreground leading-normal line-clamp-2">
-                        {item.desc}
-                      </p>
-                    </div>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                    <span>{category.label}</span>
+                    <ChevronDown className="w-3.5 h-3.5 opacity-60 transition-transform duration-200" />
+                  </div>
+                }
+              />
+              <DropdownMenuContent
+                className="p-5 w-[650px] grid grid-cols-2 gap-5 border-0 shadow-2xl bg-background/95 backdrop-blur-md rounded-2xl"
+                align="start"
+                side="bottom"
+              >
+                <DropdownMenuGroup className="grid grid-cols-2 gap-5 col-span-2">
+                  {category.items.map((item) => (
+                    <DropdownMenuItem
+                      key={item.label}
+                      render={<a href={item.href} />}
+                      className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-accent/60 hover:text-accent-foreground transition-all duration-200 cursor-pointer border-0"
+                    >
+                      <div className="p-3 rounded-2xl bg-primary/10 text-primary shrink-0 flex items-center justify-center">
+                        {item.icon}
+                      </div>
+                      <div className="space-y-1.5">
+                        <p className="text-sm font-bold leading-none tracking-tight">
+                          {item.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground leading-normal line-clamp-2">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         );
       })}
     </nav>
