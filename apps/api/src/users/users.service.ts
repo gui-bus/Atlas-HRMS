@@ -60,6 +60,7 @@ export class UsersService {
     let finalAvatarUrl = dto.avatarUrl;
     if (avatar) {
       const uploadResult = await this.uploadthingService.uploadFile(avatar);
+      console.log("uploadResult for avatar upload:", JSON.stringify(uploadResult));
       finalAvatarUrl = uploadResult?.data?.url ?? uploadResult?.url ?? "";
     }
 

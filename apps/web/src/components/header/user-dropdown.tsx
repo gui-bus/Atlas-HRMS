@@ -70,13 +70,24 @@ export function UserDropdown({ locale }: UserDropdownProps) {
             <div
               role="button"
               tabIndex={0}
-              className="relative flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/15 active:scale-95 transition-all cursor-pointer select-none outline-none focus:outline-none"
+              className="relative flex items-center justify-center h-9 w-9 rounded-full overflow-hidden bg-primary/10 text-primary hover:bg-primary/15 active:scale-95 transition-all cursor-pointer select-none outline-none focus:outline-none"
             >
-              <span className="font-bold text-sm tracking-wide uppercase">
-                {user?.email?.charAt(0).toUpperCase()}
-              </span>
+              {user?.employee?.avatarUrl ? (
+                <img
+                  src={user.employee.avatarUrl}
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="font-bold text-sm tracking-wide uppercase">
+                  {user?.email?.charAt(0).toUpperCase()}
+                </span>
+              )}
               {/* Active dot indicator */}
-              <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+              <span
+                className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"
+                z-index={10}
+              />
             </div>
           }
         />
@@ -87,8 +98,16 @@ export function UserDropdown({ locale }: UserDropdownProps) {
         >
           {/* Premium User Profile Header Card */}
           <div className="flex flex-col items-center text-center p-4 bg-muted/40 rounded-xl mb-1.5">
-            <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg uppercase mb-2">
-              {user?.email?.charAt(0).toUpperCase()}
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-primary/10 text-primary flex items-center justify-center font-bold text-lg uppercase mb-2">
+              {user?.employee?.avatarUrl ? (
+                <img
+                  src={user.employee.avatarUrl}
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                user?.email?.charAt(0).toUpperCase()
+              )}
             </div>
             <p
               className="text-sm font-semibold text-foreground truncate w-full max-w-[200px]"
