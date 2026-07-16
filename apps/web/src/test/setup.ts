@@ -19,6 +19,7 @@ vi.mock("next/navigation", () => {
     }),
     usePathname: () => "/pt/login",
     useSearchParams: () => new URLSearchParams(window.location.search),
+    useParams: () => ({ locale: "pt" }),
   };
 });
 
