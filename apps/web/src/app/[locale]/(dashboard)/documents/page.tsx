@@ -16,6 +16,8 @@ import {
 } from "@tanstack/react-table";
 
 import { documentService, Document } from "@/services/document.service";
+import { employeeService } from "@/services/employee.service";
+import { useAuthStore } from "@/store/useAuthStore";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +36,18 @@ export default function DocumentsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const locale = params?.locale || "pt";
+
+  const { user } = useAuthStore();
+  const userRole = user?.role || "EMPLOYEE";
+  const isEmployee = userRole === "EMPLOYEE";
+
+  // Get current logged-in employee ID if role is EMPLOYEE
+  const { data: employeesData } = useQuery({
+    queryKey: ["employees", { search: user?.email }],
+    queryFn: () => employeeService.getEmployees({ search: user?.email }),
+    enabled: isEmployee && !!user?.email,
+  });
+  const currentEmployee = employeesData?.data?.[0];
 
   // --- Fetch Lists ---
   const { data: documents = [], isLoading: loadingDocs } = useQuery({
@@ -85,71 +99,88 @@ export default function DocumentsPage() {
   // Local Filter
   const filteredData = useMemo(() => {
     return documents.filter((doc) => {
+      if (isEmployee) {
+        if (!currentEmployee || doc.employeeId !== currentEmployee.id) {
+          return false;
+        }
+      }
       if (typeFilter !== "ALL" && doc.type !== typeFilter) return false;
       return true;
     });
-  }, [documents, typeFilter]);
+  }, [documents, typeFilter, isEmployee, currentEmployee]);
 
   const columnHelper = createColumnHelper<Document>();
-  const columns = [
-    columnHelper.accessor("name", {
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
-        >
-          {t("table.name")}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-      cell: (info) => {
-        const doc = info.row.original;
-        return (
-          <a
-            href={doc.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-primary hover:underline"
-          >
-            {info.getValue()}
-          </a>
-        );
-      },
-    }),
-    columnHelper.accessor("type", {
-      header: t("table.type"),
-      cell: (info) => (
-        <span className="text-muted-foreground">{getDocTypeLabel(info.getValue())}</span>
-      ),
-    }),
-    columnHelper.accessor((row) => `${row.employee?.firstName} ${row.employee?.lastName}`, {
-      id: "employee",
-      header: t("table.employee"),
-      cell: (info) => <span className="text-muted-foreground">{info.getValue()}</span>,
-    }),
-    columnHelper.accessor("createdAt", {
-      header: t("table.createdAt"),
-      cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
-    }),
-    columnHelper.display({
-      id: "actions",
-      header: t("table.actions"),
-      cell: (info) => {
-        const doc = info.row.original;
-        return (
+  const columns = useMemo(() => {
+    return [
+      columnHelper.accessor("name", {
+        header: ({ column }) => (
           <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
-            onClick={() => handleOpenDeleteConfirm(doc.id)}
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
           >
-            <Trash className="h-4 w-4" />
+            {t("table.name")}
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        );
-      },
-    }),
-  ];
+        ),
+        cell: (info) => {
+          const doc = info.row.original;
+          return (
+            <a
+              href={doc.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary hover:underline"
+            >
+              {info.getValue()}
+            </a>
+          );
+        },
+      }),
+      columnHelper.accessor("type", {
+        header: t("table.type"),
+        cell: (info) => (
+          <span className="text-muted-foreground">{getDocTypeLabel(info.getValue())}</span>
+        ),
+      }),
+      ...(!isEmployee
+        ? [
+            columnHelper.accessor((row) => `${row.employee?.firstName} ${row.employee?.lastName}`, {
+              id: "employee",
+              header: t("table.employee"),
+              cell: (info) => <span className="text-muted-foreground">{info.getValue()}</span>,
+            }),
+          ]
+        : []),
+      columnHelper.accessor("createdAt", {
+        header: t("table.createdAt"),
+        cell: (info) => (
+          <span className="text-muted-foreground">{formatDate(info.getValue())}</span>
+        ),
+      }),
+      ...(!isEmployee
+        ? [
+            columnHelper.display({
+              id: "actions",
+              header: t("table.actions"),
+              cell: (info) => {
+                const doc = info.row.original;
+                return (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
+                    onClick={() => handleOpenDeleteConfirm(doc.id)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                );
+              },
+            }),
+          ]
+        : []),
+    ];
+  }, [isEmployee, t]);
 
   const table = useReactTable({
     data: filteredData,
@@ -163,7 +194,7 @@ export default function DocumentsPage() {
   });
 
   return (
-    <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
+    <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER", "EMPLOYEE"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
         <div className="flex items-center justify-between">
@@ -171,13 +202,15 @@ export default function DocumentsPage() {
             <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
             <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
           </div>
-          <Button
-            onClick={() => router.push(`/${locale}/documents/new`)}
-            className="gap-2 rounded-2xl"
-          >
-            <Plus className="h-4 w-4" />
-            Adicionar Documento
-          </Button>
+          {!isEmployee && (
+            <Button
+              onClick={() => router.push(`/${locale}/documents/new`)}
+              className="gap-2 rounded-2xl"
+            >
+              <Plus className="h-4 w-4" />
+              Adicionar Documento
+            </Button>
+          )}
         </div>
 
         {/* Toolbar */}

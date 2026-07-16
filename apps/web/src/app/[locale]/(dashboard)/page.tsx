@@ -77,16 +77,37 @@ export default function DashboardPage() {
               <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
                 <Calendar className="h-5 w-5" />
               </div>
-              <h3 className="font-semibold text-sm">Minhas Ausências</h3>
+              <h3 className="font-semibold text-sm">Minhas Férias</h3>
               <p className="text-xs text-muted-foreground">
-                Solicitar férias e registrar atestados.
+                Solicitar férias e gerenciar seu período de descanso.
               </p>
             </div>
             <Button
               variant="outline"
               size="sm"
               className="mt-4 self-start rounded-xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold"
-              onClick={() => router.push(`/${locale}/absences/my-requests`)}
+              onClick={() => router.push(`/${locale}/absences/vacations/my-requests`)}
+            >
+              Acessar
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+            </Button>
+          </div>
+
+          <div className="bg-muted/15 p-6 rounded-2xl flex flex-col justify-between h-40">
+            <div className="space-y-2">
+              <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                <Calendar className="h-5 w-5" />
+              </div>
+              <h3 className="font-semibold text-sm">Meus Atestados & Licenças</h3>
+              <p className="text-xs text-muted-foreground">
+                Registrar atestados médicos e licenças de afastamento.
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4 self-start rounded-xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold"
+              onClick={() => router.push(`/${locale}/absences/leaves/my-requests`)}
             >
               Acessar
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -107,7 +128,7 @@ export default function DashboardPage() {
               variant="outline"
               size="sm"
               className="mt-4 self-start rounded-xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold animate-fade-in"
-              onClick={() => router.push(`/${locale}/absences/my-requests`)}
+              onClick={() => router.push(`/${locale}/documents`)}
             >
               Acessar
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />

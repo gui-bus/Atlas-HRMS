@@ -77,7 +77,7 @@
       "viewProfile": "Ver Perfil",
       "delete": "Eliminar",
       "deleteConfirmTitle": "Eliminar Empleado",
-      "deleteConfirmDesc": "¿Está seguro de que desea eliminar este empleado? Esta acción realizará una eliminación lógica (soft delete).",
+      "deleteConfirmDesc": "¿Está seguro de que desea eliminar este empleado del sistema?",
       "cancel": "Cancelar",
       "confirm": "Confirmar"
     },

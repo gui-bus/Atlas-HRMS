@@ -77,7 +77,7 @@
       "viewProfile": "Ver Perfil",
       "delete": "Excluir",
       "deleteConfirmTitle": "Excluir Colaborador",
-      "deleteConfirmDesc": "Tem certeza que deseja remover este colaborador? Esta ação realizará uma exclusão lógica (soft delete).",
+      "deleteConfirmDesc": "Tem certeza que deseja remover este colaborador do sistema?",
       "cancel": "Cancelar",
       "confirm": "Confirmar"
     },
