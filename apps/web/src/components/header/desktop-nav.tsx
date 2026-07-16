@@ -146,6 +146,13 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           icon: <ClipboardList className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
+        {
+          label: "Contas de Usuário",
+          desc: "Níveis de acesso e credenciais do sistema.",
+          href: `/${locale}/organization/users`,
+          icon: <Users className="w-8 h-8 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
+        },
       ],
     },
   ];

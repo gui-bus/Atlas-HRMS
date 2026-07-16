@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Logo } from "./header/logo";
 import { DesktopNav } from "./header/desktop-nav";
 import { UserDropdown } from "./header/user-dropdown";
+import { NotificationDropdown } from "./header/notification-dropdown";
 import { MobileNav } from "./header/mobile-nav";
 
 export function Header() {
@@ -23,6 +24,7 @@ export function Header() {
 
         {/* Right side widgets */}
         <div className="flex items-center gap-2 md:gap-4">
+          <NotificationDropdown locale={locale} />
           <UserDropdown locale={locale} />
           <MobileNav locale={locale} />
         </div>

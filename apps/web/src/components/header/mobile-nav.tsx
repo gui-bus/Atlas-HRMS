@@ -123,6 +123,12 @@ export function MobileNav({ locale }: MobileNavProps) {
           icon: <ClipboardList className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
+        {
+          label: "Contas de Usuário",
+          href: `/${locale}/organization/users`,
+          icon: <Users className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
+        },
       ],
     },
   ];

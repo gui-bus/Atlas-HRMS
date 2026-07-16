@@ -14,6 +14,8 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Recurso TanStack Table Avançado**: Barra de pesquisa, ordenação dinâmica por clique nas colunas, e filtragem avançada por status local integrada às tabelas do sistema.
 - **Páginas Separadas de Tabelas**: Divisão das telas de Ausências (Férias vs Atestados) e Organização (Departamentos vs Cargos) em caminhos de rotas individuais.
 - **Interação Suave de Hover no Megamenu**: Corrigida a transição do mouse da barra superior para a caixa de conteúdo do megamenu, adicionando um debounce de 150ms para evitar fechamentos prematuros acidentais.
+- **Central de Notificações no Frontend**: Componente `<NotificationDropdown>` com ícone de sino e contador de alertas não lidos no cabeçalho do sistema, integrado à API de notificações, permitindo marcar mensagens como lidas instantaneamente.
+- **Módulo de Contas de Usuários no Frontend**: Página `/organization/users` exclusiva para administradores e RH com listagem de credenciais, papéis de acesso (role) e data de criação usando TanStack Table.
 
 ---
 
