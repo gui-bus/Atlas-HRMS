@@ -310,11 +310,6 @@ export class TimeAttendanceService {
 
     if (!entry || !exit) return;
 
-    // Load expected schedule details
-    const schedule = await this.prisma.timeSchedule.findUnique({
-      where: { employeeId },
-    });
-
     const expectedWorkMinutes = 480; // default 8 hours (ex: 8:00 to 17:00 with 60 mins lunch)
 
     // Compute net worked minutes
