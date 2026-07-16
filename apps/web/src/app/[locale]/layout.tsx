@@ -39,7 +39,7 @@ export default async function LocaleLayout({
             <QueryProvider>
               <AuthProvider>
                 <TooltipProvider>
-                  <main className="w-full max-w-[110rem] mx-auto">{children}</main>
+                  <main className="w-full">{children}</main>
                 </TooltipProvider>
               </AuthProvider>
             </QueryProvider>

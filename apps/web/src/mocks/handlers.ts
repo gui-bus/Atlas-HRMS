@@ -58,4 +58,24 @@ export const handlers = [
       accessToken: "mock-refreshed-access-token",
     });
   }),
+
+  // Mock forgot password handler
+  http.post(`${API_URL}/auth/forgot-password`, async ({ request }) => {
+    const { email } = (await request.json()) as any;
+
+    if (email === "error@atlas.com") {
+      return new HttpResponse(
+        JSON.stringify({
+          message: "E-mail não cadastrado",
+          error: "NotFound",
+          statusCode: 404,
+        }),
+        { status: 404 },
+      );
+    }
+
+    return HttpResponse.json({
+      success: true,
+    });
+  }),
 ];
