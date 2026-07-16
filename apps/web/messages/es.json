@@ -120,5 +120,156 @@
       "errorLoading": "Error al cargar los datos.",
       "notFound": "Empleado no encontrado."
     }
+  },
+  "Organization": {
+    "title": "Estructura Organizacional",
+    "subTitle": "Gestione departamentos, gerentes y cargos en su empresa.",
+    "departments": "Departamentos",
+    "positions": "Cargos",
+    "addDepartment": "Nuevo Departamento",
+    "addPosition": "Nuevo Cargo",
+    "editDepartment": "Editar Departamento",
+    "editPosition": "Editar Cargo",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "requiredFieldsNotice": "Indica campos obligatorios",
+    "form": {
+      "name": "Nombre del Departamento",
+      "code": "Código / Sigla",
+      "description": "Descripción (Opcional)",
+      "manager": "Gerente Responsable",
+      "title": "Título del Cargo",
+      "salaryMin": "Salario Mínimo ($)",
+      "salaryMax": "Salario Máximo ($)",
+      "department": "Departamento Asociado",
+      "status": "Estado",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "create": "Registrar"
+    },
+    "table": {
+      "name": "Nombre",
+      "code": "Código",
+      "manager": "Gerente",
+      "employeesCount": "Empleados",
+      "positionsCount": "Cargos",
+      "status": "Estado",
+      "title": "Título",
+      "salaryRange": "Rango Salarial",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "deleteConfirmTitle": "Eliminar Registro",
+      "deleteConfirmDesc": "¿Está seguro de que desea eliminar este registro?"
+    }
+  },
+  "Absences": {
+    "title": "Gestión de Ausencias",
+    "subTitle": "Seguimiento y aprobación de solicitudes de vacaciones y licencias de los empleados.",
+    "vacations": "Vacaciones",
+    "leaves": "Licencias",
+    "addVacation": "Solicitar Vacaciones",
+    "addLeave": "Solicitar Licencia / Certificado",
+    "pendingRequests": "Solicitudes Pendientes",
+    "myRequests": "Mis Solicitudes",
+    "type": "Tipo de Ausencia",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Término",
+    "status": "Estado",
+    "reason": "Motivo / Justificación",
+    "comments": "Observaciones (Opcional)",
+    "actions": "Acciones",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "cancel": "Cancelar",
+    "save": "Enviar Solicitud",
+    "rejectionReason": "Motivo del Rechazo",
+    "requiredFieldsNotice": "Indica campos obligatorios",
+    "attachment": "Adjunto / Certificado",
+    "statusPending": "Pendiente",
+    "statusApproved": "Aprobado",
+    "statusRejected": "Rechazado",
+    "statusCancelled": "Cancelado",
+    "medical": "Médica",
+    "parental": "Maternidad / Paternidad",
+    "legal": "Legal / Matrimonio",
+    "unpaid": "Licencia no remunerada",
+    "other": "Otros Motivos"
+  },
+  "Documents": {
+    "title": "Repositorio de Documentos",
+    "subTitle": "Gestione y almacene contratos, acuerdos y comprobantes de los empleados.",
+    "addDocument": "Subir Documento",
+    "requiredFieldsNotice": "Indica campos obligatorios",
+    "uploadArea": "Haga clic para seleccionar o arrastre el archivo aquí",
+    "form": {
+      "name": "Nombre descriptivo del documento",
+      "type": "Tipo de documento",
+      "url": "URL del archivo",
+      "employee": "Empleado",
+      "cancel": "Cancelar",
+      "create": "Subir"
+    },
+    "table": {
+      "name": "Nombre",
+      "type": "Categoría",
+      "employee": "Empleado",
+      "createdAt": "Fecha de Envío",
+      "actions": "Acciones",
+      "delete": "Eliminar",
+      "deleteConfirmTitle": "Eliminar Documento",
+      "deleteConfirmDesc": "¿Está seguro de que desea eliminar permanentemente este documento?"
+    },
+    "types": {
+      "contract": "Contrato",
+      "identification": "Identificación (ID/Licencia)",
+      "education": "Diploma/Educación",
+      "address_proof": "Comprobante de Domicilio",
+      "other": "Otros"
+    }
+  },
+  "Recruitment": {
+    "title": "Reclutamiento y Selección (ATS)",
+    "subTitle": "Gestione los procesos de selección y candidatos del embudo de contratación.",
+    "addJob": "Crear Vacante",
+    "requiredFieldsNotice": "Indica campos obligatorios",
+    "form": {
+      "title": "Título de la Vacante",
+      "description": "Descripción Detallada",
+      "requirements": "Requisitos Técnicos",
+      "vacancies": "Número de Vacantes",
+      "salaryMin": "Salario Mínimo",
+      "salaryMax": "Salario Máximo",
+      "workModel": "Modelo de Trabajo",
+      "employmentType": "Tipo de Contratación",
+      "seniority": "Nivel de Senioridad",
+      "department": "Departamento",
+      "position": "Cargo Vinculado",
+      "status": "Estado de la Vacante",
+      "cancel": "Cancelar",
+      "create": "Crear Vacante",
+      "save": "Guardar Cambios"
+    },
+    "stages": {
+      "SUBMITTED": "Inscrito",
+      "SCREENING": "Criba",
+      "HR_INTERVIEW": "Entrevista RRHH",
+      "TECHNICAL_TEST": "Prueba Técnica",
+      "MANAGER_INTERVIEW": "Entrevista Gestor",
+      "OFFER": "Oferta",
+      "HIRED": "Contratado",
+      "REJECTED": "Rechazado"
+    }
+  },
+  "Audit": {
+    "title": "Logs de Auditoría",
+    "subTitle": "Seguimiento e historial de cambios ejecutados por los usuarios en el sistema.",
+    "searchPlaceholder": "Buscar por acción o detalles...",
+    "table": {
+      "action": "Acción / Evento",
+      "user": "Usuario Ejecutor",
+      "timestamp": "Fecha/Hora",
+      "details": "Detalles del Evento"
+    }
   }
 }

@@ -120,5 +120,156 @@
       "errorLoading": "Error loading data.",
       "notFound": "Employee not found."
     }
+  },
+  "Organization": {
+    "title": "Organizational Structure",
+    "subTitle": "Manage departments, managers and positions in your company.",
+    "departments": "Departments",
+    "positions": "Positions",
+    "addDepartment": "New Department",
+    "addPosition": "New Position",
+    "editDepartment": "Edit Department",
+    "editPosition": "Edit Position",
+    "active": "Active",
+    "inactive": "Inactive",
+    "requiredFieldsNotice": "Indicates required fields",
+    "form": {
+      "name": "Department Name",
+      "code": "Code / Acronym",
+      "description": "Description (Optional)",
+      "manager": "Responsible Manager",
+      "title": "Position Title",
+      "salaryMin": "Minimum Salary ($)",
+      "salaryMax": "Maximum Salary ($)",
+      "department": "Associated Department",
+      "status": "Status",
+      "cancel": "Cancel",
+      "save": "Save",
+      "create": "Register"
+    },
+    "table": {
+      "name": "Name",
+      "code": "Code",
+      "manager": "Manager",
+      "employeesCount": "Employees",
+      "positionsCount": "Positions",
+      "status": "Status",
+      "title": "Title",
+      "salaryRange": "Salary Range",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete Record",
+      "deleteConfirmDesc": "Are you sure you want to delete this record?"
+    }
+  },
+  "Absences": {
+    "title": "Absence Management",
+    "subTitle": "Track and approve employee vacation and leave requests.",
+    "vacations": "Vacations",
+    "leaves": "Leaves",
+    "addVacation": "Request Vacation",
+    "addLeave": "Request Leave / Certificate",
+    "pendingRequests": "Pending Requests",
+    "myRequests": "My Requests",
+    "type": "Absence Type",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "status": "Status",
+    "reason": "Reason / Justification",
+    "comments": "Comments (Optional)",
+    "actions": "Actions",
+    "approve": "Approve",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "save": "Submit Request",
+    "rejectionReason": "Rejection Reason",
+    "requiredFieldsNotice": "Indicates required fields",
+    "attachment": "Attachment / Certificate",
+    "statusPending": "Pending",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "statusCancelled": "Cancelled",
+    "medical": "Medical",
+    "parental": "Maternity / Paternity",
+    "legal": "Legal / Marriage",
+    "unpaid": "Unpaid Leave",
+    "other": "Other Reasons"
+  },
+  "Documents": {
+    "title": "Document Repository",
+    "subTitle": "Manage and store employee contracts, agreements and receipts.",
+    "addDocument": "Upload Document",
+    "requiredFieldsNotice": "Indicates required fields",
+    "uploadArea": "Click to select or drag document file here",
+    "form": {
+      "name": "Document descriptive name",
+      "type": "Document type",
+      "url": "File URL",
+      "employee": "Employee",
+      "cancel": "Cancel",
+      "create": "Upload"
+    },
+    "table": {
+      "name": "Name",
+      "type": "Category",
+      "employee": "Employee",
+      "createdAt": "Upload Date",
+      "actions": "Actions",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete Document",
+      "deleteConfirmDesc": "Are you sure you want to permanently delete this document?"
+    },
+    "types": {
+      "contract": "Contract",
+      "identification": "Identification (ID/DL)",
+      "education": "Diploma/Education",
+      "address_proof": "Proof of Address",
+      "other": "Others"
+    }
+  },
+  "Recruitment": {
+    "title": "Recruitment & Selection (ATS)",
+    "subTitle": "Manage vacancies and candidate pipeline stages.",
+    "addJob": "Create Job",
+    "requiredFieldsNotice": "Indicates required fields",
+    "form": {
+      "title": "Job Title",
+      "description": "Detailed Description",
+      "requirements": "Technical Requirements",
+      "vacancies": "Number of Vacancies",
+      "salaryMin": "Min Salary",
+      "salaryMax": "Max Salary",
+      "workModel": "Work Model",
+      "employmentType": "Employment Type",
+      "seniority": "Seniority Level",
+      "department": "Department",
+      "position": "Linked Position",
+      "status": "Vacancy Status",
+      "cancel": "Cancel",
+      "create": "Create Job",
+      "save": "Save Changes"
+    },
+    "stages": {
+      "SUBMITTED": "Submitted",
+      "SCREENING": "Screening",
+      "HR_INTERVIEW": "HR Interview",
+      "TECHNICAL_TEST": "Technical Test",
+      "MANAGER_INTERVIEW": "Manager Interview",
+      "OFFER": "Offer",
+      "HIRED": "Hired",
+      "REJECTED": "Rejected"
+    }
+  },
+  "Audit": {
+    "title": "Audit Logs",
+    "subTitle": "Track and view history of actions executed by users in the system.",
+    "searchPlaceholder": "Search by action or details...",
+    "table": {
+      "action": "Action / Event",
+      "user": "Executor User",
+      "timestamp": "Date/Time",
+      "details": "Event Details"
+    }
   }
 }

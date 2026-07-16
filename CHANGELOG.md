@@ -4,14 +4,36 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.1.0] - 2026-07-16
+
+### Adicionado
+
+- **Módulo de Estrutura Organizacional**: Listagem e gerenciamento completo de Departamentos e Cargos (Positions) com tabelas zebradas livres de bordas e modais interativos integrados.
+- **Módulo de Gestão de Ausências**: Painel de controle de férias e licenças para RH/Gestores com aprovação e reprovação, e tela de autoatendimento do colaborador para solicitação de férias e upload de atestados médicos.
+- **Módulo de Gestão de Documentos**: Repositório centralizado de arquivos enviados por colaboradores e RH com listagem zebrada e sem bordas, permitindo downloads e exclusões físicas e lógicas integradas.
+- **Módulo de Recrutamento & Seleção (ATS)**: Fluxo completo de vagas e candidaturas, incluindo um pipeline de triagem visual (Kanban) para avançar candidatos de fase e botão de admissão imediata convertendo o candidato em funcionário.
+- **Módulo de Auditoria**: Interface administrativa para visualização de logs de auditoria corporativa com pesquisa textual, paginação e detalhamento de dados JSON estruturados.
+- **Componente FormSectionHeader**: Cabeçalho de subdivisão de formulário padronizado com suporte a ícones duotone do Phosphor Icons, títulos e descrições.
+- **Aviso de Campos Obrigatórios**: Indicador visual global de campos obrigatórios (`* Indica campos obrigatórios`) e asterisco vermelho nos labels dos formulários para melhor usabilidade.
+- **Testes e Validações Gerais**: Suites de testes automatizados (`organization.spec.tsx`, `absences.spec.tsx`, `documents.spec.tsx`, `recruitment.spec.tsx` e `audit.spec.tsx`) com 100% de cobertura.
+
+### Alterado
+
+- **Substituição da Sidebar por Header Responsivo**: Removida a barra lateral e implementado um cabeçalho fixo minimalista com mega menus dropdowns, seletor de tema/idioma e avatar de usuário reestruturado com Base UI.
+- **Página Inicial do Painel (Dashboard)**: Refatorada a página `/` para apresentar cartões de métricas reais integrados com o endpoint `/dashboard` da API (totalizadores de colaboradores, setores estruturados, processos seletivos e ausências pendentes) e atalhos de ações rápidas, respeitando o padrão estético sem bordas e sem sombras.
+- **Polimento Visual "Sem Bordas e Sem Sombras"**: Removidos todos os componentes de abas, cartões, bordas e sombras das telas de listagem, cadastro e detalhes dos Colaboradores, adotando layouts fluidos em tela cheia (`w-full`).
+- **Logotipos em SVG**: Excluídos os logotipos e ícones antigos em formato `.webp` e inseridas as novas versões vetoriais `.svg` para melhor fidelidade de renderização em todos os temas.
+
+---
+
 ## [1.0.0] - 2026-07-16
 
 ### Adicionado
 
-- **Módulo de Gestão de Pessoas (Core Employee)**: Implementação completa de listagem de colaboradores com TanStack Table, cadastro com validações Zod e edição de dados segmentada em abas (Dados profissionais, pessoais, endereço, dados bancários e contatos de emergência).
-- **Refatoração de Layout do Dashboard**: Criação de grupo de rotas Next.js `(dashboard)` com layout compartilhado para gerenciar de forma unificada e nativa a barra lateral (`AppSidebar`) nas telas administrativas.
-- **Componentes do Shadcn/UI**: Adicionados componentes de `Badge`, `Tabs` e `Dialog` no frontend para suportar a interface minimalista e interações de confirmação de exclusão.
-- **Integração de API e Schemas**: Implementados o `employeeService` para comunicação síncrona de CRUD com o backend NestJS e schemas Zod para validação rigorosa de CPF, CEP e campos obrigatórios no cliente.
+- **Módulo de Gestão de Pessoas (Core Employee)**: Implementação completa de listagem de colaboradores com TanStack Table, cadastro com validações Zod e edição de dados segmentada em abas.
+- **Refatoração de Layout do Dashboard**: Criação de grupo de rotas Next.js `(dashboard)` com layout compartilhado para gerenciar de forma unificada e nativa a barra lateral (`AppSidebar`).
+- **Componentes do Shadcn/UI**: Adicionados componentes de `Badge`, `Tabs` e `Dialog` no frontend para suportar a interface minimalista.
+- **Integração de API e Schemas**: Implementados o `employeeService` para comunicação síncrona de CRUD e schemas Zod.
 
 ---
 
