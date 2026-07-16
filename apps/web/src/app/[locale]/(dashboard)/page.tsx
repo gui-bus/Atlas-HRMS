@@ -17,6 +17,7 @@ import {
 import { useAuthStore } from "@/store/useAuthStore";
 import { dashboardService } from "@/services/dashboard.service";
 import { Button } from "@/components/ui/button";
+import { ClockWidget } from "@/components/time-attendance/clock-widget";
 
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
@@ -69,6 +70,9 @@ export default function DashboardPage() {
             Painel do {getRoleLabel(user?.role)}. Gerencie suas informações e envie solicitações.
           </p>
         </div>
+
+        {/* Clock In Widget */}
+        <ClockWidget />
 
         {/* Quick Links cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
