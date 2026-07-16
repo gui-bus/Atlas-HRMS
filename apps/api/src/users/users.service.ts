@@ -104,6 +104,49 @@ export class UsersService {
           },
         });
       });
+    } else {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.employee.create({
+          data: {
+            userId: user.id,
+            firstName: dto.firstName || "Admin",
+            lastName: dto.lastName || "User",
+            email: user.email,
+            phone: dto.phone || "",
+            hireDate: new Date(),
+            salary: 0,
+            personalData: {
+              create: {
+                avatarUrl: finalAvatarUrl || "",
+                rg: dto.rg || "",
+                cpf: "",
+                birthDate: dto.birthDate ? new Date(dto.birthDate) : new Date("1970-01-01"),
+                gender: dto.gender || "OTHER",
+                maritalStatus: dto.maritalStatus || "SINGLE",
+              },
+            },
+            address: {
+              create: {
+                cep: dto.cep?.replace(/[^\d]/g, "") || "",
+                street: dto.street || "",
+                number: dto.number || "",
+                complement: dto.complement || "",
+                neighborhood: dto.neighborhood || "",
+                city: dto.city || "",
+                state: dto.state?.toUpperCase() || "",
+              },
+            },
+            bankAccount: {
+              create: {
+                bankCode: dto.bankCode || "",
+                bankAgency: dto.bankAgency || "",
+                bankAccount: dto.bankAccount || "",
+                accountType: dto.accountType || "CHECKING",
+              },
+            },
+          },
+        });
+      });
     }
 
     return { success: true };
