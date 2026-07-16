@@ -16,6 +16,7 @@ import { DashboardModule } from "./dashboard/dashboard.module";
 import { AuditModule } from "./audit/audit.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { UploadthingModule } from "./common/uploadthing/uploadthing.module";
+import { TimeAttendanceModule } from "./time-attendance/time-attendance.module";
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { UploadthingModule } from "./common/uploadthing/uploadthing.module";
     AuditModule,
     NotificationsModule,
     UploadthingModule,
+    TimeAttendanceModule,
   ],
   providers: [
     {

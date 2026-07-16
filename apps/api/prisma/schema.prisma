@@ -67,6 +67,13 @@ model Employee {
   leaves            Leave[]
   documents         Document[]
 
+  timeSchedule      TimeSchedule?
+  timeRecords       TimeRecord[]
+  timeSummaries     TimeDaySummary[]
+  hourBankLedger    HourBankLedger[]
+  corrections       TimeCorrectionRequest[]
+  overtimeRequests  OvertimeApprovalRequest[]
+
   personalData      EmployeePersonalData?
   address           EmployeeAddress?
   bankAccount       EmployeeBankAccount?
@@ -411,3 +418,107 @@ model AuditLog {
 
   @@map("audit_logs")
 }
+
+model TimeSchedule {
+  id               String   @id @default(uuid())
+  employeeId       String   @unique
+  expectedIn       String   // ex: "08:00"
+  expectedOut      String   // ex: "17:00"
+  intervalMinutes  Int      @default(60)
+  workDays         Int[]    // ex: [1, 2, 3, 4, 5] (Segunda a Sexta)
+  toleranceMinutes Int      @default(10)
+  employee         Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("time_schedules")
+}
+
+enum TimeRecordType {
+  ENTRY
+  INTERVAL_OUT
+  INTERVAL_IN
+  EXIT
+}
+
+enum TimeRecordSource {
+  WEB
+  MOBILE
+  ADMIN
+}
+
+model TimeRecord {
+  id          String           @id @default(uuid())
+  employeeId  String
+  timestamp   DateTime
+  type        TimeRecordType
+  source      TimeRecordSource
+  ipAddress   String?
+  userAgent   String?
+  latitude    Float?
+  longitude   Float?
+  comments    String?
+  createdAt   DateTime         @default(now())
+  employee    Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("time_records")
+}
+
+model TimeDaySummary {
+  id              String   @id @default(uuid())
+  employeeId      String
+  date            DateTime // Apenas data (Y-m-d)
+  grossMinutes    Int      // Minutos trabalhados brutos
+  intervalMinutes Int      // Minutos de intervalo real
+  netMinutes      Int      // Minutos trabalhados líquidos
+  expectedMinutes Int      // Minutos que deveria trabalhar
+  overtimeMinutes Int      // Horas extras geradas
+  debtMinutes     Int      // Horas devidas/atraso
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+  @@map("time_day_summaries")
+}
+
+model HourBankLedger {
+  id         String   @id @default(uuid())
+  employeeId String
+  date       DateTime
+  amount     Int      // Saldo positivo (crédito) ou negativo (débito) em minutos
+  reason     String   // ex: "Horas extras da jornada" ou "Falta injustificada"
+  balance    Int      // Saldo acumulado do funcionário após a transação
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("hour_bank_ledgers")
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model TimeCorrectionRequest {
+  id          String         @id @default(uuid())
+  employeeId  String
+  date        DateTime
+  targetType  TimeRecordType
+  time        String         // ex: "08:15"
+  reason      String
+  status      RequestStatus  @default(PENDING)
+  notes       String?        // Observações do gestor
+  employee    Employee       @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("time_correction_requests")
+}
+
+model OvertimeApprovalRequest {
+  id              String        @id @default(uuid())
+  employeeId      String
+  date            DateTime
+  minutesExceeded Int
+  status          RequestStatus @default(PENDING)
+  notes           String?
+  employee        Employee      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("overtime_approval_requests")
+}
+
