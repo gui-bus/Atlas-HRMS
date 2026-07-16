@@ -18,6 +18,10 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Módulo de Contas de Usuários no Frontend**: Página `/organization/users` exclusiva para administradores e RH com listagem de credenciais, papéis de acesso (role) e data de criação usando TanStack Table.
 - **Módulo de Ponto Eletrônico (Backend)**: Adicionada infraestrutura completa e APIs sob o prefixo `/time-attendance` para batida sequencial inteligente, auditorias físicas (IP/User-Agent/Localização), banco de horas e solicitações de ajuste de jornada.
 
+### Corrigido
+
+- **Taxa Limite de Conexões no Login**: Ajustada a diretiva `@Throttle` nos endpoints de Login e Registro de `10` para `100` requisições por minuto, evitando bloqueios de rede indesejados e erros de conexão CORS em preflights.
+
 ---
 
 ## [1.1.0] - 2026-07-16

@@ -42,7 +42,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("register")
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Throttle({ default: { limit: 100, ttl: 60000 } })
   @ApiOperation({ summary: "Cadastrar um novo usuário no sistema" })
   @ApiResponse({ status: 201, description: "Usuário criado com sucesso", type: UserResponseDto })
   @ApiResponse({
@@ -55,7 +55,7 @@ export class AuthController {
   }
 
   @Post("login")
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Throttle({ default: { limit: 100, ttl: 60000 } })
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Realizar login obtendo token de acesso e cookie de atualização" })
   @ApiResponse({ status: 200, description: "Login efetuado com sucesso", type: LoginResponseDto })
