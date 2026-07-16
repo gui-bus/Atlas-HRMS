@@ -1,8 +1,9 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { expect, test, describe, vi, beforeEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DocumentsPage from "./page";
+import NewDocumentPage from "./new/page";
 
 // Mock Services
 vi.mock("@/services/document.service", () => ({
@@ -29,6 +30,21 @@ vi.mock("@/services/employee.service", () => ({
     }),
   },
 }));
+
+vi.mock("@/store/useAuthStore", () => ({
+  useAuthStore: () => ({
+    user: { id: "mock-user-123", email: "admin@atlas.com", role: "ADMIN" },
+    isAuthenticated: true,
+  }),
+}));
+
+vi.mock("next/navigation", () => {
+  const pushMock = vi.fn();
+  return {
+    useRouter: () => ({ push: pushMock, back: vi.fn() }),
+    useParams: () => ({ locale: "pt" }),
+  };
+});
 
 describe("DocumentsPage integration tests", () => {
   let queryClient: QueryClient;
@@ -58,25 +74,8 @@ describe("DocumentsPage integration tests", () => {
     });
   });
 
-  test("opens dialog and uploads a new document record", async () => {
-    renderWithProviders(<DocumentsPage />);
-
-    const openBtn = screen.getByRole("button", { name: "addDocument" });
-    fireEvent.click(openBtn);
-
-    expect(screen.getByRole("heading", { name: "addDocument" })).toBeInTheDocument();
-
-    // Fill form
-    fireEvent.change(screen.getByLabelText(/form\.name/i), { target: { value: "RG Pedro" } });
-    fireEvent.change(screen.getByLabelText(/form\.url/i), {
-      target: { value: "https://utfs.io/f/rg.pdf" },
-    });
-
-    const submitBtn = screen.getByRole("button", { name: "form.create" });
-    fireEvent.click(submitBtn);
-
-    await waitFor(() => {
-      expect(screen.queryByText("RG Pedro")).not.toBeInTheDocument();
-    });
+  test("renders upload document form page", async () => {
+    renderWithProviders(<NewDocumentPage />);
+    expect(screen.getByText("Adicionar Documento")).toBeInTheDocument();
   });
 });

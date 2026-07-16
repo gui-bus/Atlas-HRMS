@@ -26,6 +26,7 @@ export default function DashboardPage() {
   const locale = params?.locale || "pt";
 
   const isEmployee = user?.role === "EMPLOYEE";
+  const isAdminOrHr = user?.role === "ADMIN" || user?.role === "HR";
 
   // --- Fetch Dashboard Stats (only for admin/hr/managers) ---
   const { data: stats, isLoading } = useQuery({
@@ -58,7 +59,7 @@ export default function DashboardPage() {
   // --- Employee dashboard view ---
   if (isEmployee) {
     return (
-      <div className="p-6 md:p-8 space-y-8 w-full">
+      <div className="p-6 md:p-8 space-y-8 w-full animate-fade-in">
         {/* Welcome block */}
         <div className="space-y-1.5">
           <h1 className="text-2xl font-bold tracking-tight">
@@ -105,8 +106,8 @@ export default function DashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className="mt-4 self-start rounded-xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold"
-              onClick={() => router.push(`/${locale}/documents`)}
+              className="mt-4 self-start rounded-xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold animate-fade-in"
+              onClick={() => router.push(`/${locale}/absences/my-requests`)}
             >
               Acessar
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -119,7 +120,7 @@ export default function DashboardPage() {
 
   // --- Administrative dashboard view ---
   return (
-    <div className="p-6 md:p-8 space-y-8 w-full">
+    <div className="p-6 md:p-8 space-y-8 w-full animate-fade-in">
       {/* Title Header */}
       <div className="space-y-1.5">
         <h1 className="text-2xl font-bold tracking-tight">
@@ -189,35 +190,39 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick Actions for Admins/HR */}
+      {/* Quick Actions for Admins/HR/Managers with RBAC */}
       <div className="space-y-4 pt-4">
         <h2 className="text-lg font-bold tracking-tight">Ações Rápidas</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
-          <Button
-            variant="outline"
-            className="h-12 justify-start rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold px-4"
-            onClick={() => router.push(`/${locale}/employees/new`)}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Admitir Colaborador
-          </Button>
+          {isAdminOrHr && (
+            <>
+              <Button
+                variant="outline"
+                className="h-12 justify-start rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold px-4 animate-fade-in"
+                onClick={() => router.push(`/${locale}/employees/new`)}
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Admitir Colaborador
+              </Button>
+
+              <Button
+                variant="outline"
+                className="h-12 justify-start rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold px-4 animate-fade-in"
+                onClick={() => router.push(`/${locale}/recruitment/new`)}
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Nova Vaga (ATS)
+              </Button>
+            </>
+          )}
 
           <Button
             variant="outline"
             className="h-12 justify-start rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold px-4"
-            onClick={() => router.push(`/${locale}/recruitment/new`)}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Nova Vaga (ATS)
-          </Button>
-
-          <Button
-            variant="outline"
-            className="h-12 justify-start rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold px-4"
-            onClick={() => router.push(`/${locale}/absences`)}
+            onClick={() => router.push(`/${locale}/absences/vacations`)}
           >
             <Calendar className="mr-2 h-4 w-4" />
-            Controlar Ausências
+            Controlar Férias
           </Button>
 
           <Button

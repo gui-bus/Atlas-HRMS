@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 
 import { employeeService, EmployeeWithDetails } from "@/services/employee.service";
+import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -182,169 +183,173 @@ export default function EmployeesListPage() {
   const totalPages = data?.meta?.lastPage || 1;
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
-      {/* Header section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-          <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
+    <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
+      <div className="p-6 md:p-8 space-y-6">
+        {/* Header section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
+          </div>
+          <Button onClick={() => router.push(`/${locale}/employees/new`)} className="gap-2">
+            <Plus className="h-4 w-4" />
+            {t("addEmployee")}
+          </Button>
         </div>
-        <Button onClick={() => router.push(`/${locale}/employees/new`)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          {t("addEmployee")}
-        </Button>
-      </div>
 
-      {/* Filters section */}
-      <div className="flex flex-col md:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("searchPlaceholder")}
-            value={search}
+        {/* Filters section */}
+        <div className="flex flex-col md:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder")}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="pl-10 h-10 rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+            />
+          </div>
+          <select
+            value={status}
             onChange={(e) => {
-              setSearch(e.target.value);
+              setStatus(e.target.value);
               setPage(1);
             }}
-            className="pl-10 h-10 rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-          />
+            className="flex h-10 w-full md:w-[180px] rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 px-4 text-sm outline-none focus:outline-none transition-colors cursor-pointer"
+          >
+            <option value="">{t("table.status")}</option>
+            <option value="ACTIVE">{t("statusActive")}</option>
+            <option value="INACTIVE">{t("statusInactive")}</option>
+            <option value="ON_LEAVE">{t("statusOnLeave")}</option>
+            <option value="SUSPENDED">{t("statusSuspended")}</option>
+          </select>
         </div>
-        <select
-          value={status}
-          onChange={(e) => {
-            setStatus(e.target.value);
-            setPage(1);
-          }}
-          className="flex h-10 w-full md:w-[180px] rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 px-4 text-sm outline-none focus:outline-none transition-colors cursor-pointer"
-        >
-          <option value="">{t("table.status")}</option>
-          <option value="ACTIVE">{t("statusActive")}</option>
-          <option value="INACTIVE">{t("statusInactive")}</option>
-          <option value="ON_LEAVE">{t("statusOnLeave")}</option>
-          <option value="SUSPENDED">{t("statusSuspended")}</option>
-        </select>
-      </div>
 
-      {/* Table section */}
-      <div className="w-full bg-transparent overflow-hidden">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full text-sm border-collapse text-left border-0">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {isLoading ? (
-                <tr className="border-0">
-                  <td colSpan={columns.length} className="h-24 text-center border-0">
-                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
-                  </td>
-                </tr>
-              ) : isError ? (
-                <tr className="border-0">
-                  <td
-                    colSpan={columns.length}
-                    className="h-24 text-center text-destructive border-0"
-                  >
-                    {t("form.errorLoading")}
-                  </td>
-                </tr>
-              ) : table.getRowModel().rows.length === 0 ? (
-                <tr className="border-0">
-                  <td
-                    colSpan={columns.length}
-                    className="h-24 text-center text-muted-foreground border-0"
-                  >
-                    {t("form.notFound")}
-                  </td>
-                </tr>
-              ) : (
-                table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="p-4 align-middle [&:has([role=checkbox])]:pr-0 border-0"
+        {/* Table section */}
+        <div className="w-full bg-transparent overflow-hidden">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full text-sm border-collapse text-left border-0">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0"
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+                      </th>
                     ))}
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ))}
+              </thead>
+              <tbody>
+                {isLoading ? (
+                  <tr className="border-0">
+                    <td colSpan={columns.length} className="h-24 text-center border-0">
+                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                    </td>
+                  </tr>
+                ) : isError ? (
+                  <tr className="border-0">
+                    <td
+                      colSpan={columns.length}
+                      className="h-24 text-center text-destructive border-0"
+                    >
+                      {t("form.errorLoading")}
+                    </td>
+                  </tr>
+                ) : table.getRowModel().rows.length === 0 ? (
+                  <tr className="border-0">
+                    <td
+                      colSpan={columns.length}
+                      className="h-24 text-center text-muted-foreground border-0"
+                    >
+                      {t("form.notFound")}
+                    </td>
+                  </tr>
+                ) : (
+                  table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="p-4 align-middle [&:has([role=checkbox])]:pr-0 border-0"
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      {/* Pagination controls */}
-      {!isLoading && !isError && totalPages > 1 && (
-        <div className="flex items-center justify-end gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm font-medium">
-            {page} / {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-
-      {/* Delete confirmation dialog */}
-      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("table.deleteConfirmTitle")}</DialogTitle>
-            <DialogDescription>{t("table.deleteConfirmDesc")}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
+        {/* Pagination controls */}
+        {!isLoading && !isError && totalPages > 1 && (
+          <div className="flex items-center justify-end gap-2">
             <Button
               variant="outline"
-              onClick={() => setDeleteConfirmOpen(false)}
-              disabled={deleteMutation.isPending}
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
             >
-              {t("table.cancel")}
+              <ChevronLeft className="h-4 w-4" />
             </Button>
+            <span className="text-sm font-medium">
+              {page} / {totalPages}
+            </span>
             <Button
-              variant="destructive"
-              onClick={handleConfirmDelete}
-              disabled={deleteMutation.isPending}
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
             >
-              {deleteMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              {t("table.confirm")}
+              <ChevronRight className="h-4 w-4" />
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+          </div>
+        )}
+
+        {/* Delete confirmation dialog */}
+        <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t("table.deleteConfirmTitle")}</DialogTitle>
+              <DialogDescription>{t("table.deleteConfirmDesc")}</DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setDeleteConfirmOpen(false)}
+                disabled={deleteMutation.isPending}
+              >
+                {t("table.cancel")}
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleConfirmDelete}
+                disabled={deleteMutation.isPending}
+              >
+                {deleteMutation.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {t("table.confirm")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </RbacGuard>
   );
 }

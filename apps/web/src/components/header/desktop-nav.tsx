@@ -13,6 +13,7 @@ import {
   ClipboardList,
 } from "lucide-react";
 
+import { useAuthStore } from "@/store/useAuthStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +27,7 @@ interface MenuItem {
   desc: string;
   href: string;
   icon: React.ReactNode;
+  allowedRoles: string[];
 }
 
 interface MenuCategory {
@@ -38,7 +40,10 @@ interface DesktopNavProps {
 }
 
 export function DesktopNav({ locale }: DesktopNavProps) {
-  const menuCategories: MenuCategory[] = [
+  const { user } = useAuthStore();
+  const userRole = user?.role || "EMPLOYEE";
+
+  const allCategories: MenuCategory[] = [
     {
       label: "Gestão de Pessoas",
       items: [
@@ -47,24 +52,35 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           desc: "Base cadastral de funcionários e perfis.",
           href: `/${locale}/employees`,
           icon: <Users className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Novo Cadastro",
           desc: "Adicionar novos colaboradores ao sistema.",
           href: `/${locale}/employees/new`,
           icon: <UserPlus className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Férias & Licenças",
-          desc: "Controle e aprovação de ausências.",
-          href: `/${locale}/absences`,
+          label: "Férias",
+          desc: "Controle e aprovação de ausências de férias.",
+          href: `/${locale}/absences/vacations`,
           icon: <Calendar className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
+        },
+        {
+          label: "Atestados & Licenças",
+          desc: "Controle de licenças e afastamentos.",
+          href: `/${locale}/absences/leaves`,
+          icon: <Calendar className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Documentos",
           desc: "Termos, contratos e comprovantes.",
           href: `/${locale}/documents`,
           icon: <FileText className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
       ],
     },
@@ -76,12 +92,14 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           desc: "Processos seletivos e candidatos ativos.",
           href: `/${locale}/recruitment`,
           icon: <Briefcase className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Nova Vaga",
           desc: "Criar e publicar processos seletivos públicos.",
           href: `/${locale}/recruitment/new`,
           icon: <FilePlus className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
         },
       ],
     },
@@ -89,64 +107,99 @@ export function DesktopNav({ locale }: DesktopNavProps) {
       label: "Organização",
       items: [
         {
-          label: "Departamentos & Cargos",
-          desc: "Definir hierarquias e faixas salariais.",
-          href: `/${locale}/organization`,
+          label: "Departamentos",
+          desc: "Listar e gerenciar departamentos da empresa.",
+          href: `/${locale}/organization/departments`,
           icon: <Building className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
+        },
+        {
+          label: "Cargos",
+          desc: "Definir cargos e faixas salariais.",
+          href: `/${locale}/organization/positions`,
+          icon: <Building className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Logs de Auditoria",
           desc: "Monitore o histórico de operações críticas.",
           href: `/${locale}/audit`,
           icon: <ClipboardList className="w-6 h-6 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
         },
       ],
     },
   ];
 
+  // Filter categories to only keep allowed items
+  const menuCategories = allCategories
+    .map((category) => ({
+      ...category,
+      items: category.items.filter((item) => item.allowedRoles.includes(userRole)),
+    }))
+    .filter((category) => category.items.length > 0);
+
   return (
     <nav className="hidden lg:flex items-center space-x-1">
-      {menuCategories.map((category) => (
-        <DropdownMenu key={category.label}>
-          <DropdownMenuTrigger
-            render={
-              <div
-                role="button"
-                tabIndex={0}
-                className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
-              >
-                <span>{category.label}</span>
-                <ChevronDown className="w-3.5 h-3.5 opacity-60 transition-transform duration-200" />
-              </div>
-            }
-          />
-          <DropdownMenuContent
-            className="p-4 w-[480px] grid grid-cols-2 gap-4 border-0 shadow-xl"
-            align="start"
-            side="bottom"
-          >
-            <DropdownMenuGroup className="grid grid-cols-2 gap-4 col-span-2">
-              {category.items.map((item) => (
-                <DropdownMenuItem
-                  key={item.label}
-                  render={<a href={item.href} />}
-                  className="flex items-start space-x-3.5 p-3.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer border-0"
+      {menuCategories.map((category) => {
+        // --- Enhancing RBAC Header menus ---
+        // If only 1 item inside the category is available for this role,
+        // render a direct link instead of a dropdown/mega-menu
+        if (category.items.length === 1) {
+          const singleItem = category.items[0];
+          return (
+            <a
+              key={category.label}
+              href={singleItem.href}
+              className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
+            >
+              <span>{singleItem.label}</span>
+            </a>
+          );
+        }
+
+        return (
+          <DropdownMenu key={category.label}>
+            <DropdownMenuTrigger
+              render={
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
                 >
-                  <div className="p-2.5 rounded-xl bg-muted/65 text-primary shrink-0 flex items-center justify-center">
-                    {item.icon}
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-semibold leading-none">{item.label}</p>
-                    <p className="text-xs text-muted-foreground leading-normal line-clamp-2">
-                      {item.desc}
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ))}
+                  <span>{category.label}</span>
+                  <ChevronDown className="w-3.5 h-3.5 opacity-60 transition-transform duration-200" />
+                </div>
+              }
+            />
+            <DropdownMenuContent
+              className="p-4 w-[480px] grid grid-cols-2 gap-4 border-0 shadow-xl"
+              align="start"
+              side="bottom"
+            >
+              <DropdownMenuGroup className="grid grid-cols-2 gap-4 col-span-2">
+                {category.items.map((item) => (
+                  <DropdownMenuItem
+                    key={item.label}
+                    render={<a href={item.href} />}
+                    className="flex items-start space-x-3.5 p-3.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer border-0"
+                  >
+                    <div className="p-2.5 rounded-xl bg-muted/65 text-primary shrink-0 flex items-center justify-center">
+                      {item.icon}
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold leading-none">{item.label}</p>
+                      <p className="text-xs text-muted-foreground leading-normal line-clamp-2">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      })}
     </nav>
   );
 }

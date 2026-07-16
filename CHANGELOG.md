@@ -4,6 +4,18 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.2.0] - 2026-07-16
+
+### Adicionado
+
+- **Proteção por RBAC no Frontend**: Componente de controle de acesso `<RbacGuard>` para interceptar e redirecionar acessos a rotas restritas baseadas nos privilégios do usuário.
+- **Header Adaptativo (RBAC Dinâmico)**: Links do header e categorias megamenu agora renderizam links de navegação diretos em vez de dropdowns caso apenas um item esteja autorizado para o usuário.
+- **Páginas de Formulários Dedicadas**: Eliminação completa de modais/diálogos em favor de páginas dedicadas a formulários para criação e edição de Departamentos, Cargos, Solicitação de Férias e Licenças, e Envio de Documentos.
+- **Recurso TanStack Table Avançado**: Barra de pesquisa, ordenação dinâmica por clique nas colunas, e filtragem avançada por status local integrada às tabelas do sistema.
+- **Páginas Separadas de Tabelas**: Divisão das telas de Ausências (Férias vs Atestados) e Organização (Departamentos vs Cargos) em caminhos de rotas individuais.
+
+---
+
 ## [1.1.0] - 2026-07-16
 
 ### Adicionado

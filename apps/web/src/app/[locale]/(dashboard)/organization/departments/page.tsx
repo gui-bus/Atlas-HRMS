@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { Plus, Trash, Loader2, Search, ArrowUpDown } from "lucide-react";
+import { Plus, Search, Pencil, Trash, ArrowUpDown, Loader2 } from "lucide-react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -15,7 +15,8 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 
-import { documentService, Document } from "@/services/document.service";
+import { useAuthStore } from "@/store/useAuthStore";
+import { departmentService, Department } from "@/services/department.service";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,69 +29,53 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export default function DocumentsPage() {
-  const t = useTranslations("Documents");
+export default function DepartmentsPage() {
+  const t = useTranslations("Organization");
   const params = useParams();
   const router = useRouter();
   const queryClient = useQueryClient();
   const locale = params?.locale || "pt";
+  const { user } = useAuthStore();
+  const isAdminOrHr = user?.role === "ADMIN" || user?.role === "HR";
 
-  // --- Fetch Lists ---
-  const { data: documents = [], isLoading: loadingDocs } = useQuery({
-    queryKey: ["documents"],
-    queryFn: () => documentService.getDocuments(),
-  });
-
-  // --- State ---
+  // State
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [typeFilter, setTypeFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState<"ALL" | "ACTIVE" | "INACTIVE">("ALL");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // --- Mutations ---
+  // Fetch
+  const { data: departments = [], isLoading } = useQuery({
+    queryKey: ["departments"],
+    queryFn: () => departmentService.getDepartments(),
+  });
+
+  // Mutation
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => documentService.deleteDocument(id),
+    mutationFn: (id: string) => departmentService.deleteDepartment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
       setDeleteConfirmOpen(false);
-      setDeleteId(null);
+      setSelectedId(null);
     },
   });
 
-  // --- Open Dialogs ---
-  const handleOpenDeleteConfirm = (id: string) => {
-    setDeleteId(id);
+  // Filtering data locally
+  const filteredData = useMemo(() => {
+    return departments.filter((dept) => {
+      if (statusFilter === "ACTIVE") return dept.active === true;
+      if (statusFilter === "INACTIVE") return dept.active === false;
+      return true;
+    });
+  }, [departments, statusFilter]);
+
+  const handleDeleteClick = (id: string) => {
+    setSelectedId(id);
     setDeleteConfirmOpen(true);
   };
 
-  const getDocTypeLabel = (type: string) => {
-    const labels = {
-      CONTRACT: "Contrato",
-      ID_CARD: "Identidade",
-      CERTIFICATE: "Certificado",
-      OTHER: "Outros",
-    };
-    return labels[type] || type;
-  };
-
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString();
-    } catch {
-      return dateString;
-    }
-  };
-
-  // Local Filter
-  const filteredData = useMemo(() => {
-    return documents.filter((doc) => {
-      if (typeFilter !== "ALL" && doc.type !== typeFilter) return false;
-      return true;
-    });
-  }, [documents, typeFilter]);
-
-  const columnHelper = createColumnHelper<Document>();
+  const columnHelper = createColumnHelper<Department>();
   const columns = [
     columnHelper.accessor("name", {
       header: ({ column }) => (
@@ -99,53 +84,64 @@ export default function DocumentsPage() {
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
         >
-          {t("table.name")}
+          Nome
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
+      cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
+    }),
+    columnHelper.accessor("code", {
+      header: "Código",
+      cell: (info) => (
+        <span className="text-muted-foreground font-mono text-xs">{info.getValue()}</span>
+      ),
+    }),
+    columnHelper.accessor("employeesCount", {
+      header: "Colaboradores",
+      cell: (info) => <span className="text-muted-foreground">{info.getValue() ?? 0}</span>,
+    }),
+    columnHelper.accessor("active", {
+      header: "Status",
       cell: (info) => {
-        const doc = info.row.original;
+        const val = info.getValue();
         return (
-          <a
-            href={doc.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-primary hover:underline"
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              val ? "bg-emerald-500/10 text-emerald-500" : "bg-muted text-muted-foreground"
+            }`}
           >
-            {info.getValue()}
-          </a>
+            {val ? "Ativo" : "Inativo"}
+          </span>
         );
       },
     }),
-    columnHelper.accessor("type", {
-      header: t("table.type"),
-      cell: (info) => (
-        <span className="text-muted-foreground">{getDocTypeLabel(info.getValue())}</span>
-      ),
-    }),
-    columnHelper.accessor((row) => `${row.employee?.firstName} ${row.employee?.lastName}`, {
-      id: "employee",
-      header: t("table.employee"),
-      cell: (info) => <span className="text-muted-foreground">{info.getValue()}</span>,
-    }),
-    columnHelper.accessor("createdAt", {
-      header: t("table.createdAt"),
-      cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
-    }),
     columnHelper.display({
       id: "actions",
-      header: t("table.actions"),
+      header: "Ações",
       cell: (info) => {
-        const doc = info.row.original;
+        const dept = info.row.original;
+        // Hide edit/delete actions if not ADMIN or HR
+        if (!isAdminOrHr) return <span className="text-muted-foreground/60 text-xs">—</span>;
+
         return (
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
-            onClick={() => handleOpenDeleteConfirm(doc.id)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40 hover:bg-muted/65"
+              onClick={() => router.push(`/${locale}/organization/departments/${dept.id}`)}
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
+              onClick={() => handleDeleteClick(dept.id)}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
         );
       },
     }),
@@ -168,24 +164,29 @@ export default function DocumentsPage() {
         {/* Title Header */}
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
+            <h1 className="text-2xl font-bold tracking-tight">Departamentos</h1>
+            <p className="text-muted-foreground text-sm">
+              Gerencie os setores e departamentos estruturais da empresa.
+            </p>
           </div>
-          <Button
-            onClick={() => router.push(`/${locale}/documents/new`)}
-            className="gap-2 rounded-2xl"
-          >
-            <Plus className="h-4 w-4" />
-            Adicionar Documento
-          </Button>
+          {/* Hide Create button if not ADMIN or HR */}
+          {isAdminOrHr && (
+            <Button
+              onClick={() => router.push(`/${locale}/organization/departments/new`)}
+              className="gap-2 rounded-2xl"
+            >
+              <Plus className="h-4 w-4" />
+              Adicionar Departamento
+            </Button>
+          )}
         </div>
 
-        {/* Toolbar */}
+        {/* Toolbar controls: search & filter */}
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Pesquisar documento..."
+              placeholder="Pesquisar departamento..."
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="pl-10 h-10 rounded-2xl bg-muted/40 border-0 focus-visible:ring-1"
@@ -193,19 +194,17 @@ export default function DocumentsPage() {
           </div>
 
           <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="flex h-10 w-full md:w-[200px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as any)}
+            className="flex h-10 w-full md:w-[180px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <option value="ALL">Todos os tipos</option>
-            <option value="CONTRACT">Contrato</option>
-            <option value="ID_CARD">Identidade</option>
-            <option value="CERTIFICATE">Certificado</option>
-            <option value="OTHER">Outros</option>
+            <option value="ALL">Todos os status</option>
+            <option value="ACTIVE">Ativos</option>
+            <option value="INACTIVE">Inativos</option>
           </select>
         </div>
 
-        {/* Table */}
+        {/* Tabela Zebrada Sem Bordas */}
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -224,7 +223,7 @@ export default function DocumentsPage() {
                 ))}
               </thead>
               <tbody>
-                {loadingDocs ? (
+                {isLoading ? (
                   <tr className="border-0">
                     <td colSpan={columns.length} className="h-24 text-center border-0">
                       <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
@@ -236,7 +235,7 @@ export default function DocumentsPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhum documento encontrado.
+                      Nenhum departamento encontrado.
                     </td>
                   </tr>
                 ) : (
@@ -258,13 +257,14 @@ export default function DocumentsPage() {
           </div>
         </div>
 
-        {/* Delete Confirmation */}
+        {/* --- Delete Confirmation Dialog --- */}
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-sm">
             <DialogHeader>
-              <DialogTitle>Excluir Documento</DialogTitle>
+              <DialogTitle>Excluir Departamento</DialogTitle>
               <DialogDescription>
-                Deseja mesmo excluir permanentemente este documento?
+                Tem certeza que deseja excluir permanentemente este departamento? Todos os vínculos
+                serão afetados.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-2">
@@ -278,7 +278,7 @@ export default function DocumentsPage() {
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => deleteId && deleteMutation.mutate(deleteId)}
+                onClick={() => selectedId && deleteMutation.mutate(selectedId)}
                 disabled={deleteMutation.isPending}
                 className="rounded-2xl"
               >

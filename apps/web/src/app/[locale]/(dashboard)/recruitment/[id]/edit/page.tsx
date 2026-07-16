@@ -1,32 +1,39 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { Briefcase } from "@phosphor-icons/react";
+import { ArrowLeft, Loader2, Briefcase } from "lucide-react";
 
 import { recruitmentService } from "@/services/recruitment.service";
-import { RbacGuard } from "@/components/rbac-guard";
 import { departmentService } from "@/services/department.service";
 import { positionService } from "@/services/position.service";
 import { recruitmentSchema, RecruitmentFormValues } from "@/schemas/recruitment.schema";
-
+import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
 
-export default function NewVacancyPage() {
+export default function EditVacancyPage() {
   const t = useTranslations("Recruitment");
   const params = useParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const id = params?.id as string;
   const locale = params?.locale || "pt";
 
-  // --- Fetch Departments & Positions ---
+  // Fetch lists
+  const { data: vacancy, isLoading: loadingVacancy } = useQuery({
+    queryKey: ["vacancy", id],
+    queryFn: () =>
+      recruitmentService.getRecruitments().then((list) => list.find((v) => v.id === id)),
+    enabled: !!id,
+  });
+
   const { data: departments = [] } = useQuery({
     queryKey: ["departments"],
     queryFn: () => departmentService.getDepartments(),
@@ -37,33 +44,37 @@ export default function NewVacancyPage() {
     queryFn: () => positionService.getPositions(),
   });
 
-  // --- React Hook Form ---
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<RecruitmentFormValues>({
     resolver: zodResolver(recruitmentSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      employmentType: "CLT",
-      workModel: "REMOTE",
-      seniority: "MID",
-      vacancies: "1",
-      salaryMin: "",
-      salaryMax: "",
-      requirements: "",
-      departmentId: "",
-      positionId: "",
-      status: "OPEN",
-    },
   });
 
-  // --- Mutation ---
+  useEffect(() => {
+    if (vacancy) {
+      reset({
+        title: vacancy.title,
+        description: vacancy.description,
+        employmentType: vacancy.employmentType as any,
+        workModel: vacancy.workModel as any,
+        seniority: vacancy.seniority as any,
+        vacancies: vacancy.vacancies,
+        salaryMin: vacancy.salaryMin || "",
+        salaryMax: vacancy.salaryMax || "",
+        requirements: vacancy.requirements || "",
+        departmentId: vacancy.departmentId,
+        positionId: vacancy.positionId,
+        status: vacancy.status as any,
+      });
+    }
+  }, [vacancy, reset]);
+
   const mutation = useMutation({
     mutationFn: (data: RecruitmentFormValues) => {
-      return recruitmentService.createRecruitment({
+      return recruitmentService.updateRecruitment(id, {
         ...data,
         vacancies: Number(data.vacancies),
         salaryMin: data.salaryMin || undefined,
@@ -71,6 +82,8 @@ export default function NewVacancyPage() {
       });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["recruitments"] });
+      queryClient.invalidateQueries({ queryKey: ["vacancy", id] });
       router.push(`/${locale}/recruitment`);
     },
   });
@@ -79,9 +92,17 @@ export default function NewVacancyPage() {
     mutation.mutate(d);
   };
 
+  if (loadingVacancy) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR"]}>
-      <div className="p-6 md:p-8 space-y-6 w-full">
+      <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         <div className="flex items-center gap-4">
           <Button
             variant="outline"
@@ -92,9 +113,9 @@ export default function NewVacancyPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t("addJob")}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Editar Vaga</h1>
             <p className="text-muted-foreground text-sm">
-              Abra uma nova vaga de emprego para atrair talentos.
+              Modifique as informações do processo seletivo estruturado.
             </p>
             <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
           </div>
@@ -220,14 +241,12 @@ export default function NewVacancyPage() {
                   {...register("departmentId")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="">Selecione o departamento...</option>
-                  {departments
-                    .filter((d) => d.active)
-                    .map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.name}
-                      </option>
-                    ))}
+                  <option value="">Selecione o departamento</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </option>
+                  ))}
                 </select>
                 {errors.departmentId && (
                   <p className="text-xs text-destructive">{errors.departmentId.message}</p>
@@ -243,27 +262,33 @@ export default function NewVacancyPage() {
                   {...register("positionId")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="">Selecione o cargo...</option>
-                  {positions
-                    .filter((p) => p.active)
-                    .map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.title}
-                      </option>
-                    ))}
+                  <option value="">Selecione o cargo correspondente</option>
+                  {positions.map((pos) => (
+                    <option key={pos.id} value={pos.id}>
+                      {pos.title}
+                    </option>
+                  ))}
                 </select>
                 {errors.positionId && (
                   <p className="text-xs text-destructive">{errors.positionId.message}</p>
                 )}
               </div>
+
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="status">Status da Vaga</Label>
+                <select
+                  id="status"
+                  {...register("status")}
+                  className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
+                >
+                  <option value="OPEN">Aberta</option>
+                  <option value="ON_HOLD">Em Espera</option>
+                  <option value="CLOSED">Encerrada</option>
+                  <option value="CANCELLED">Cancelada</option>
+                </select>
+              </div>
             </div>
           </div>
-
-          {mutation.isError && (
-            <p className="text-sm text-destructive font-medium">
-              Erro ao criar vaga. Verifique as informações fornecidas.
-            </p>
-          )}
 
           <div className="flex justify-end gap-3 pt-6 border-t border-transparent">
             <Button
@@ -272,11 +297,11 @@ export default function NewVacancyPage() {
               onClick={() => router.back()}
               className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
             >
-              {t("form.cancel")}
+              Cancelar
             </Button>
             <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
               {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t("form.create")}
+              Salvar Alterações
             </Button>
           </div>
         </form>

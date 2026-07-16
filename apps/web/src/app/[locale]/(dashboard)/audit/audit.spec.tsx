@@ -27,6 +27,13 @@ vi.mock("@/services/audit.service", () => ({
   },
 }));
 
+vi.mock("@/store/useAuthStore", () => ({
+  useAuthStore: () => ({
+    user: { id: "mock-user-123", email: "admin@atlas.com", role: "ADMIN" },
+    isAuthenticated: true,
+  }),
+}));
+
 describe("AuditLogsPage integration tests", () => {
   let queryClient: QueryClient;
 

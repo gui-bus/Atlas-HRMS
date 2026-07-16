@@ -63,6 +63,13 @@ vi.mock("@/services/position.service", () => ({
   },
 }));
 
+vi.mock("@/store/useAuthStore", () => ({
+  useAuthStore: () => ({
+    user: { id: "user-1", email: "pedro@atlas.com", role: "ADMIN" },
+    isAuthenticated: true,
+  }),
+}));
+
 vi.mock("next/navigation", () => ({
   useParams: () => ({ id: "job-1", locale: "pt" }),
   useRouter: () => ({ push: vi.fn(), back: vi.fn() }),

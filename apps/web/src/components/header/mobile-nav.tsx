@@ -43,12 +43,13 @@ export function MobileNav({ locale }: MobileNavProps) {
       console.error("Erro durante o logout", err);
     } finally {
       clearAuth();
-      // Router redirection is handled on page reload/auth context trigger
       setLoggingOut(false);
     }
   };
 
-  const menuCategories = [
+  const userRole = user?.role || "EMPLOYEE";
+
+  const allCategories = [
     {
       label: "Gestão de Pessoas",
       items: [
@@ -56,21 +57,31 @@ export function MobileNav({ locale }: MobileNavProps) {
           label: "Colaboradores",
           href: `/${locale}/employees`,
           icon: <Users className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Novo Cadastro",
           href: `/${locale}/employees/new`,
           icon: <UserPlus className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Férias & Licenças",
-          href: `/${locale}/absences`,
+          label: "Férias",
+          href: `/${locale}/absences/vacations`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
+        },
+        {
+          label: "Atestados & Licenças",
+          href: `/${locale}/absences/leaves`,
+          icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Documentos",
           href: `/${locale}/documents`,
           icon: <FileText className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
       ],
     },
@@ -81,11 +92,13 @@ export function MobileNav({ locale }: MobileNavProps) {
           label: "Quadro de Vagas",
           href: `/${locale}/recruitment`,
           icon: <Briefcase className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Nova Vaga",
           href: `/${locale}/recruitment/new`,
           icon: <FilePlus className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
         },
       ],
     },
@@ -93,18 +106,33 @@ export function MobileNav({ locale }: MobileNavProps) {
       label: "Organização",
       items: [
         {
-          label: "Departamentos & Cargos",
-          href: `/${locale}/organization`,
+          label: "Departamentos",
+          href: `/${locale}/organization/departments`,
           icon: <Building className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
+        },
+        {
+          label: "Cargos",
+          href: `/${locale}/organization/positions`,
+          icon: <Building className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Logs de Auditoria",
           href: `/${locale}/audit`,
           icon: <ClipboardList className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR"],
         },
       ],
     },
   ];
+
+  const menuCategories = allCategories
+    .map((category) => ({
+      ...category,
+      items: category.items.filter((item) => item.allowedRoles.includes(userRole)),
+    }))
+    .filter((category) => category.items.length > 0);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -130,27 +158,46 @@ export function MobileNav({ locale }: MobileNavProps) {
           </SheetHeader>
 
           <div className="space-y-6">
-            {menuCategories.map((category) => (
-              <div key={category.label} className="space-y-2">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  {category.label}
-                </p>
-                <div className="grid grid-cols-1 gap-1">
-                  {category.items.map((item) => (
+            {menuCategories.map((category) => {
+              if (category.items.length === 1) {
+                const singleItem = category.items[0];
+                return (
+                  <div key={category.label} className="space-y-2">
                     <a
-                      key={item.label}
-                      href={item.href}
-                      className="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-accent text-foreground text-sm font-medium transition-colors"
+                      href={singleItem.href}
+                      className="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-accent text-foreground text-sm font-medium transition-colors animate-fade-in"
                     >
                       <div className="p-2 rounded-lg bg-muted/65 text-primary shrink-0">
-                        {item.icon}
+                        {singleItem.icon}
                       </div>
-                      <span>{item.label}</span>
+                      <span>{singleItem.label}</span>
                     </a>
-                  ))}
+                  </div>
+                );
+              }
+
+              return (
+                <div key={category.label} className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    {category.label}
+                  </p>
+                  <div className="grid grid-cols-1 gap-1">
+                    {category.items.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        className="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-accent text-foreground text-sm font-medium transition-colors"
+                      >
+                        <div className="p-2 rounded-lg bg-muted/65 text-primary shrink-0">
+                          {item.icon}
+                        </div>
+                        <span>{item.label}</span>
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
