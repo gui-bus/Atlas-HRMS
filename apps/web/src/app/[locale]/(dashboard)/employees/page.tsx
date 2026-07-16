@@ -198,7 +198,7 @@ export default function EmployeesListPage() {
       {/* Filters section */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={t("searchPlaceholder")}
             value={search}
@@ -206,7 +206,7 @@ export default function EmployeesListPage() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="pl-9"
+            className="pl-10 h-10 rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
           />
         </div>
         <select
@@ -215,7 +215,7 @@ export default function EmployeesListPage() {
             setStatus(e.target.value);
             setPage(1);
           }}
-          className="flex h-9 w-full md:w-[180px] rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          className="flex h-10 w-full md:w-[180px] rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 px-4 text-sm outline-none focus:outline-none transition-colors cursor-pointer"
         >
           <option value="">{t("table.status")}</option>
           <option value="ACTIVE">{t("statusActive")}</option>
@@ -226,16 +226,16 @@ export default function EmployeesListPage() {
       </div>
 
       {/* Table section */}
-      <div className="rounded-md border bg-card text-card-foreground">
+      <div className="w-full bg-transparent overflow-hidden">
         <div className="overflow-x-auto w-full">
-          <table className="w-full text-sm border-collapse text-left">
+          <table className="w-full text-sm border-collapse text-left border-0">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="border-b bg-muted/30 hover:bg-muted/30">
+                <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                      className="h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0"
                     >
                       {header.isPlaceholder
                         ? null
@@ -247,20 +247,26 @@ export default function EmployeesListPage() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={columns.length} className="h-24 text-center">
+                <tr className="border-0">
+                  <td colSpan={columns.length} className="h-24 text-center border-0">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                   </td>
                 </tr>
               ) : isError ? (
-                <tr>
-                  <td colSpan={columns.length} className="h-24 text-center text-destructive">
+                <tr className="border-0">
+                  <td
+                    colSpan={columns.length}
+                    className="h-24 text-center text-destructive border-0"
+                  >
                     {t("form.errorLoading")}
                   </td>
                 </tr>
               ) : table.getRowModel().rows.length === 0 ? (
-                <tr>
-                  <td colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                <tr className="border-0">
+                  <td
+                    colSpan={columns.length}
+                    className="h-24 text-center text-muted-foreground border-0"
+                  >
                     {t("form.notFound")}
                   </td>
                 </tr>
@@ -268,10 +274,13 @@ export default function EmployeesListPage() {
                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                    className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                      <td
+                        key={cell.id}
+                        className="p-4 align-middle [&:has([role=checkbox])]:pr-0 border-0"
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
