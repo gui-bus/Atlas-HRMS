@@ -8,13 +8,16 @@ import {
   ChevronDown,
   LogOut,
   Users,
-  Building,
+  UserPlus,
   Calendar,
   FileText,
   Briefcase,
+  FilePlus,
+  Building,
   ClipboardList,
+  Menu,
+  X,
 } from "lucide-react";
-import { Sun, Moon } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
@@ -28,7 +31,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 
 export function Header() {
@@ -39,10 +41,16 @@ export function Header() {
   const { theme } = useTheme();
   const [loggingOut, setLoggingOut] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const segments = pathname.split("/");
   const locale = segments[1] || "pt";
@@ -60,46 +68,70 @@ export function Header() {
     }
   };
 
-  // Menu Categories with Dropdowns
-  const menuItems = [
+  // Grouped menu structure with Icons, Titles, and Descriptions
+  const menuCategories = [
     {
-      label: t("employees"),
-      icon: <Users className="w-4 h-4" />,
+      label: "Gestão de Pessoas",
       items: [
-        { label: "Listar Colaboradores", href: `/${locale}/employees` },
-        { label: "Novo Cadastro", href: `/${locale}/employees/new` },
+        {
+          label: "Colaboradores",
+          desc: "Base cadastral de funcionários e perfis.",
+          href: `/${locale}/employees`,
+          icon: <Users className="w-5 h-5 text-primary shrink-0" />,
+        },
+        {
+          label: "Novo Cadastro",
+          desc: "Adicionar novos colaboradores ao sistema.",
+          href: `/${locale}/employees/new`,
+          icon: <UserPlus className="w-5 h-5 text-primary shrink-0" />,
+        },
+        {
+          label: "Férias & Licenças",
+          desc: "Controle e aprovação de ausências.",
+          href: `/${locale}/absences`,
+          icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
+        },
+        {
+          label: "Documentos",
+          desc: "Termos, contratos e comprovantes.",
+          href: `/${locale}/documents`,
+          icon: <FileText className="w-5 h-5 text-primary shrink-0" />,
+        },
       ],
     },
     {
-      label: t("departments"),
-      icon: <Building className="w-4 h-4" />,
-      items: [{ label: "Departamentos & Cargos", href: `/${locale}/organization` }],
-    },
-    {
-      label: t("vacations"),
-      icon: <Calendar className="w-4 h-4" />,
+      label: "Recrutamento",
       items: [
-        { label: "Férias & Licenças", href: `/${locale}/absences` },
-        { label: "Minhas Solicitações", href: `/${locale}/absences/my-requests` },
+        {
+          label: "Quadro de Vagas",
+          desc: "Processos seletivos e candidatos ativos.",
+          href: `/${locale}/recruitment`,
+          icon: <Briefcase className="w-5 h-5 text-primary shrink-0" />,
+        },
+        {
+          label: "Nova Vaga",
+          desc: "Criar e publicar processos seletivos públicos.",
+          href: `/${locale}/recruitment/new`,
+          icon: <FilePlus className="w-5 h-5 text-primary shrink-0" />,
+        },
       ],
     },
     {
-      label: "Documentos",
-      icon: <FileText className="w-4 h-4" />,
-      items: [{ label: "Repositório Geral", href: `/${locale}/documents` }],
-    },
-    {
-      label: t("recruitment"),
-      icon: <Briefcase className="w-4 h-4" />,
+      label: "Organização",
       items: [
-        { label: "Vagas Abertas", href: `/${locale}/recruitment` },
-        { label: "Nova Vaga", href: `/${locale}/recruitment/new` },
+        {
+          label: "Departamentos & Cargos",
+          desc: "Definir hierarquias e faixas salariais.",
+          href: `/${locale}/organization`,
+          icon: <Building className="w-5 h-5 text-primary shrink-0" />,
+        },
+        {
+          label: "Logs de Auditoria",
+          desc: "Monitore o histórico de operações críticas.",
+          href: `/${locale}/audit`,
+          icon: <ClipboardList className="w-5 h-5 text-primary shrink-0" />,
+        },
       ],
-    },
-    {
-      label: "Auditoria",
-      icon: <ClipboardList className="w-4 h-4" />,
-      items: [{ label: "Logs do Sistema", href: `/${locale}/audit` }],
     },
   ];
 
@@ -107,44 +139,49 @@ export function Header() {
     mounted && theme === "dark" ? "/utils/logo_white_text.svg" : "/utils/logo_black_text.svg";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 w-full items-center justify-between px-6">
-        {/* Left: Branding/Logo */}
-        <div className="flex items-center gap-6">
+    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex h-16 w-full items-center justify-between px-6 md:px-8">
+        {/* Left: Brand Logo & Desktop Nav */}
+        <div className="flex items-center gap-8">
           <a href={`/${locale}`} className="flex items-center space-x-2 shrink-0">
             {mounted ? (
               <Image
                 src={logoSrc}
                 alt="Atlas HRMS Logo"
-                width={120}
-                height={35}
-                className="h-8 w-auto object-contain"
+                width={100}
+                height={28}
+                className="h-6 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
                 priority
               />
             ) : (
-              <div className="h-8 w-24 bg-muted animate-pulse rounded" />
+              <div className="h-6 w-20 bg-muted animate-pulse rounded" />
             )}
           </a>
 
-          {/* Middle: Hover Navigation Menus */}
+          {/* Desktop Mega Menus */}
           <nav className="hidden lg:flex items-center space-x-1">
-            {menuItems.map((category) => (
+            {menuCategories.map((category) => (
               <div key={category.label} className="relative group py-2">
-                <button className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/50 transition-colors focus:outline-none">
-                  {category.icon}
+                <button className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none">
                   <span>{category.label}</span>
                   <ChevronDown className="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform duration-200" />
                 </button>
 
-                {/* Dropdown panel */}
-                <div className="absolute left-0 top-full hidden group-hover:block w-52 rounded-lg border bg-popover p-1.5 text-popover-foreground shadow-md animate-in fade-in-50 slide-in-from-top-1">
+                {/* Mega Dropdown Panel (2x2 Grid) */}
+                <div className="absolute left-0 top-full hidden group-hover:grid grid-cols-2 gap-4 p-4 w-[480px] rounded-2xl bg-popover text-popover-foreground shadow-xl animate-in fade-in-50 slide-in-from-top-1 border-0">
                   {category.items.map((item) => (
                     <a
                       key={item.label}
                       href={item.href}
-                      className="block px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors font-normal"
+                      className="flex items-start space-x-3 p-2.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors"
                     >
-                      {item.label}
+                      {item.icon}
+                      <div className="space-y-0.5">
+                        <p className="text-sm font-semibold leading-none">{item.label}</p>
+                        <p className="text-xs text-muted-foreground leading-normal line-clamp-2">
+                          {item.desc}
+                        </p>
+                      </div>
                     </a>
                   ))}
                 </div>
@@ -154,34 +191,39 @@ export function Header() {
         </div>
 
         {/* Right Controls */}
-        <div className="flex items-center gap-4">
-          {/* Language Switcher */}
-          <LanguageSwitcher />
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="hidden sm:flex items-center gap-2 md:gap-4">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
 
-          {/* Theme Toggler */}
-          <ThemeSwitcher />
+            {/* Theme Toggler */}
+            <ThemeSwitcher />
+          </div>
 
           {/* User Profile Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <div className="flex items-center space-x-3 px-2 py-1.5 rounded-lg hover:bg-accent transition-colors cursor-pointer select-none border">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-sm shrink-0 uppercase border border-primary/20">
+                <button
+                  type="button"
+                  className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl hover:bg-accent transition-colors cursor-pointer select-none outline-none focus:outline-none"
+                >
+                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-sm shrink-0 uppercase border-0">
                     {user?.email?.charAt(0).toUpperCase()}
                   </div>
                   <div className="hidden md:flex flex-col text-left min-w-0">
                     <p className="text-xs font-semibold text-foreground truncate max-w-[120px]">
                       {user?.email}
                     </p>
-                    <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-muted-foreground leading-none">
                       {user?.role}
                     </span>
                   </div>
                   <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                </div>
+                </button>
               }
             />
-            <DropdownMenuContent className="w-56" align="end" side="bottom">
+            <DropdownMenuContent className="w-56 border-0 shadow-xl" align="end" side="bottom">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none truncate">{user?.email}</p>
@@ -201,8 +243,48 @@ export function Header() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="flex lg:hidden items-center justify-center w-9 h-9 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden w-full bg-background border-t p-4 space-y-4 animate-in slide-in-from-top-2 duration-150">
+          <div className="flex justify-between items-center px-2 pb-2">
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+          </div>
+          <div className="space-y-4">
+            {menuCategories.map((category) => (
+              <div key={category.label} className="space-y-1">
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2">
+                  {category.label}
+                </p>
+                <div className="grid grid-cols-1 gap-1">
+                  {category.items.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-accent text-foreground text-sm font-medium transition-colors"
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
