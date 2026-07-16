@@ -183,6 +183,8 @@ export class AuthService {
         employee: {
           include: {
             personalData: true,
+            address: true,
+            bankAccount: true,
           },
         },
       },
@@ -202,7 +204,15 @@ export class AuthService {
             id: user.employee.id,
             firstName: user.employee.firstName,
             lastName: user.employee.lastName,
+            phone: user.employee.phone || null,
             avatarUrl: user.employee.personalData?.avatarUrl || null,
+            rg: user.employee.personalData?.rg || null,
+            cpf: user.employee.personalData?.cpf || null,
+            birthDate: user.employee.personalData?.birthDate || null,
+            gender: user.employee.personalData?.gender || null,
+            maritalStatus: user.employee.personalData?.maritalStatus || null,
+            address: user.employee.address || null,
+            bankAccount: user.employee.bankAccount || null,
           }
         : null,
     };

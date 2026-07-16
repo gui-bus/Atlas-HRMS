@@ -3,7 +3,8 @@
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { MagnifyingGlass, ArrowsDownUp, CircleNotch } from "@phosphor-icons/react";
+import { useParams, useRouter } from "next/navigation";
+import { MagnifyingGlass, ArrowsDownUp, CircleNotch, Eye } from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -21,6 +22,9 @@ import { Select, Option } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 export default function UserAccountsPage() {
+  const router = useRouter();
+  const params = useParams();
+  const locale = params?.locale || "pt";
   const t = useTranslations("Common"); // Reuse dashboard translation scope or commons
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -95,6 +99,25 @@ export default function UserAccountsPage() {
     columnHelper.accessor("createdAt", {
       header: "Data de Criação",
       cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "Ações",
+      cell: (info) => {
+        const rowData = info.row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40 hover:bg-muted/65 text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => router.push(`/${locale}/organization/users/${rowData.id}`)}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </div>
+        );
+      },
     }),
   ];
 

@@ -17,9 +17,7 @@ describe("UsersController (Unit)", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [
-        { provide: UsersService, useValue: mockUsersService },
-      ],
+      providers: [{ provide: UsersService, useValue: mockUsersService }],
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: () => true })
@@ -43,6 +41,17 @@ describe("UsersController (Unit)", () => {
       const result = await controller.findAll();
       expect(result).toEqual(users);
       expect(service.findAll).toHaveBeenCalled();
+    });
+  });
+
+  describe("update", () => {
+    it("should call service.update with id and dto", async () => {
+      const dto = { role: UserRole.ADMIN };
+      mockUsersService.update = jest.fn().mockResolvedValue({ id: "u-123", role: UserRole.ADMIN });
+
+      const result = await controller.update("u-123", dto);
+      expect(result).toEqual({ id: "u-123", role: UserRole.ADMIN });
+      expect(mockUsersService.update).toHaveBeenCalledWith("u-123", dto);
     });
   });
 });

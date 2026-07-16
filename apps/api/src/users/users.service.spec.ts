@@ -50,4 +50,26 @@ describe("UsersService (Unit)", () => {
       await expect(service.findOne("u-invalid")).rejects.toThrow(NotFoundException);
     });
   });
+
+  describe("update", () => {
+    it("should throw NotFoundException if user not found", async () => {
+      mockPrisma.user.findFirst.mockResolvedValue(null);
+      await expect(service.update("u-invalid", { role: UserRole.ADMIN })).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it("should update user successfully", async () => {
+      const mockUser = { id: "u-123", email: "user@atlas.com" };
+      mockPrisma.user.findFirst.mockResolvedValue(mockUser);
+      const updateMock = jest.fn().mockResolvedValue({ id: "u-123", role: UserRole.ADMIN });
+      mockPrisma.user.update = updateMock;
+
+      await service.update("u-123", { role: UserRole.ADMIN });
+      expect(updateMock).toHaveBeenCalledWith({
+        where: { id: "u-123" },
+        data: { role: UserRole.ADMIN, isActive: undefined },
+      });
+    });
+  });
 });

@@ -12,4 +12,13 @@ export const userAccountService = {
     const response = await api.get<UserAccount[]>("/users");
     return response.data;
   },
+
+  async getUserAccount(id: string): Promise<UserAccount> {
+    const response = await api.get<UserAccount>(`/users/${id}`);
+    return response.data;
+  },
+
+  async updateUserAccount(id: string, data: { role?: string; isActive?: boolean }): Promise<void> {
+    await api.put(`/users/${id}`, data);
+  },
 };

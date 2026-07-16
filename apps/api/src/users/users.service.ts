@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from "@nestjs/comm
 import { PrismaService } from "../common/prisma.service";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 import { UploadthingService } from "../common/uploadthing/uploadthing.service";
 import * as bcrypt from "bcrypt";
 
@@ -74,6 +75,29 @@ export class UsersService {
             personalData: {
               update: {
                 avatarUrl: finalAvatarUrl !== undefined ? finalAvatarUrl : undefined,
+                rg: dto.rg !== undefined ? dto.rg : undefined,
+                birthDate: dto.birthDate !== undefined ? new Date(dto.birthDate) : undefined,
+                gender: dto.gender !== undefined ? dto.gender : undefined,
+                maritalStatus: dto.maritalStatus !== undefined ? dto.maritalStatus : undefined,
+              },
+            },
+            address: {
+              update: {
+                cep: dto.cep !== undefined ? dto.cep.replace(/[^\d]/g, "") : undefined,
+                street: dto.street !== undefined ? dto.street : undefined,
+                number: dto.number !== undefined ? dto.number : undefined,
+                complement: dto.complement !== undefined ? dto.complement : undefined,
+                neighborhood: dto.neighborhood !== undefined ? dto.neighborhood : undefined,
+                city: dto.city !== undefined ? dto.city : undefined,
+                state: dto.state !== undefined ? dto.state.toUpperCase() : undefined,
+              },
+            },
+            bankAccount: {
+              update: {
+                bankCode: dto.bankCode !== undefined ? dto.bankCode : undefined,
+                bankAgency: dto.bankAgency !== undefined ? dto.bankAgency : undefined,
+                bankAccount: dto.bankAccount !== undefined ? dto.bankAccount : undefined,
+                accountType: dto.accountType !== undefined ? dto.accountType : undefined,
               },
             },
           },
@@ -110,5 +134,23 @@ export class UsersService {
     });
 
     return { success: true };
+  }
+
+  async update(id: string, dto: UpdateUserDto) {
+    const user = await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
+    });
+
+    if (!user) {
+      throw new NotFoundException("Usuário não encontrado");
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        role: dto.role !== undefined ? dto.role : undefined,
+        isActive: dto.isActive !== undefined ? dto.isActive : undefined,
+      },
+    });
   }
 }

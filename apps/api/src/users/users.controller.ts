@@ -19,6 +19,7 @@ import { UserRole } from "@prisma/client";
 import { CurrentUser } from "../auth/current-user.decorator";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 import {
   UnauthorizedErrorResponseDto,
   ForbiddenErrorResponseDto,
@@ -97,5 +98,23 @@ export class UsersController {
   })
   async findOne(@Param("id") id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @Put(":id")
+  @Roles(UserRole.ADMIN, UserRole.HR)
+  @ApiOperation({
+    summary: "Atualizar permissões/papéis de uma conta de usuário específica (Apenas Admin e RH)",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Conta de usuário atualizada com sucesso",
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Usuário não encontrado",
+    type: NotFoundErrorResponseDto,
+  })
+  async update(@Param("id") id: string, @Body() dto: UpdateUserDto) {
+    return this.usersService.update(id, dto);
   }
 }

@@ -237,7 +237,15 @@ describe("AuthService", () => {
           id: "emp-1",
           firstName: "John",
           lastName: "Doe",
+          phone: null,
           avatarUrl: "https://photo.png",
+          rg: null,
+          cpf: null,
+          birthDate: null,
+          gender: null,
+          maritalStatus: null,
+          address: null,
+          bankAccount: null,
         },
       });
     });

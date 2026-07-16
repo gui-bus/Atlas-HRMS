@@ -246,7 +246,9 @@ export default function EmployeesListPage() {
                     {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className="h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0"
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 ${
+                          index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"
+                        }`}
                       >
                         {header.isPlaceholder
                           ? null
@@ -290,7 +292,9 @@ export default function EmployeesListPage() {
                       {row.getVisibleCells().map((cell, index) => (
                         <td
                           key={cell.id}
-                          className="p-4 align-middle [&:has([role=checkbox])]:pr-0 border-0"
+                          className={`p-4 align-middle [&:has([role=checkbox])]:pr-0 border-0 ${
+                            index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"
+                          }`}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>

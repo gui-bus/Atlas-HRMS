@@ -14,6 +14,7 @@ import {
   Buildings,
   ClipboardText,
   Clock,
+  TextOutdentIcon,
 } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
@@ -173,7 +174,7 @@ export function MobileNav({ locale }: MobileNavProps) {
             type="button"
             className="flex lg:hidden items-center justify-center w-9 h-9 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
           >
-            <Menu className="w-5 h-5" />
+            <TextOutdentIcon className="w-5 h-5" />
           </button>
         }
       />
