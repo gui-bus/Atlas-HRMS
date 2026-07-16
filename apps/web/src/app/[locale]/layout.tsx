@@ -7,6 +7,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import AuthProvider from "@/providers/AuthProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ToastProvider } from "@/components/ui/toast";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -39,7 +40,9 @@ export default async function LocaleLayout({
             <QueryProvider>
               <AuthProvider>
                 <TooltipProvider>
-                  <main className="w-full max-w-[110rem] mx-auto">{children}</main>
+                  <ToastProvider>
+                    <main className="w-full max-w-[110rem] mx-auto">{children}</main>
+                  </ToastProvider>
                 </TooltipProvider>
               </AuthProvider>
             </QueryProvider>

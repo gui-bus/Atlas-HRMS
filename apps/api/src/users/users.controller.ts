@@ -1,11 +1,24 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  Put,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
 import { UserResponseDto } from "./dto/user-response.dto";
 import { AuthGuard } from "../auth/auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 import { UserRole } from "@prisma/client";
+import { CurrentUser } from "../auth/current-user.decorator";
+import { UpdateProfileDto } from "./dto/update-profile.dto";
+import { ChangePasswordDto } from "./dto/change-password.dto";
 import {
   UnauthorizedErrorResponseDto,
   ForbiddenErrorResponseDto,
@@ -29,6 +42,32 @@ import {
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Put("me")
+  @UseInterceptors(FileInterceptor("avatar"))
+  @ApiConsumes("multipart/form-data")
+  @ApiOperation({ summary: "Atualizar informações de perfil do próprio usuário autenticado" })
+  @ApiResponse({
+    status: 200,
+    description: "Perfil atualizado com sucesso",
+  })
+  async updateProfile(
+    @CurrentUser() user: { sub: string },
+    @Body() dto: UpdateProfileDto,
+    @UploadedFile() avatar?: Express.Multer.File,
+  ) {
+    return this.usersService.updateProfile(user.sub, dto, avatar);
+  }
+
+  @Put("change-password")
+  @ApiOperation({ summary: "Alterar a senha da própria conta autenticada" })
+  @ApiResponse({
+    status: 200,
+    description: "Senha alterada com sucesso",
+  })
+  async changePassword(@CurrentUser() user: { sub: string }, @Body() dto: ChangePasswordDto) {
+    return this.usersService.changePassword(user.sub, dto);
+  }
+
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR)
   @ApiOperation({ summary: "Listar todas as contas de usuário do sistema (Apenas Admin e RH)" })
@@ -43,7 +82,9 @@ export class UsersController {
 
   @Get(":id")
   @Roles(UserRole.ADMIN, UserRole.HR)
-  @ApiOperation({ summary: "Buscar detalhes de uma conta de usuário específica (Apenas Admin e RH)" })
+  @ApiOperation({
+    summary: "Buscar detalhes de uma conta de usuário específica (Apenas Admin e RH)",
+  })
   @ApiResponse({
     status: 200,
     description: "Usuário encontrado e retornado com sucesso",

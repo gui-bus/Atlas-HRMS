@@ -25,5 +25,6 @@
 ## 5. Diretrizes do Frontend (Internacionalização e Estilo)
 
 - **Internacionalização Obrigatória (i18n)**: Todo e qualquer texto visível para o usuário final nas telas, modais, placeholders, mensagens de erro, validações e alertas deve ser traduzido usando os arquivos de localização (`messages/pt.json`, `messages/en.json`, `messages/es.json`). É estritamente proibido o uso de strings literal fixas (hardcoded) no código de componentes do frontend.
-- **Design minimalista e Shadcn**: Siga os padrões estéticos definidos para o projeto, utilizando os componentes base da biblioteca **shadcn/ui** de forma a manter uma identidade visual limpa, premium, profissional e minimalista.
-
+- **Design minimalista e Shadcn**: Siga os padrões estéticos definidos para o projeto, utilizando os componentes base da biblioteca **shadcn/ui** de forma a manter uma identidade visual limpa, premium, profissional e minimalista. É estritamente proibido o uso de elementos HTML puros (como <select>, <input>) sem estilização apropriada para o tema escuro. Sempre utilize componentes do shadcn/ui.
+- **Ícones do Sistema**: É estritamente proibido o uso de ícones da biblioteca `lucide-react` no frontend. Utilize unicamente os ícones da biblioteca `@phosphor-icons/react` para garantir consistência estética.
+- **Textos e Localização**: É terminantemente proibida a utilização de textos estáticos hardcoded nos componentes do frontend. Todas as strings devem ser acessadas através dos arquivos de tradução (`pt.json`, `en.json`, `es.json`) utilizando a biblioteca de internacionalização do projeto.

@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Search,
+  MagnifyingGlass,
   MapPin,
   Briefcase,
   Calendar,
   Building2,
-  ChevronRight,
-  Loader2,
-} from "lucide-react";
+  CaretRight,
+  CircleNotch,
+} from "@phosphor-icons/react";
 import { useParams, useRouter } from "next/navigation";
 import { recruitmentService, Recruitment } from "@/services/recruitment.service";
 import { Button } from "@/components/ui/button";
@@ -90,10 +90,10 @@ export default function PublicJobsPage() {
         </p>
       </section>
 
-      {/* Search and Jobs List */}
+      {/* MagnifyingGlass and Jobs List */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-6 md:px-12 pb-16 space-y-6">
         <div className="relative w-full">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Pesquisar vagas por título ou departamento..."
             value={searchTerm}
@@ -105,7 +105,7 @@ export default function PublicJobsPage() {
         <div className="space-y-4">
           {isLoading ? (
             <div className="py-12 flex items-center justify-center">
-              <Loader2 className="h-7 w-7 animate-spin text-muted-foreground" />
+              <CircleNotch className="h-7 w-7 animate-spin text-muted-foreground" />
             </div>
           ) : filteredJobs.length === 0 ? (
             <div className="py-12 text-center text-sm text-muted-foreground">
@@ -139,7 +139,7 @@ export default function PublicJobsPage() {
 
                 <div className="flex items-center gap-2 text-primary font-bold text-xs group-hover:translate-x-1 transition-transform">
                   Ver Detalhes
-                  <ChevronRight className="w-4 h-4" />
+                  <CaretRight className="w-4 h-4" />
                 </div>
               </div>
             ))

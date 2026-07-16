@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { DocumentsController } from "./documents.controller";
 import { DocumentsService } from "./documents.service";
+import { UploadthingService } from "../common/uploadthing/uploadthing.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { UserRole } from "@prisma/client";
@@ -23,7 +24,10 @@ describe("DocumentsController (Unit)", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DocumentsController],
-      providers: [{ provide: DocumentsService, useValue: mockDocumentsService }],
+      providers: [
+        { provide: DocumentsService, useValue: mockDocumentsService },
+        { provide: UploadthingService, useValue: { uploadFile: jest.fn(), deleteFile: jest.fn() } },
+      ],
     })
       .overrideGuard(AuthGuard)
       .useValue(mockAuthGuard)

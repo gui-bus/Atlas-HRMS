@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, FileText } from "lucide-react";
+import { ArrowLeft, CircleNotch, FileText } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { employeeService } from "@/services/employee.service";
@@ -14,6 +14,7 @@ import { vacationService } from "@/services/vacation.service";
 import { leaveRequestSchema, LeaveRequestValues } from "@/schemas/vacation.schema";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
@@ -117,17 +118,17 @@ export default function NewLeaveRequestPage() {
                 <Label htmlFor="type">
                   Tipo de Licença <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="type"
                   {...register("type")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="MEDICAL">Médica (Atestado)</option>
-                  <option value="PARENTAL">Parental (Maternidade/Paternidade)</option>
-                  <option value="LEGAL">Legal (Casamento, Óbito, etc.)</option>
-                  <option value="UNPAID">Não Remunerada</option>
-                  <option value="OTHER">Outros Afastamentos</option>
-                </select>
+                  <Option value="MEDICAL">Médica (Atestado)</Option>
+                  <Option value="PARENTAL">Parental (Maternidade/Paternidade)</Option>
+                  <Option value="LEGAL">Legal (Casamento, Óbito, etc.)</Option>
+                  <Option value="UNPAID">Não Remunerada</Option>
+                  <Option value="OTHER">Outros Afastamentos</Option>
+                </Select>
                 {errors.type && <p className="text-xs text-destructive">{errors.type.message}</p>}
               </div>
 
@@ -157,7 +158,7 @@ export default function NewLeaveRequestPage() {
               Cancelar
             </Button>
             <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               Solicitar Licença
             </Button>
           </div>

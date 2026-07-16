@@ -203,16 +203,21 @@
   "Documents": {
     "title": "Document Repository",
     "subTitle": "Manage and store employee contracts, agreements and receipts.",
-    "addDocument": "Upload Document",
+    "addDocument": "Add Document",
+    "addDocumentDesc": "Register terms, contracts or receipts for employees by uploading the file directly.",
     "requiredFieldsNotice": "Indicates required fields",
-    "uploadArea": "Click to select or drag document file here",
+    "uploadArea": "Drag and drop the file here or click to select",
+    "uploadHint": "PDF, DOC, DOCX, PNG or JPG (max. 10MB)",
+    "employeeSelectPlaceholder": "Select an employee",
+    "uploadSectionTitle": "Document Upload",
+    "uploadSectionDesc": "Upload the document file and associate the information to the corresponding employee.",
     "form": {
-      "name": "Document descriptive name",
-      "type": "Document type",
+      "name": "Document Name",
+      "type": "Document Type",
       "url": "File URL",
-      "employee": "Employee",
+      "employee": "Related Employee",
       "cancel": "Cancel",
-      "create": "Upload"
+      "create": "Save Document"
     },
     "table": {
       "name": "Name",
@@ -275,5 +280,20 @@
       "timestamp": "Date/Time",
       "details": "Event Details"
     }
+  },
+  "Profile": {
+    "title": "My Profile",
+    "subTitle": "Manage your personal details, avatar, and access credentials.",
+    "saveSuccess": "Profile updated successfully!",
+    "passwordSuccess": "Password changed successfully!",
+    "personalInfo": "Personal Information",
+    "security": "Security & Access",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "changePassword": "Change Password",
+    "changing": "Changing..."
   }
 }

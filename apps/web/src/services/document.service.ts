@@ -32,13 +32,12 @@ export const documentService = {
     return response.data;
   },
 
-  async createDocument(data: {
-    name: string;
-    type: "CONTRACT" | "IDENTIFICATION" | "EDUCATION" | "ADDRESS_PROOF" | "OTHER";
-    url: string;
-    employeeId: string;
-  }): Promise<Document> {
-    const response = await api.post<Document>("/documents", data);
+  async createDocument(data: FormData): Promise<Document> {
+    const response = await api.post<Document>("/documents", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 

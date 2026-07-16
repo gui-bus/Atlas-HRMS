@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { Search, Loader2, ArrowLeft, Clock, Calendar } from "lucide-react";
+import { MagnifyingGlass, CircleNotch, ArrowLeft, Clock, Calendar } from "@phosphor-icons/react";
 import { useRouter, useParams } from "next/navigation";
 import { timeAttendanceService, TimeRecord } from "@/services/time-attendance.service";
 import { Button } from "@/components/ui/button";
@@ -127,9 +127,9 @@ export default function MyTimeHistoryPage() {
         </Button>
       </div>
 
-      {/* Search Input */}
+      {/* MagnifyingGlass Input */}
       <div className="relative w-full">
-        <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Pesquisar por data (ex: DD/MM/AAAA)..."
           value={globalFilter}
@@ -142,7 +142,7 @@ export default function MyTimeHistoryPage() {
       <div className="space-y-4">
         {isLoading ? (
           <div className="py-12 flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <CircleNotch className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : filteredDays.length === 0 ? (
           <div className="py-12 text-center text-sm text-muted-foreground">

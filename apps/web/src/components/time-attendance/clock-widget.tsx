@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Clock, CheckCircle2, AlertCircle, Calendar } from "lucide-react";
+import { Clock, CheckCircle, WarningCircle, Calendar } from "@phosphor-icons/react";
 import { timeAttendanceService } from "@/services/time-attendance.service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -239,7 +239,7 @@ export function ClockWidget() {
                 : "bg-destructive/10 text-destructive"
             }`}
           >
-            <AlertCircle className="w-4 h-4 shrink-0" />
+            <WarningCircle className="w-4 h-4 shrink-0" />
             <span>{notification.text}</span>
           </div>
         )}

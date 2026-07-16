@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { Info, Loader2, Search, ArrowLeft, ArrowRight } from "lucide-react";
+import { Info, CircleNotch, MagnifyingGlass, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -118,7 +118,7 @@ export default function AuditLogsPage() {
         {/* Filter Toolbar */}
         <div className="flex items-center gap-4 pt-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder={t("searchPlaceholder")}
               value={search}
@@ -138,10 +138,10 @@ export default function AuditLogsPage() {
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
-                    {headerGroup.headers.map((header) => (
+                    {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className="h-10 px-4 align-middle font-medium text-muted-foreground border-0"
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
@@ -153,7 +153,7 @@ export default function AuditLogsPage() {
                 {isLoading ? (
                   <tr className="border-0">
                     <td colSpan={columns.length} className="h-24 text-center border-0">
-                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                      <CircleNotch className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                     </td>
                   </tr>
                 ) : logs.length === 0 ? (
@@ -171,8 +171,11 @@ export default function AuditLogsPage() {
                       key={row.id}
                       className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="p-4 align-middle border-0">
+                      {row.getVisibleCells().map((cell, index) => (
+                        <td
+                          key={cell.id}
+                          className={`p-4 align-middle border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}

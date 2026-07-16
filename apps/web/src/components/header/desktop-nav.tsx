@@ -2,17 +2,17 @@
 
 import React, { useState, useRef } from "react";
 import {
-  ChevronDown,
+  CaretDown,
   Users,
   UserPlus,
   Calendar,
   FileText,
   Briefcase,
   FilePlus,
-  Building,
-  ClipboardList,
+  Buildings,
+  ClipboardText,
   Clock,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import {
@@ -151,21 +151,21 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           label: "Departamentos",
           desc: "Listar e gerenciar departamentos da empresa.",
           href: `/${locale}/organization/departments`,
-          icon: <Building className="w-8 h-8 text-primary shrink-0" />,
+          icon: <Buildings className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Cargos",
           desc: "Definir cargos e faixas salariais.",
           href: `/${locale}/organization/positions`,
-          icon: <Building className="w-8 h-8 text-primary shrink-0" />,
+          icon: <Buildings className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Logs de Auditoria",
           desc: "Monitore o histórico de operações críticas.",
           href: `/${locale}/audit`,
-          icon: <ClipboardList className="w-8 h-8 text-primary shrink-0" />,
+          icon: <ClipboardText className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
@@ -253,7 +253,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
                     className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
                   >
                     <span>{category.label}</span>
-                    <ChevronDown className="w-3.5 h-3.5 opacity-60 transition-transform duration-200" />
+                    <CaretDown className="w-3.5 h-3.5 opacity-60 transition-transform duration-200" />
                   </div>
                 }
               />

@@ -25,6 +25,8 @@ describe("EmployeesService (Unit)", () => {
     },
     user: {
       update: jest.fn(),
+      findUnique: jest.fn().mockResolvedValue(null),
+      create: jest.fn().mockResolvedValue({ id: "user-123" }),
     },
     $transaction: jest.fn((cb) => cb(mockPrisma)),
   };

@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { Search, ArrowUpDown, Loader2 } from "lucide-react";
+import { MagnifyingGlass, ArrowsDownUp, CircleNotch } from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -17,6 +17,7 @@ import {
 import { userAccountService, UserAccount } from "@/services/user-account.service";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Input } from "@/components/ui/input";
+import { Select, Option } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 export default function UserAccountsPage() {
@@ -67,7 +68,7 @@ export default function UserAccountsPage() {
           className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
         >
           E-mail
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowsDownUp className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
@@ -122,7 +123,7 @@ export default function UserAccountsPage() {
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Pesquisar contas por e-mail..."
               value={globalFilter}
@@ -131,17 +132,17 @@ export default function UserAccountsPage() {
             />
           </div>
 
-          <select
+          <Select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
             className="flex h-10 w-full md:w-[200px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <option value="ALL">Todos os níveis</option>
-            <option value="ADMIN">Administrador</option>
-            <option value="HR">Recursos Humanos</option>
-            <option value="MANAGER">Gestor</option>
-            <option value="EMPLOYEE">Colaborador</option>
-          </select>
+            <Option value="ALL">Todos os níveis</Option>
+            <Option value="ADMIN">Administrador</Option>
+            <Option value="HR">Recursos Humanos</Option>
+            <Option value="MANAGER">Gestor</Option>
+            <Option value="EMPLOYEE">Colaborador</Option>
+          </Select>
         </div>
 
         {/* Table */}
@@ -151,10 +152,10 @@ export default function UserAccountsPage() {
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
-                    {headerGroup.headers.map((header) => (
+                    {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className="h-10 px-4 align-middle font-medium text-muted-foreground border-0"
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
@@ -166,7 +167,7 @@ export default function UserAccountsPage() {
                 {isLoading ? (
                   <tr className="border-0">
                     <td colSpan={columns.length} className="h-24 text-center border-0">
-                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                      <CircleNotch className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                     </td>
                   </tr>
                 ) : filteredData.length === 0 ? (
@@ -184,8 +185,11 @@ export default function UserAccountsPage() {
                       key={row.id}
                       className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="p-4 align-middle border-0">
+                      {row.getVisibleCells().map((cell, index) => (
+                        <td
+                          key={cell.id}
+                          className={`p-4 align-middle border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}

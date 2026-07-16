@@ -6,13 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Plus, Trash } from "lucide-react";
+import { CircleNotch, ArrowLeft, Plus, Trash } from "@phosphor-icons/react";
 import { Briefcase, User, MapPin, CreditCard, PhoneCall } from "@phosphor-icons/react";
 
 import { employeeService } from "@/services/employee.service";
 import { RbacGuard } from "@/components/rbac-guard";
 import { employeeSchema, EmployeeFormValues } from "@/schemas/employee.schema";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
@@ -161,16 +162,16 @@ export default function NewEmployeePage() {
                 <Label htmlFor="status">
                   {t("form.status")} <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="status"
                   {...register("status")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="ACTIVE">{t("statusActive")}</option>
-                  <option value="INACTIVE">{t("statusInactive")}</option>
-                  <option value="ON_LEAVE">{t("statusOnLeave")}</option>
-                  <option value="SUSPENDED">{t("statusSuspended")}</option>
-                </select>
+                  <Option value="ACTIVE">{t("statusActive")}</Option>
+                  <Option value="INACTIVE">{t("statusInactive")}</Option>
+                  <Option value="ON_LEAVE">{t("statusOnLeave")}</Option>
+                  <Option value="SUSPENDED">{t("statusSuspended")}</Option>
+                </Select>
               </div>
             </div>
           </div>
@@ -388,15 +389,15 @@ export default function NewEmployeePage() {
                 <Label htmlFor="bankAccount.accountType">
                   {t("form.accountType")} <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="bankAccount.accountType"
                   {...register("bankAccount.accountType")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="CORRENTE">CORRENTE</option>
-                  <option value="POUPANCA">POUPANÇA</option>
-                  <option value="SALARIO">SALÁRIO</option>
-                </select>
+                  <Option value="CORRENTE">CORRENTE</Option>
+                  <Option value="POUPANCA">POUPANÇA</Option>
+                  <Option value="SALARIO">SALÁRIO</Option>
+                </Select>
               </div>
             </div>
           </div>
@@ -499,7 +500,7 @@ export default function NewEmployeePage() {
               {t("table.cancel")}
             </Button>
             <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               {t("form.create")}
             </Button>
           </div>

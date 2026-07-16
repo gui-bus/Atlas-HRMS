@@ -4,6 +4,27 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.3.0] - 2026-07-16
+
+### Adicionado
+
+- **Página de Perfil do Colaborador**: Nova tela em `/profile` com formulário de edição de dados básicos, upload de avatar com pré-visualização instantânea e atualização de senha com máscara de visibilidade (olho) e validações robustas.
+- **Área de Upload de Documentos nativa**: Refatorado o formulário em `/documents/new` para suportar upload de arquivos real via drag-and-drop utilizando `FormData` para a API.
+- **Notificações Toast Customizadas**: Criação de `ToastProvider` e hook `useToast` disparando mensagens flutuantes para feedback imediato e elegante.
+- **Componentes Select Adaptados para Tema Escuro**: Novos wrappers `Select` e `Option` customizados e utilizados em todos os formulários do sistema para legibilidade impecável no Dark Mode.
+
+### Alterado
+
+- **Substituição Geral de Ícones**: Migração de todos os ícones `lucide-react` para `@phosphor-icons/react` no frontend para homogeneidade visual.
+- **Redimensionamento Inteligente de Tabelas**: Ajustado o grid de colunas para fazer com que a primeira coluna ocupe todo o espaço disponível (`w-full`) e as subsequentes ocupem apenas a largura estritamente necessária.
+- **Criação de Usuário com Senha Padrão**: Lógica transacional no backend para criar automaticamente uma credencial com a senha `"Mudar@123"` criptografada por bcrypt ao cadastrar um novo funcionário sem userId associado.
+
+### Corrigido
+
+- **Validação de Tipos de Payload de Cargo**: Correção na conversão de faixas salariais para tipo float no envio de payloads na API de Cargos.
+
+---
+
 ## [1.2.0] - 2026-07-16
 
 ### Adicionado

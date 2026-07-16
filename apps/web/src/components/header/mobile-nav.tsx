@@ -3,18 +3,18 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import {
-  Menu,
-  LogOut,
+  List,
+  SignOut,
   Users,
   UserPlus,
   Calendar,
   FileText,
   Briefcase,
   FilePlus,
-  Building,
-  ClipboardList,
+  Buildings,
+  ClipboardText,
   Clock,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
@@ -127,19 +127,19 @@ export function MobileNav({ locale }: MobileNavProps) {
         {
           label: "Departamentos",
           href: `/${locale}/organization/departments`,
-          icon: <Building className="w-5 h-5 text-primary shrink-0" />,
+          icon: <Buildings className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Cargos",
           href: `/${locale}/organization/positions`,
-          icon: <Building className="w-5 h-5 text-primary shrink-0" />,
+          icon: <Buildings className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
           label: "Logs de Auditoria",
           href: `/${locale}/audit`,
-          icon: <ClipboardList className="w-5 h-5 text-primary shrink-0" />,
+          icon: <ClipboardText className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
@@ -253,7 +253,7 @@ export function MobileNav({ locale }: MobileNavProps) {
                 disabled={loggingOut}
                 className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
               >
-                <LogOut className="w-4 h-4" />
+                <SignOut className="w-4 h-4" />
               </button>
             </div>
           )}

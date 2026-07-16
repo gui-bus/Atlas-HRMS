@@ -203,16 +203,21 @@
   "Documents": {
     "title": "Repositorio de Documentos",
     "subTitle": "Gestione y almacene contratos, acuerdos y comprobantes de los empleados.",
-    "addDocument": "Subir Documento",
+    "addDocument": "Añadir Documento",
+    "addDocumentDesc": "Registre términos, contratos o comprobantes de empleados cargando el archivo directamente.",
     "requiredFieldsNotice": "Indica campos obligatorios",
-    "uploadArea": "Haga clic para seleccionar o arrastre el archivo aquí",
+    "uploadArea": "Arrastre y suelte el archivo aquí o haga clic para seleccionar",
+    "uploadHint": "PDF, DOC, DOCX, PNG o JPG (máx. 10MB)",
+    "employeeSelectPlaceholder": "Seleccione un empleado",
+    "uploadSectionTitle": "Carga de Documento",
+    "uploadSectionDesc": "Cargue el archivo del documento y asocie la información al empleado correspondiente.",
     "form": {
-      "name": "Nombre descriptivo del documento",
-      "type": "Tipo de documento",
+      "name": "Nombre del Documento",
+      "type": "Tipo de Documento",
       "url": "URL del archivo",
-      "employee": "Empleado",
+      "employee": "Empleado Relacionado",
       "cancel": "Cancelar",
-      "create": "Subir"
+      "create": "Guardar Documento"
     },
     "table": {
       "name": "Nombre",
@@ -275,5 +280,20 @@
       "timestamp": "Fecha/Hora",
       "details": "Detalles del Evento"
     }
+  },
+  "Profile": {
+    "title": "Mi Perfil",
+    "subTitle": "Gestione sus datos personales, avatar y credenciales de acceso.",
+    "saveSuccess": "¡Perfil actualizado con éxito!",
+    "passwordSuccess": "¡Contraseña cambiada con éxito!",
+    "personalInfo": "Información Personal",
+    "security": "Seguridad y Acceso",
+    "currentPassword": "Contraseña Actual",
+    "newPassword": "Nueva Contraseña",
+    "confirmNewPassword": "Confirmar Nueva Contraseña",
+    "saveChanges": "Guardar Cambios",
+    "saving": "Guardando...",
+    "changePassword": "Cambiar Contraseña",
+    "changing": "Cambiando..."
   }
 }

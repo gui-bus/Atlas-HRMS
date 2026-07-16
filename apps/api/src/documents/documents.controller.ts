@@ -8,14 +8,19 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
 import { AuthGuard } from "../auth/auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 import { CurrentUser } from "../auth/current-user.decorator";
 import { DocumentsService } from "./documents.service";
+import { UploadthingService } from "../common/uploadthing/uploadthing.service";
 import { CreateDocumentDto } from "./dto/create-document.dto";
 import { DocumentResponseDto } from "./dto/document-response.dto";
 import {
@@ -35,9 +40,14 @@ import {
   type: UnauthorizedErrorResponseDto,
 })
 export class DocumentsController {
-  constructor(private readonly documentsService: DocumentsService) {}
+  constructor(
+    private readonly documentsService: DocumentsService,
+    private readonly uploadthingService: UploadthingService,
+  ) {}
 
   @Post()
+  @UseInterceptors(FileInterceptor("file"))
+  @ApiConsumes("multipart/form-data")
   @ApiOperation({
     summary: "Criar registro de documento para um funcionário (Todos os cargos autenticados)",
   })
@@ -64,7 +74,15 @@ export class DocumentsController {
   async create(
     @Body() dto: CreateDocumentDto,
     @CurrentUser() user: { sub: string; role: UserRole },
+    @UploadedFile() file?: Express.Multer.File,
   ) {
+    if (!file && !dto.url) {
+      throw new BadRequestException("O arquivo do documento ou a URL é obrigatória");
+    }
+    if (file) {
+      const uploadResult = await this.uploadthingService.uploadFile(file);
+      dto.url = uploadResult?.data?.url ?? uploadResult?.url ?? "";
+    }
     return this.documentsService.create(dto, user);
   }
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Bell, Check, Loader2 } from "lucide-react";
+import { Bell, Check, CircleNotch } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
 
 import { notificationService, Notification } from "@/services/notification.service";
@@ -92,7 +92,7 @@ export function NotificationDropdown({ locale }: NotificationDropdownProps) {
         <DropdownMenuGroup className="max-h-[300px] overflow-y-auto space-y-1 py-1">
           {isLoading ? (
             <div className="py-8 flex items-center justify-center">
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <CircleNotch className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           ) : notifications.length === 0 ? (
             <div className="py-8 text-center text-xs text-muted-foreground">

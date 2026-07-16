@@ -46,6 +46,12 @@ vi.mock("next/navigation", () => {
   };
 });
 
+vi.mock("@/components/ui/toast", () => ({
+  useToast: () => ({
+    toast: vi.fn(),
+  }),
+}));
+
 describe("DocumentsPage integration tests", () => {
   let queryClient: QueryClient;
 
@@ -76,6 +82,6 @@ describe("DocumentsPage integration tests", () => {
 
   test("renders upload document form page", async () => {
     renderWithProviders(<NewDocumentPage />);
-    expect(screen.getByText("Adicionar Documento")).toBeInTheDocument();
+    expect(screen.getByText("addDocument")).toBeInTheDocument();
   });
 });

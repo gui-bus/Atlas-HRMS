@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Calendar } from "lucide-react";
+import { ArrowLeft, CircleNotch, Calendar } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { employeeService } from "@/services/employee.service";
@@ -137,7 +137,7 @@ export default function NewVacationRequestPage() {
               Cancelar
             </Button>
             <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               Solicitar Férias
             </Button>
           </div>

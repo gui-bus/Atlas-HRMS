@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEnum, IsUrl, IsUUID } from "class-validator";
+import { IsString, IsNotEmpty, IsEnum, IsUrl, IsUUID, IsOptional } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export enum DocumentType {
@@ -30,12 +30,13 @@ export class CreateDocumentDto {
   type!: DocumentType;
 
   @ApiProperty({
-    description: "URL do arquivo hospedado no UploadThing",
+    description: "URL do arquivo hospedado no UploadThing (preenchida automaticamente)",
     example: "https://utfs.io/f/abc123-rg-joao.pdf",
+    required: false,
   })
   @IsUrl({}, { message: "URL do documento inválida" })
-  @IsNotEmpty()
-  url!: string;
+  @IsOptional()
+  url?: string;
 
   @ApiProperty({
     description: "ID do funcionário ao qual o documento pertence",

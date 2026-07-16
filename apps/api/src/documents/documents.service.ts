@@ -34,7 +34,7 @@ export class DocumentsService {
       data: {
         name: dto.name,
         type: dto.type,
-        url: dto.url,
+        url: dto.url!,
         employeeId: dto.employeeId,
       },
     });

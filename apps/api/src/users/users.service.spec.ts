@@ -4,6 +4,8 @@ import { PrismaService } from "../common/prisma.service";
 import { NotFoundException } from "@nestjs/common";
 import { UserRole } from "@prisma/client";
 
+import { UploadthingService } from "../common/uploadthing/uploadthing.service";
+
 describe("UsersService (Unit)", () => {
   let service: UsersService;
   let prisma: PrismaService;
@@ -20,6 +22,7 @@ describe("UsersService (Unit)", () => {
       providers: [
         UsersService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: UploadthingService, useValue: { uploadFile: jest.fn(), deleteFile: jest.fn() } },
       ],
     }).compile();
 

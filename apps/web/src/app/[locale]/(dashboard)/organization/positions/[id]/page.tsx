@@ -6,13 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Briefcase } from "lucide-react";
+import { ArrowLeft, CircleNotch, Briefcase } from "@phosphor-icons/react";
 
 import { positionService } from "@/services/position.service";
 import { departmentService } from "@/services/department.service";
 import { positionSchema, PositionFormValues } from "@/schemas/position.schema";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
@@ -78,7 +79,7 @@ export default function EditPositionPage() {
   if (isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -131,18 +132,18 @@ export default function EditPositionPage() {
                 <Label htmlFor="departmentId">
                   Departamento de Lotação <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="departmentId"
                   {...register("departmentId")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="">Selecione um departamento</option>
+                  <Option value="">Selecione um departamento</Option>
                   {departments.map((d) => (
-                    <option key={d.id} value={d.id}>
+                    <Option key={d.id} value={d.id}>
                       {d.name}
-                    </option>
+                    </Option>
                   ))}
-                </select>
+                </Select>
                 {errors.departmentId && (
                   <p className="text-xs text-destructive">{errors.departmentId.message}</p>
                 )}
@@ -150,14 +151,14 @@ export default function EditPositionPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="active">Status</Label>
-                <select
+                <Select
                   id="active"
                   {...register("active", { setValueAs: (v) => v === "true" })}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="true">Ativo</option>
-                  <option value="false">Inativo</option>
-                </select>
+                  <Option value="true">Ativo</Option>
+                  <Option value="false">Inativo</Option>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -198,7 +199,7 @@ export default function EditPositionPage() {
               Cancelar
             </Button>
             <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               Salvar Alterações
             </Button>
           </div>

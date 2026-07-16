@@ -4,7 +4,15 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { Plus, Search, Eye, Trash, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import {
+  Plus,
+  MagnifyingGlass,
+  Eye,
+  Trash,
+  CaretLeft,
+  CaretRight,
+  CircleNotch,
+} from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -15,6 +23,7 @@ import {
 import { employeeService, EmployeeWithDetails } from "@/services/employee.service";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -200,7 +209,7 @@ export default function EmployeesListPage() {
         {/* Filters section */}
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
+            <MagnifyingGlass className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t("searchPlaceholder")}
               value={search}
@@ -211,7 +220,7 @@ export default function EmployeesListPage() {
               className="pl-10 h-10 rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
             />
           </div>
-          <select
+          <Select
             value={status}
             onChange={(e) => {
               setStatus(e.target.value);
@@ -219,12 +228,12 @@ export default function EmployeesListPage() {
             }}
             className="flex h-10 w-full md:w-[180px] rounded-2xl border-0 bg-muted/40 hover:bg-muted/50 px-4 text-sm outline-none focus:outline-none transition-colors cursor-pointer"
           >
-            <option value="">{t("table.status")}</option>
-            <option value="ACTIVE">{t("statusActive")}</option>
-            <option value="INACTIVE">{t("statusInactive")}</option>
-            <option value="ON_LEAVE">{t("statusOnLeave")}</option>
-            <option value="SUSPENDED">{t("statusSuspended")}</option>
-          </select>
+            <Option value="">{t("table.status")}</Option>
+            <Option value="ACTIVE">{t("statusActive")}</Option>
+            <Option value="INACTIVE">{t("statusInactive")}</Option>
+            <Option value="ON_LEAVE">{t("statusOnLeave")}</Option>
+            <Option value="SUSPENDED">{t("statusSuspended")}</Option>
+          </Select>
         </div>
 
         {/* Table section */}
@@ -234,7 +243,7 @@ export default function EmployeesListPage() {
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
-                    {headerGroup.headers.map((header) => (
+                    {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
                         className="h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0"
@@ -251,7 +260,7 @@ export default function EmployeesListPage() {
                 {isLoading ? (
                   <tr className="border-0">
                     <td colSpan={columns.length} className="h-24 text-center border-0">
-                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                      <CircleNotch className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                     </td>
                   </tr>
                 ) : isError ? (
@@ -278,7 +287,7 @@ export default function EmployeesListPage() {
                       key={row.id}
                       className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
                     >
-                      {row.getVisibleCells().map((cell) => (
+                      {row.getVisibleCells().map((cell, index) => (
                         <td
                           key={cell.id}
                           className="p-4 align-middle [&:has([role=checkbox])]:pr-0 border-0"
@@ -304,7 +313,7 @@ export default function EmployeesListPage() {
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page === 1}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <CaretLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm font-medium">
               {page} / {totalPages}
@@ -316,7 +325,7 @@ export default function EmployeesListPage() {
               onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={page === totalPages}
             >
-              <ChevronRight className="h-4 w-4" />
+              <CaretRight className="h-4 w-4" />
             </Button>
           </div>
         )}
@@ -342,7 +351,7 @@ export default function EmployeesListPage() {
                 disabled={deleteMutation.isPending}
               >
                 {deleteMutation.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
                 {t("table.confirm")}
               </Button>

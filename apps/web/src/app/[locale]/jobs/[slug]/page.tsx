@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Briefcase, MapPin, Loader2, CheckCircle, FileUp } from "lucide-react";
+import {
+  ArrowLeft,
+  Briefcase,
+  MapPin,
+  CircleNotch,
+  CheckCircle,
+  FileArrowUp,
+} from "@phosphor-icons/react";
 import { useParams, useRouter } from "next/navigation";
 import { recruitmentService } from "@/services/recruitment.service";
 import { Button } from "@/components/ui/button";
@@ -87,7 +94,7 @@ export default function PublicJobDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -286,7 +293,7 @@ export default function PublicJobDetailPage() {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     required
                   />
-                  <FileUp className="w-5 h-5 text-muted-foreground/75" />
+                  <FileArrowUp className="w-5 h-5 text-muted-foreground/75" />
                   <span className="text-xs font-semibold text-muted-foreground/90">
                     {resumeFile ? resumeFile.name : "Clique para anexar seu PDF"}
                   </span>

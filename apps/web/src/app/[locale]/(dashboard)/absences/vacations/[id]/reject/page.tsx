@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, XCircle } from "lucide-react";
+import { ArrowLeft, CircleNotch, XCircle } from "@phosphor-icons/react";
 import { z } from "zod";
 
 import { vacationService } from "@/services/vacation.service";
@@ -59,7 +59,7 @@ export default function RejectVacationPage() {
   if (isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default function RejectVacationPage() {
               disabled={mutation.isPending}
               className="rounded-2xl"
             >
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               Confirmar Rejeição
             </Button>
           </div>

@@ -4,6 +4,7 @@ import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
 import { QueryEmployeeDto } from "./dto/query-employee.dto";
 import { Prisma, EmployeeStatus } from "@prisma/client";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class EmployeesService {
@@ -111,6 +112,27 @@ export class EmployeesService {
     }
 
     return this.prisma.$transaction(async (tx) => {
+      let linkedUserId = dto.userId || null;
+      if (!linkedUserId) {
+        // Check if user already exists
+        const existingUser = await tx.user.findUnique({
+          where: { email: dto.email },
+        });
+        if (existingUser) {
+          linkedUserId = existingUser.id;
+        } else {
+          const hashedPassword = await bcrypt.hash("Mudar@123", 10);
+          const newUser = await tx.user.create({
+            data: {
+              email: dto.email,
+              password: hashedPassword,
+              role: "EMPLOYEE",
+            },
+          });
+          linkedUserId = newUser.id;
+        }
+      }
+
       return tx.employee.create({
         data: {
           firstName: dto.firstName,
@@ -121,7 +143,7 @@ export class EmployeesService {
           hireDate: new Date(dto.hireDate),
           terminationDate: dto.terminationDate ? new Date(dto.terminationDate) : null,
           salary: dto.salary,
-          userId: dto.userId || null,
+          userId: linkedUserId,
           departmentId: dto.departmentId || null,
           positionId: dto.positionId || null,
           personalData: {

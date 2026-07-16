@@ -4,7 +4,14 @@ import React, { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { Plus, Search, Pencil, Trash, ArrowUpDown, Loader2 } from "lucide-react";
+import {
+  Plus,
+  MagnifyingGlass,
+  Pencil,
+  Trash,
+  ArrowsDownUp,
+  CircleNotch,
+} from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -20,6 +27,7 @@ import { positionService, Position } from "@/services/position.service";
 import { departmentService } from "@/services/department.service";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -103,7 +111,7 @@ export default function PositionsPage() {
           className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
         >
           Título do Cargo
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowsDownUp className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
@@ -206,7 +214,7 @@ export default function PositionsPage() {
         {/* Toolbar controls: search & filter */}
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Pesquisar cargo..."
               value={globalFilter}
@@ -215,18 +223,18 @@ export default function PositionsPage() {
             />
           </div>
 
-          <select
+          <Select
             value={deptFilter}
             onChange={(e) => setDeptFilter(e.target.value)}
             className="flex h-10 w-full md:w-[220px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <option value="ALL">Todos os departamentos</option>
+            <Option value="ALL">Todos os departamentos</Option>
             {departments.map((d) => (
-              <option key={d.id} value={d.id}>
+              <Option key={d.id} value={d.id}>
                 {d.name}
-              </option>
+              </Option>
             ))}
-          </select>
+          </Select>
         </div>
 
         {/* Tabela Zebrada Sem Bordas */}
@@ -236,10 +244,10 @@ export default function PositionsPage() {
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
-                    {headerGroup.headers.map((header) => (
+                    {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className="h-10 px-4 align-middle font-medium text-muted-foreground border-0"
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
@@ -251,7 +259,7 @@ export default function PositionsPage() {
                 {isLoading ? (
                   <tr className="border-0">
                     <td colSpan={columns.length} className="h-24 text-center border-0">
-                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                      <CircleNotch className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                     </td>
                   </tr>
                 ) : filteredData.length === 0 ? (
@@ -269,8 +277,11 @@ export default function PositionsPage() {
                       key={row.id}
                       className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="p-4 align-middle border-0">
+                      {row.getVisibleCells().map((cell, index) => (
+                        <td
+                          key={cell.id}
+                          className={`p-4 align-middle border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}
@@ -306,7 +317,7 @@ export default function PositionsPage() {
                 disabled={deleteMutation.isPending}
                 className="rounded-2xl"
               >
-                {deleteMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {deleteMutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
                 Excluir
               </Button>
             </DialogFooter>

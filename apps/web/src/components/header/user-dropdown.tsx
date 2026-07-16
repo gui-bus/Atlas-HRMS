@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, User, Settings, Shield } from "lucide-react";
+import { SignOut, User, Gear, Shield } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
@@ -122,7 +122,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
               render={<a href={`/${locale}/settings`} />}
               className="flex items-center space-x-2.5 p-2.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer border-0"
             >
-              <Settings className="w-4 h-4 text-muted-foreground shrink-0" />
+              <Gear className="w-4 h-4 text-muted-foreground shrink-0" />
               <span className="text-sm font-medium">Configurações</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -135,7 +135,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
             disabled={loggingOut}
             className="flex items-center space-x-2.5 p-2.5 rounded-xl hover:bg-destructive/10 text-destructive focus:bg-destructive/15 focus:text-destructive transition-colors cursor-pointer border-0"
           >
-            <LogOut className="w-4 h-4 shrink-0" />
+            <SignOut className="w-4 h-4 shrink-0" />
             <span className="text-sm font-semibold">Sair da Conta</span>
           </DropdownMenuItem>
         </DropdownMenuContent>

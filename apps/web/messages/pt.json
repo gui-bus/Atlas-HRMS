@@ -203,16 +203,21 @@
   "Documents": {
     "title": "Repositório de Documentos",
     "subTitle": "Gerencie e armazene contratos, termos e comprovantes dos colaboradores.",
-    "addDocument": "Enviar Documento",
+    "addDocument": "Adicionar Documento",
+    "addDocumentDesc": "Registre termos, contratos ou comprovantes de colaboradores realizando o upload direto do arquivo.",
     "requiredFieldsNotice": "Indica campos obrigatórios",
-    "uploadArea": "Clique para selecionar ou arraste o arquivo do documento aqui",
+    "uploadArea": "Arraste e solte o arquivo aqui ou clique para selecionar",
+    "uploadHint": "PDF, DOC, DOCX, PNG ou JPG (máx. 10MB)",
+    "employeeSelectPlaceholder": "Selecione um funcionário",
+    "uploadSectionTitle": "Upload do Documento",
+    "uploadSectionDesc": "Faça upload do arquivo de documento e associe as informações ao colaborador correspondente.",
     "form": {
-      "name": "Nome descritivo do documento",
-      "type": "Tipo de documento",
+      "name": "Nome do Documento",
+      "type": "Tipo de Documento",
       "url": "URL do arquivo",
-      "employee": "Colaborador",
+      "employee": "Colaborador Relacionado",
       "cancel": "Cancelar",
-      "create": "Enviar"
+      "create": "Salvar Documento"
     },
     "table": {
       "name": "Nome",
@@ -275,5 +280,20 @@
       "timestamp": "Data/Hora",
       "details": "Detalhes do Evento"
     }
+  },
+  "Profile": {
+    "title": "Meu Perfil",
+    "subTitle": "Gerencie seus dados pessoais, avatar e credenciais de acesso.",
+    "saveSuccess": "Perfil atualizado com sucesso!",
+    "passwordSuccess": "Senha alterada com sucesso!",
+    "personalInfo": "Informações Pessoais",
+    "security": "Segurança e Acesso",
+    "currentPassword": "Senha Atual",
+    "newPassword": "Nova Senha",
+    "confirmNewPassword": "Confirmar Nova Senha",
+    "saveChanges": "Salvar Alterações",
+    "saving": "Salvando...",
+    "changePassword": "Alterar Senha",
+    "changing": "Alterando..."
   }
 }

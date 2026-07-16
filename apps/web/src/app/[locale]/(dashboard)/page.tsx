@@ -8,11 +8,11 @@ import {
   Users,
   Briefcase,
   Calendar,
-  Building,
+  Buildings,
   FileText,
   ArrowRight,
   PlusCircle,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { dashboardService } from "@/services/dashboard.service";
@@ -110,7 +110,7 @@ export default function DashboardPage() {
         <div className="bg-muted/15 p-6 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-muted-foreground uppercase">Setores</span>
-            <Building className="h-5 w-5 text-muted-foreground" />
+            <Buildings className="h-5 w-5 text-muted-foreground" />
           </div>
           <div className="space-y-1">
             <p className="text-3xl font-bold tracking-tight">

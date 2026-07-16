@@ -26,6 +26,10 @@ describe("Employees Integration Tests (Supertest)", () => {
     employeePersonalData: {
       findUnique: jest.fn(),
     },
+    user: {
+      findUnique: jest.fn().mockResolvedValue(null),
+      create: jest.fn().mockResolvedValue({ id: "user-emp-123" }),
+    },
     $transaction: jest.fn((cb) => cb(mockPrisma)),
   };
 

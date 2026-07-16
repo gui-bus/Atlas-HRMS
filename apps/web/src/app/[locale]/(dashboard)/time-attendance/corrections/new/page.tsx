@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Clock, Calendar } from "lucide-react";
+import { ArrowLeft, Clock, Calendar } from "@phosphor-icons/react";
 import { timeAttendanceService } from "@/services/time-attendance.service";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -111,17 +112,17 @@ export default function NewCorrectionRequestPage() {
             <Label htmlFor="targetType">
               Tipo de Batida <span className="text-destructive">*</span>
             </Label>
-            <select
+            <Select
               id="targetType"
               value={targetType}
               onChange={(e) => setTargetType(e.target.value)}
               className="flex h-10 w-full rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
             >
-              <option value="ENTRY">Entrada</option>
-              <option value="INTERVAL_OUT">Saída Almoço</option>
-              <option value="INTERVAL_IN">Retorno Almoço</option>
-              <option value="EXIT">Saída Expediente</option>
-            </select>
+              <Option value="ENTRY">Entrada</Option>
+              <Option value="INTERVAL_OUT">Saída Almoço</Option>
+              <Option value="INTERVAL_IN">Retorno Almoço</Option>
+              <Option value="EXIT">Saída Expediente</Option>
+            </Select>
           </div>
         </div>
 

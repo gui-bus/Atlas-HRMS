@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Briefcase } from "lucide-react";
+import { ArrowLeft, CircleNotch, Briefcase } from "@phosphor-icons/react";
 
 import { recruitmentService } from "@/services/recruitment.service";
 import { departmentService } from "@/services/department.service";
@@ -14,6 +14,7 @@ import { positionService } from "@/services/position.service";
 import { recruitmentSchema, RecruitmentFormValues } from "@/schemas/recruitment.schema";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
@@ -95,7 +96,7 @@ export default function EditVacancyPage() {
   if (loadingVacancy) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -152,49 +153,49 @@ export default function EditVacancyPage() {
                 <Label htmlFor="employmentType">
                   {t("form.employmentType")} <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="employmentType"
                   {...register("employmentType")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="CLT">CLT</option>
-                  <option value="PJ">PJ</option>
-                  <option value="CONTRACTOR">Prestador de Serviço</option>
-                  <option value="INTERNSHIP">Estágio</option>
-                  <option value="TEMPORARY">Temporário</option>
-                </select>
+                  <Option value="CLT">CLT</Option>
+                  <Option value="PJ">PJ</Option>
+                  <Option value="CONTRACTOR">Prestador de Serviço</Option>
+                  <Option value="INTERNSHIP">Estágio</Option>
+                  <Option value="TEMPORARY">Temporário</Option>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="workModel">
                   {t("form.workModel")} <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="workModel"
                   {...register("workModel")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="REMOTE">Remoto</option>
-                  <option value="HYBRID">Híbrido</option>
-                  <option value="ONSITE">Presencial</option>
-                </select>
+                  <Option value="REMOTE">Remoto</Option>
+                  <Option value="HYBRID">Híbrido</Option>
+                  <Option value="ONSITE">Presencial</Option>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="seniority">
                   {t("form.seniority")} <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="seniority"
                   {...register("seniority")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="JUNIOR">Júnior</option>
-                  <option value="MID">Pleno</option>
-                  <option value="SENIOR">Sênior</option>
-                  <option value="LEAD">Tech Lead</option>
-                  <option value="EXECUTIVE">Diretoria / Executivo</option>
-                </select>
+                  <Option value="JUNIOR">Júnior</Option>
+                  <Option value="MID">Pleno</Option>
+                  <Option value="SENIOR">Sênior</Option>
+                  <Option value="LEAD">Tech Lead</Option>
+                  <Option value="EXECUTIVE">Diretoria / Executivo</Option>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -236,18 +237,18 @@ export default function EditVacancyPage() {
                 <Label htmlFor="departmentId">
                   {t("form.department")} <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="departmentId"
                   {...register("departmentId")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="">Selecione o departamento</option>
+                  <Option value="">Selecione o departamento</Option>
                   {departments.map((dept) => (
-                    <option key={dept.id} value={dept.id}>
+                    <Option key={dept.id} value={dept.id}>
                       {dept.name}
-                    </option>
+                    </Option>
                   ))}
-                </select>
+                </Select>
                 {errors.departmentId && (
                   <p className="text-xs text-destructive">{errors.departmentId.message}</p>
                 )}
@@ -257,18 +258,18 @@ export default function EditVacancyPage() {
                 <Label htmlFor="positionId">
                   {t("form.position")} <span className="text-destructive">*</span>
                 </Label>
-                <select
+                <Select
                   id="positionId"
                   {...register("positionId")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="">Selecione o cargo correspondente</option>
+                  <Option value="">Selecione o cargo correspondente</Option>
                   {positions.map((pos) => (
-                    <option key={pos.id} value={pos.id}>
+                    <Option key={pos.id} value={pos.id}>
                       {pos.title}
-                    </option>
+                    </Option>
                   ))}
-                </select>
+                </Select>
                 {errors.positionId && (
                   <p className="text-xs text-destructive">{errors.positionId.message}</p>
                 )}
@@ -276,16 +277,16 @@ export default function EditVacancyPage() {
 
               <div className="space-y-2 col-span-2">
                 <Label htmlFor="status">Status da Vaga</Label>
-                <select
+                <Select
                   id="status"
                   {...register("status")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="OPEN">Aberta</option>
-                  <option value="ON_HOLD">Em Espera</option>
-                  <option value="CLOSED">Encerrada</option>
-                  <option value="CANCELLED">Cancelada</option>
-                </select>
+                  <Option value="OPEN">Aberta</Option>
+                  <Option value="ON_HOLD">Em Espera</Option>
+                  <Option value="CLOSED">Encerrada</Option>
+                  <Option value="CANCELLED">Cancelada</Option>
+                </Select>
               </div>
             </div>
           </div>
@@ -300,7 +301,7 @@ export default function EditVacancyPage() {
               Cancelar
             </Button>
             <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               Salvar Alterações
             </Button>
           </div>

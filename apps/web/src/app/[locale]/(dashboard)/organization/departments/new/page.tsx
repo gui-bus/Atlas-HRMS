@@ -6,12 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Landmark } from "lucide-react";
+import { ArrowLeft, CircleNotch, Bank } from "@phosphor-icons/react";
 
 import { departmentService } from "@/services/department.service";
 import { departmentSchema, DepartmentFormValues } from "@/schemas/department.schema";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
+import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
@@ -68,7 +69,7 @@ export default function NewDepartmentPage() {
             <FormSectionHeader
               title="Informações do Setor"
               description="Defina a nomenclatura, código de custos e status operacional do departamento."
-              icon={Landmark}
+              icon={Bank}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 w-full">
@@ -90,14 +91,14 @@ export default function NewDepartmentPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="active">Status</Label>
-                <select
+                <Select
                   id="active"
                   {...register("active", { setValueAs: (v) => v === "true" })}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <option value="true">Ativo</option>
-                  <option value="false">Inativo</option>
-                </select>
+                  <Option value="true">Ativo</Option>
+                  <Option value="false">Inativo</Option>
+                </Select>
               </div>
             </div>
           </div>
@@ -112,7 +113,7 @@ export default function NewDepartmentPage() {
               Cancelar
             </Button>
             <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               Salvar Departamento
             </Button>
           </div>

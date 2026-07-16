@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { Calendar, Plus, ArrowUpDown } from "lucide-react";
+import { Calendar, Plus, ArrowsDownUp } from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -88,7 +88,7 @@ export default function MyLeavesPage() {
           className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
         >
           {t("startDate")}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowsDownUp className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
@@ -179,10 +179,10 @@ export default function MyLeavesPage() {
               <thead>
                 {leaveTable.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-muted/20 hover:bg-muted/20 border-0">
-                    {headerGroup.headers.map((header) => (
+                    {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className="h-10 px-4 align-middle font-medium text-muted-foreground border-0"
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
@@ -212,8 +212,11 @@ export default function MyLeavesPage() {
                       key={row.id}
                       className="odd:bg-muted/15 even:bg-transparent transition-colors hover:bg-muted/25 border-0"
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="p-4 align-middle border-0">
+                      {row.getVisibleCells().map((cell, index) => (
+                        <td
+                          key={cell.id}
+                          className={`p-4 align-middle border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}

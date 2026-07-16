@@ -33,8 +33,14 @@ export const positionService = {
     salaryRangeMin: string;
     salaryRangeMax: string;
     departmentId: string;
+    active?: boolean;
   }): Promise<Position> {
-    const response = await api.post<Position>("/positions", data);
+    const payload = {
+      ...data,
+      salaryRangeMin: parseFloat(data.salaryRangeMin),
+      salaryRangeMax: parseFloat(data.salaryRangeMax),
+    };
+    const response = await api.post<Position>("/positions", payload);
     return response.data;
   },
 
@@ -49,7 +55,10 @@ export const positionService = {
       active?: boolean;
     },
   ): Promise<Position> {
-    const response = await api.put<Position>(`/positions/${id}`, data);
+    const payload: any = { ...data };
+    if (data.salaryRangeMin) payload.salaryRangeMin = parseFloat(data.salaryRangeMin);
+    if (data.salaryRangeMax) payload.salaryRangeMax = parseFloat(data.salaryRangeMax);
+    const response = await api.put<Position>(`/positions/${id}`, payload);
     return response.data;
   },
 

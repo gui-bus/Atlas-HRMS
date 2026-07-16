@@ -4,7 +4,7 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, ArrowRight, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, CircleNotch, ArrowRight, CheckCircle, XCircle } from "@phosphor-icons/react";
 
 import { recruitmentService, Application } from "@/services/recruitment.service";
 import { RbacGuard } from "@/components/rbac-guard";
@@ -67,7 +67,7 @@ export default function RecruitmentDetailsPage() {
   if (loadingVacancy || loadingApps) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
