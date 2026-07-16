@@ -13,6 +13,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Páginas de Formulários Dedicadas**: Eliminação completa de modais/diálogos em favor de páginas dedicadas a formulários para criação e edição de Departamentos, Cargos, Solicitação de Férias e Licenças, e Envio de Documentos.
 - **Recurso TanStack Table Avançado**: Barra de pesquisa, ordenação dinâmica por clique nas colunas, e filtragem avançada por status local integrada às tabelas do sistema.
 - **Páginas Separadas de Tabelas**: Divisão das telas de Ausências (Férias vs Atestados) e Organização (Departamentos vs Cargos) em caminhos de rotas individuais.
+- **Interação Suave de Hover no Megamenu**: Corrigida a transição do mouse da barra superior para a caixa de conteúdo do megamenu, adicionando um debounce de 150ms para evitar fechamentos prematuros acidentais.
 
 ---
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   ChevronDown,
   Users,
@@ -43,6 +43,24 @@ export function DesktopNav({ locale }: DesktopNavProps) {
   const { user } = useAuthStore();
   const userRole = user?.role || "EMPLOYEE";
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = (categoryLabel: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setOpenCategory(categoryLabel);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setOpenCategory(null);
+    }, 150); // Grace period to bridge any gap between trigger and content portal
+  };
 
   const allCategories: MenuCategory[] = [
     {
@@ -161,8 +179,8 @@ export function DesktopNav({ locale }: DesktopNavProps) {
         return (
           <div
             key={category.label}
-            onMouseEnter={() => setOpenCategory(category.label)}
-            onMouseLeave={() => setOpenCategory(null)}
+            onMouseEnter={() => handleMouseEnter(category.label)}
+            onMouseLeave={handleMouseLeave}
             className="relative"
           >
             <DropdownMenu
@@ -187,6 +205,8 @@ export function DesktopNav({ locale }: DesktopNavProps) {
                 className="p-5 w-[650px] grid grid-cols-2 gap-5 border-0 shadow-2xl bg-background/95 backdrop-blur-md rounded-2xl"
                 align="start"
                 side="bottom"
+                onMouseEnter={() => handleMouseEnter(category.label)}
+                onMouseLeave={handleMouseLeave}
               >
                 <DropdownMenuGroup className="grid grid-cols-2 gap-5 col-span-2">
                   {category.items.map((item) => (
