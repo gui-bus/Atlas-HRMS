@@ -152,8 +152,7 @@ export default function ResetPasswordPage() {
     setMounted(true);
   }, []);
 
-  const logoSrc =
-    mounted && theme === "light" ? "/utils/logo_black.webp" : "/utils/logo_white.webp";
+  const logoSrc = mounted && theme === "light" ? "/utils/logo_black.svg" : "/utils/logo_white.svg";
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-6 relative">

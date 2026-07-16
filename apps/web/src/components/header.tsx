@@ -104,7 +104,7 @@ export function Header() {
   ];
 
   const logoSrc =
-    mounted && theme === "dark" ? "/utils/logo_white_text.webp" : "/utils/logo_black_text.webp";
+    mounted && theme === "dark" ? "/utils/logo_white_text.svg" : "/utils/logo_black_text.svg";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
