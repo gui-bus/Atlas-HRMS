@@ -16,7 +16,6 @@ import {
   Building,
   ClipboardList,
   Menu,
-  X,
 } from "lucide-react";
 
 import { useAuthStore } from "@/store/useAuthStore";
@@ -32,6 +31,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export function Header() {
   const t = useTranslations("Common");
@@ -77,25 +77,25 @@ export function Header() {
           label: "Colaboradores",
           desc: "Base cadastral de funcionários e perfis.",
           href: `/${locale}/employees`,
-          icon: <Users className="w-5 h-5 text-primary shrink-0" />,
+          icon: <Users className="w-6 h-6 text-primary shrink-0" />,
         },
         {
           label: "Novo Cadastro",
           desc: "Adicionar novos colaboradores ao sistema.",
           href: `/${locale}/employees/new`,
-          icon: <UserPlus className="w-5 h-5 text-primary shrink-0" />,
+          icon: <UserPlus className="w-6 h-6 text-primary shrink-0" />,
         },
         {
           label: "Férias & Licenças",
           desc: "Controle e aprovação de ausências.",
           href: `/${locale}/absences`,
-          icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
+          icon: <Calendar className="w-6 h-6 text-primary shrink-0" />,
         },
         {
           label: "Documentos",
           desc: "Termos, contratos e comprovantes.",
           href: `/${locale}/documents`,
-          icon: <FileText className="w-5 h-5 text-primary shrink-0" />,
+          icon: <FileText className="w-6 h-6 text-primary shrink-0" />,
         },
       ],
     },
@@ -106,13 +106,13 @@ export function Header() {
           label: "Quadro de Vagas",
           desc: "Processos seletivos e candidatos ativos.",
           href: `/${locale}/recruitment`,
-          icon: <Briefcase className="w-5 h-5 text-primary shrink-0" />,
+          icon: <Briefcase className="w-6 h-6 text-primary shrink-0" />,
         },
         {
           label: "Nova Vaga",
           desc: "Criar e publicar processos seletivos públicos.",
           href: `/${locale}/recruitment/new`,
-          icon: <FilePlus className="w-5 h-5 text-primary shrink-0" />,
+          icon: <FilePlus className="w-6 h-6 text-primary shrink-0" />,
         },
       ],
     },
@@ -123,13 +123,13 @@ export function Header() {
           label: "Departamentos & Cargos",
           desc: "Definir hierarquias e faixas salariais.",
           href: `/${locale}/organization`,
-          icon: <Building className="w-5 h-5 text-primary shrink-0" />,
+          icon: <Building className="w-6 h-6 text-primary shrink-0" />,
         },
         {
           label: "Logs de Auditoria",
           desc: "Monitore o histórico de operações críticas.",
           href: `/${locale}/audit`,
-          icon: <ClipboardList className="w-5 h-5 text-primary shrink-0" />,
+          icon: <ClipboardList className="w-6 h-6 text-primary shrink-0" />,
         },
       ],
     },
@@ -173,10 +173,12 @@ export function Header() {
                     <a
                       key={item.label}
                       href={item.href}
-                      className="flex items-start space-x-3 p-2.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors"
+                      className="flex items-start space-x-3.5 p-3.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors"
                     >
-                      {item.icon}
-                      <div className="space-y-0.5">
+                      <div className="p-2.5 rounded-xl bg-muted/65 text-primary shrink-0 flex items-center justify-center">
+                        {item.icon}
+                      </div>
+                      <div className="space-y-1">
                         <p className="text-sm font-semibold leading-none">{item.label}</p>
                         <p className="text-xs text-muted-foreground leading-normal line-clamp-2">
                           {item.desc}
@@ -204,8 +206,9 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <button
-                  type="button"
+                <div
+                  role="button"
+                  tabIndex={0}
                   className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl hover:bg-accent transition-colors cursor-pointer select-none outline-none focus:outline-none"
                 >
                   <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-sm shrink-0 uppercase border-0">
@@ -220,7 +223,7 @@ export function Header() {
                     </span>
                   </div>
                   <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                </button>
+                </div>
               }
             />
             <DropdownMenuContent className="w-56 border-0 shadow-xl" align="end" side="bottom">
@@ -244,47 +247,85 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Mobile Menu Toggle Button */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex lg:hidden items-center justify-center w-9 h-9 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-      </div>
+          {/* Mobile Menu Toggle via Shadcn/UI Sheet */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger
+              render={
+                <button
+                  type="button"
+                  className="flex lg:hidden items-center justify-center w-9 h-9 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                >
+                  <Menu className="w-5 h-5" />
+                </button>
+              }
+            />
+            <SheetContent
+              side="right"
+              className="w-[300px] sm:w-[350px] p-6 flex flex-col justify-between border-0 shadow-xl"
+            >
+              <div className="space-y-6 overflow-y-auto pr-1">
+                <SheetHeader className="p-0">
+                  <SheetTitle className="text-left font-bold text-lg uppercase tracking-wider text-primary">
+                    ATLAS HRMS
+                  </SheetTitle>
+                </SheetHeader>
 
-      {/* Mobile Navigation Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden w-full bg-background border-t p-4 space-y-4 animate-in slide-in-from-top-2 duration-150">
-          <div className="flex justify-between items-center px-2 pb-2">
-            <LanguageSwitcher />
-            <ThemeSwitcher />
-          </div>
-          <div className="space-y-4">
-            {menuCategories.map((category) => (
-              <div key={category.label} className="space-y-1">
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2">
-                  {category.label}
-                </p>
-                <div className="grid grid-cols-1 gap-1">
-                  {category.items.map((item) => (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-accent text-foreground text-sm font-medium transition-colors"
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </a>
+                <div className="space-y-6">
+                  {menuCategories.map((category) => (
+                    <div key={category.label} className="space-y-2">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        {category.label}
+                      </p>
+                      <div className="grid grid-cols-1 gap-1">
+                        {category.items.map((item) => (
+                          <a
+                            key={item.label}
+                            href={item.href}
+                            className="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-accent text-foreground text-sm font-medium transition-colors"
+                          >
+                            <div className="p-2 rounded-lg bg-muted/65 text-primary shrink-0">
+                              {React.cloneElement(item.icon, {
+                                className: "w-5 h-5 text-primary shrink-0",
+                              })}
+                            </div>
+                            <span>{item.label}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
+
+              <div className="border-t pt-4 space-y-4">
+                <div className="flex justify-between items-center px-2">
+                  <LanguageSwitcher />
+                  <ThemeSwitcher />
+                </div>
+                {user && (
+                  <div className="flex items-center space-x-3 p-2 bg-muted/30 rounded-xl">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-sm shrink-0 uppercase">
+                      {user.email.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 text-left min-w-0">
+                      <p className="text-xs font-semibold text-foreground truncate">{user.email}</p>
+                      <span className="text-[9px] font-bold uppercase text-muted-foreground">
+                        {user.role}
+                      </span>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
-      )}
+      </div>
     </header>
   );
 }
