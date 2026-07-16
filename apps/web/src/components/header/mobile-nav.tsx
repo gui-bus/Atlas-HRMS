@@ -13,6 +13,7 @@ import {
   FilePlus,
   Building,
   ClipboardList,
+  Clock,
 } from "lucide-react";
 
 import { useAuthStore } from "@/store/useAuthStore";
@@ -72,16 +73,34 @@ export function MobileNav({ locale }: MobileNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
+          label: "Minhas Férias",
+          href: `/${locale}/absences/vacations/my-requests`,
+          icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["EMPLOYEE"],
+        },
+        {
           label: "Atestados & Licenças",
           href: `/${locale}/absences/leaves`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
+          label: "Meus Atestados",
+          href: `/${locale}/absences/leaves/my-requests`,
+          icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["EMPLOYEE"],
+        },
+        {
           label: "Documentos",
           href: `/${locale}/documents`,
           icon: <FileText className="w-5 h-5 text-primary shrink-0" />,
-          allowedRoles: ["ADMIN", "HR", "MANAGER"],
+          allowedRoles: ["ADMIN", "HR", "MANAGER", "EMPLOYEE"],
+        },
+        {
+          label: "Meu Ponto",
+          href: `/${locale}/time-attendance/my-history`,
+          icon: <Clock className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["EMPLOYEE"],
         },
       ],
     },
@@ -128,6 +147,12 @@ export function MobileNav({ locale }: MobileNavProps) {
           href: `/${locale}/organization/users`,
           icon: <Users className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
+        },
+        {
+          label: "Ajustes de Ponto",
+          href: `/${locale}/time-attendance/admin/corrections`,
+          icon: <Clock className="w-5 h-5 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
       ],
     },

@@ -126,85 +126,50 @@ export function ClockWidget() {
   };
 
   return (
-    <div className="bg-card/45 border border-muted/20 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-8 backdrop-blur-md shadow-xl animate-fade-in">
-      {/* Clock Display */}
-      <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
-        <div className="flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full w-fit">
-          <Clock className="w-3.5 h-3.5" />
-          Ponto Eletrônico
+    <div className="flex flex-col items-center justify-center space-y-8 w-full text-center animate-fade-in py-4">
+      {/* Clock and Meta */}
+      <div className="space-y-3">
+        <div className="text-sm font-bold tracking-wider text-primary uppercase select-none">
+          Horário de Brasília
         </div>
-        <div className="text-5xl md:text-6xl font-black tracking-tighter text-foreground tabular-nums select-none drop-shadow-sm font-sans animate-pulse">
+
+        {/* Massive, crisp clock */}
+        <div className="text-8xl md:text-9xl font-black tracking-tighter text-foreground font-mono tabular-nums leading-none select-none">
           {time || "00:00:00"}
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-          <Calendar className="w-3.5 h-3.5" />
-          {dateStr}
-        </div>
 
-        {/* Hour Bank Balance Card */}
-        <div className="pt-2">
-          <div className="text-xs text-muted-foreground font-semibold">
-            Banco de Horas Acumulado
-          </div>
-          <div
-            className={`text-lg font-bold tracking-tight ${
-              balanceMinutes >= 0 ? "text-emerald-500" : "text-destructive"
-            }`}
-          >
-            {formatBalance(balanceMinutes)}
-          </div>
-        </div>
+        <div className="text-sm font-medium text-muted-foreground">{dateStr}</div>
       </div>
 
-      {/* Control Panel */}
-      <div className="flex flex-col w-full md:w-auto items-center space-y-4 max-w-sm">
-        {/* Dynamic Journey Sequence */}
-        <div className="w-full bg-muted/20 p-4 rounded-2xl space-y-3 border border-muted/10">
-          <div className="text-xs font-semibold text-muted-foreground border-b border-muted/20 pb-1">
-            Status da Jornada
-          </div>
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            {["ENTRY", "INTERVAL_OUT", "INTERVAL_IN", "EXIT"].map((type, idx) => {
-              const matched = todayRecords.find((r) => r.type === type);
-              return (
-                <div key={type} className="flex items-center gap-2 py-0.5">
-                  {matched ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  ) : (
-                    <AlertCircle className="w-4 h-4 text-muted-foreground/30 shrink-0" />
-                  )}
-                  <div className="truncate">
-                    <p className="font-semibold text-foreground/80">{getRecordTypeLabel(type)}</p>
-                    <p className="text-[10px] text-muted-foreground/80 tabular-nums">
-                      {matched
-                        ? new Date(matched.timestamp).toLocaleTimeString("pt-BR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : "--:--"}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      {/* Hour Bank Pill */}
+      <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-muted/20 border-0 text-xs font-semibold">
+        <span className="text-muted-foreground">Banco de Horas:</span>
+        <span
+          className={`font-mono font-bold tabular-nums ${
+            balanceMinutes >= 0 ? "text-emerald-500" : "text-destructive"
+          }`}
+        >
+          {formatBalance(balanceMinutes)}
+        </span>
+      </div>
 
-        {/* Clock In Actions */}
-        <div className="w-full space-y-2">
+      {/* Actions and Timeline */}
+      <div className="w-full max-w-sm space-y-6">
+        {/* Registration Button */}
+        <div className="space-y-3">
           {showComments ? (
             <div className="space-y-2">
               <Input
                 placeholder="Observação opcional..."
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
-                className="h-10 rounded-2xl text-xs bg-muted/40 border-0 focus-visible:ring-1"
+                className="h-11 rounded-2xl text-sm bg-muted/45 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 text-center"
               />
               <div className="flex gap-2">
                 <Button
                   onClick={() => clockInMutation.mutate()}
                   disabled={clockInMutation.isPending || todayRecords.length >= 4}
-                  className="flex-1 h-10 rounded-2xl text-xs font-bold"
+                  className="flex-1 h-11 rounded-2xl text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 border-0"
                 >
                   {clockInMutation.isPending
                     ? "Registrando..."
@@ -213,7 +178,7 @@ export function ClockWidget() {
                 <Button
                   variant="ghost"
                   onClick={() => setShowComments(false)}
-                  className="h-10 rounded-2xl text-xs font-medium"
+                  className="h-11 rounded-2xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/30 border-0"
                 >
                   Cancelar
                 </Button>
@@ -229,22 +194,49 @@ export function ClockWidget() {
                 setShowComments(true);
               }}
               disabled={todayRecords.length >= 4}
-              className="w-full h-12 rounded-2xl font-bold text-sm tracking-wide shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all bg-primary text-primary-foreground"
+              className="w-full h-12 rounded-2xl font-bold text-sm tracking-wide bg-primary text-primary-foreground hover:bg-primary/95 transition-all border-0"
             >
               {todayRecords.length >= 4
-                ? "Jornada Diária Concluída"
+                ? "Jornada Completa"
                 : `Registrar Ponto (${getNextRecordLabel()})`}
             </Button>
           )}
         </div>
 
+        {/* Dynamic Journey Sequence - Clean Minimal Timeline */}
+        <div className="grid grid-cols-4 gap-2 pt-2 text-center">
+          {["ENTRY", "INTERVAL_OUT", "INTERVAL_IN", "EXIT"].map((type) => {
+            const matched = todayRecords.find((r) => r.type === type);
+            return (
+              <div key={type} className="space-y-1 flex flex-col items-center">
+                <div
+                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all ${
+                    matched ? "bg-emerald-500" : "bg-muted/40"
+                  }`}
+                />
+                <span className="text-[10px] font-bold text-muted-foreground block truncate max-w-full">
+                  {getRecordTypeLabel(type)}
+                </span>
+                <span className="text-[10px] font-mono tabular-nums text-muted-foreground/75 block">
+                  {matched
+                    ? new Date(matched.timestamp).toLocaleTimeString("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "--:--"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
         {/* Local Notification Banner */}
         {notification && (
           <div
-            className={`w-full p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 border text-left ${
+            className={`p-3 rounded-2xl text-xs font-semibold flex items-center justify-center gap-2 border-0 ${
               notification.type === "success"
-                ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
-                : "bg-destructive/10 border-destructive/20 text-destructive"
+                ? "bg-emerald-500/10 text-emerald-500"
+                : "bg-destructive/10 text-destructive"
             }`}
           >
             <AlertCircle className="w-4 h-4 shrink-0" />

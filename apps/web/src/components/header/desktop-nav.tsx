@@ -11,6 +11,7 @@ import {
   FilePlus,
   Building,
   ClipboardList,
+  Clock,
 } from "lucide-react";
 
 import { useAuthStore } from "@/store/useAuthStore";
@@ -88,6 +89,13 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
+          label: "Minhas Férias",
+          desc: "Solicitar férias e consultar períodos.",
+          href: `/${locale}/absences/vacations/my-requests`,
+          icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
+          allowedRoles: ["EMPLOYEE"],
+        },
+        {
           label: "Atestados & Licenças",
           desc: "Controle de licenças e afastamentos.",
           href: `/${locale}/absences/leaves`,
@@ -95,11 +103,25 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
+          label: "Meus Atestados",
+          desc: "Registrar atestados e licenças médicas.",
+          href: `/${locale}/absences/leaves/my-requests`,
+          icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
+          allowedRoles: ["EMPLOYEE"],
+        },
+        {
           label: "Documentos",
           desc: "Termos, contratos e comprovantes.",
           href: `/${locale}/documents`,
           icon: <FileText className="w-8 h-8 text-primary shrink-0" />,
-          allowedRoles: ["ADMIN", "HR", "MANAGER"],
+          allowedRoles: ["ADMIN", "HR", "MANAGER", "EMPLOYEE"],
+        },
+        {
+          label: "Meu Ponto",
+          desc: "Histórico de marcações e banco de horas.",
+          href: `/${locale}/time-attendance/my-history`,
+          icon: <Clock className="w-8 h-8 text-primary shrink-0" />,
+          allowedRoles: ["EMPLOYEE"],
         },
       ],
     },
@@ -153,6 +175,13 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           icon: <Users className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
+        {
+          label: "Ajustes de Ponto",
+          desc: "Aprovar correções de jornada dos colaboradores.",
+          href: `/${locale}/time-attendance/admin/corrections`,
+          icon: <Clock className="w-8 h-8 text-primary shrink-0" />,
+          allowedRoles: ["ADMIN", "HR", "MANAGER"],
+        },
       ],
     },
   ];
@@ -164,6 +193,26 @@ export function DesktopNav({ locale }: DesktopNavProps) {
       items: category.items.filter((item) => item.allowedRoles.includes(userRole)),
     }))
     .filter((category) => category.items.length > 0);
+
+  if (userRole === "EMPLOYEE") {
+    const employeeItems = allCategories
+      .flatMap((c) => c.items)
+      .filter((item) => item.allowedRoles.includes("EMPLOYEE"));
+
+    return (
+      <nav className="hidden lg:flex items-center space-x-2">
+        {employeeItems.map((item) => (
+          <a
+            key={item.label}
+            href={item.href}
+            className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
+          >
+            <span>{item.label === "Documentos" ? "Meus Documentos" : item.label}</span>
+          </a>
+        ))}
+      </nav>
+    );
+  }
 
   return (
     <nav className="hidden lg:flex items-center space-x-1">

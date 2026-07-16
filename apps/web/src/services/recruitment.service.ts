@@ -89,4 +89,18 @@ export const recruitmentService = {
   async hireCandidate(applicationId: string): Promise<void> {
     await api.post(`/recruitments/applications/${applicationId}/hire`);
   },
+
+  async getPublicJobBySlug(slug: string): Promise<Recruitment> {
+    const response = await api.get<Recruitment>(`/recruitments/${slug}`);
+    return response.data;
+  },
+
+  async applyToJob(slug: string, formData: FormData): Promise<any> {
+    const response = await api.post(`/recruitments/${slug}/apply`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
 };
