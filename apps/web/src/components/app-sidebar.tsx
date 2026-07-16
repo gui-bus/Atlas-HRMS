@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Users } from "lucide-react";
 import { Sun, Moon, SignOut, CaretUpDown } from "@phosphor-icons/react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
@@ -69,13 +69,22 @@ export function AppSidebar() {
       <SidebarContent className="px-3 py-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            {/* Corrigido: Usando a prop render do Base UI para evitar erro do asChild */}
             <SidebarMenuButton
               render={<a href={`/${locale}`} />}
               isActive={pathname === `/${locale}`}
             >
               <LayoutDashboard className="w-4 h-4" />
               <span className="font-medium text-sm">{t("dashboard")}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={<a href={`/${locale}/employees`} />}
+              isActive={pathname.startsWith(`/${locale}/employees`)}
+            >
+              <Users className="w-4 h-4" />
+              <span className="font-medium text-sm">{t("employees")}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

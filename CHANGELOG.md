@@ -4,13 +4,26 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.0.0] - 2026-07-16
+
+### Adicionado
+
+- **Módulo de Gestão de Pessoas (Core Employee)**: Implementação completa de listagem de colaboradores com TanStack Table, cadastro com validações Zod e edição de dados segmentada em abas (Dados profissionais, pessoais, endereço, dados bancários e contatos de emergência).
+- **Refatoração de Layout do Dashboard**: Criação de grupo de rotas Next.js `(dashboard)` com layout compartilhado para gerenciar de forma unificada e nativa a barra lateral (`AppSidebar`) nas telas administrativas.
+- **Componentes do Shadcn/UI**: Adicionados componentes de `Badge`, `Tabs` e `Dialog` no frontend para suportar a interface minimalista e interações de confirmação de exclusão.
+- **Integração de API e Schemas**: Implementados o `employeeService` para comunicação síncrona de CRUD com o backend NestJS e schemas Zod para validação rigorosa de CPF, CEP e campos obrigatórios no cliente.
+
+---
+
 ## [0.9.0] - 2026-07-15
 
 ### Adicionado
+
 - **Testes Unitários de Autenticação**: Criados arquivos de testes unitários para redefinição de senha (`reset-password.spec.tsx`) e recuperação de acesso (`forgot-password.spec.tsx`) com cobertura de validações complexas e mock de parâmetros de consulta de URL via `URLSearchParams`.
 - **E2E Autenticação Completo**: Adicionados fluxos de ponta a ponta no Playwright (`auth.e2e.spec.ts`) validando os fluxos de sucesso e comportamento com redirecionamento de contagem regressiva para esquecimento e redefinição de credenciais.
 
 ### Alterado
+
 - **Layout de Autenticação Minimalista**: Otimizadas as páginas de `/login`, `/register` e `/forgot-password` removendo os contêineres de cards, fundos, bordas e sombras. As telas agora contam com o tema de fundo padrão integrado de forma limpa e logotipo aumentado (`h-20`).
 - **ThemeProvider sem Scripts Inline**: Refatoração do `ThemeProvider.tsx` removendo `next-themes` do escopo de montagem de scripts do lado do servidor para corrigir por completo o erro de hidratação JSX / tags de script no Turbopack.
 - **Seletor de Idiomas com SVG**: Alterado o componente `LanguageSwitcher.tsx` para consumir bandeiras em formato SVG localizadas em `/lang/`, com suporte a tradução dinâmica e localizada dos nomes dos idiomas.
