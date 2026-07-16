@@ -7,6 +7,10 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  avatarUrl?: string | null;
+  employee?: any | null;
 }
 
 export type EmployeeStatus = "ACTIVE" | "INACTIVE" | "ON_LEAVE" | "SUSPENDED";

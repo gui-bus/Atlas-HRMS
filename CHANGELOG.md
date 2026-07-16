@@ -4,6 +4,25 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.3.1] - 2026-07-16
+
+### Adicionado
+
+- **Colunas de Perfil no Modelo User**: Adicionadas as propriedades `firstName`, `lastName` e `avatarUrl` diretamente ao modelo `User` no Prisma para permitir que administradores sem vínculo com colaboradores (`Employee`) possuam nome, sobrenome e avatar persistidos no banco de dados.
+
+### Alterado
+
+- **Decodificação de Sessão do AuthProvider**: O `AuthProvider` agora busca os dados de perfil via requisição para `/auth/me` na inicialização do app em vez de apenas decodificar o payload bruto do JWT, garantindo que o nome e o avatar sejam recuperados corretamente ao atualizar a página.
+- **Zustand setAuth com Mesclagem**: A ação `setAuth` do Zustand agora mescla os estados do usuário para evitar perda de dados de perfil nas renovações silenciosas de token de acesso.
+- **Dropdown do Usuário no Header**: O cabeçalho foi ajustado para exibir o avatar vindo do `User.avatarUrl` como fallback caso o relacionamento com `employee` não possua imagem.
+
+### Corrigido
+
+- **Persistência de Perfil de Administradores**: Correção em `updateProfile` na API para atualizar campos de perfil diretamente na tabela `users` se a conta logada for um administrador puro (sem `Employee`).
+- **Garantia de Unicidade em Transações**: Substituição de métodos de escrita direta por `upsert` na edição de dados complementares de colaboradores no Prisma para evitar violações de integridade.
+
+---
+
 ## [1.3.0] - 2026-07-16
 
 ### Adicionado

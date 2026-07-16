@@ -67,6 +67,14 @@ export class UsersService {
     if (user.employee) {
       const employeeId = user.employee.id;
       await this.prisma.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            firstName: dto.firstName !== undefined ? dto.firstName : undefined,
+            lastName: dto.lastName !== undefined ? dto.lastName : undefined,
+            avatarUrl: finalAvatarUrl !== undefined ? finalAvatarUrl : undefined,
+          },
+        });
         await tx.employee.update({
           where: { id: employeeId },
           data: {
@@ -74,78 +82,73 @@ export class UsersService {
             lastName: dto.lastName !== undefined ? dto.lastName : undefined,
             phone: dto.phone !== undefined ? dto.phone : undefined,
             personalData: {
-              update: {
-                avatarUrl: finalAvatarUrl !== undefined ? finalAvatarUrl : undefined,
-                rg: dto.rg !== undefined ? dto.rg : undefined,
-                birthDate: dto.birthDate !== undefined ? new Date(dto.birthDate) : undefined,
-                gender: dto.gender !== undefined ? dto.gender : undefined,
-                maritalStatus: dto.maritalStatus !== undefined ? dto.maritalStatus : undefined,
+              upsert: {
+                create: {
+                  cpf: user.id.replace(/[^\d]/g, "").slice(0, 11) || "00000000000",
+                  avatarUrl: finalAvatarUrl || "",
+                  rg: dto.rg || "",
+                  birthDate: dto.birthDate ? new Date(dto.birthDate) : new Date("1970-01-01"),
+                  gender: dto.gender || "OTHER",
+                  maritalStatus: dto.maritalStatus || "SINGLE",
+                },
+                update: {
+                  avatarUrl: finalAvatarUrl !== undefined ? finalAvatarUrl : undefined,
+                  rg: dto.rg !== undefined ? dto.rg : undefined,
+                  birthDate: dto.birthDate !== undefined ? new Date(dto.birthDate) : undefined,
+                  gender: dto.gender !== undefined ? dto.gender : undefined,
+                  maritalStatus: dto.maritalStatus !== undefined ? dto.maritalStatus : undefined,
+                },
               },
             },
             address: {
-              update: {
-                cep: dto.cep !== undefined ? dto.cep.replace(/[^\d]/g, "") : undefined,
-                street: dto.street !== undefined ? dto.street : undefined,
-                number: dto.number !== undefined ? dto.number : undefined,
-                complement: dto.complement !== undefined ? dto.complement : undefined,
-                neighborhood: dto.neighborhood !== undefined ? dto.neighborhood : undefined,
-                city: dto.city !== undefined ? dto.city : undefined,
-                state: dto.state !== undefined ? dto.state.toUpperCase() : undefined,
+              upsert: {
+                create: {
+                  cep: dto.cep?.replace(/[^\d]/g, "") || "",
+                  street: dto.street || "",
+                  number: dto.number || "",
+                  complement: dto.complement || "",
+                  neighborhood: dto.neighborhood || "",
+                  city: dto.city || "",
+                  state: dto.state?.toUpperCase() || "",
+                },
+                update: {
+                  cep: dto.cep !== undefined ? dto.cep.replace(/[^\d]/g, "") : undefined,
+                  street: dto.street !== undefined ? dto.street : undefined,
+                  number: dto.number !== undefined ? dto.number : undefined,
+                  complement: dto.complement !== undefined ? dto.complement : undefined,
+                  neighborhood: dto.neighborhood !== undefined ? dto.neighborhood : undefined,
+                  city: dto.city !== undefined ? dto.city : undefined,
+                  state: dto.state !== undefined ? dto.state.toUpperCase() : undefined,
+                },
               },
             },
             bankAccount: {
-              update: {
-                bankCode: dto.bankCode !== undefined ? dto.bankCode : undefined,
-                bankAgency: dto.bankAgency !== undefined ? dto.bankAgency : undefined,
-                bankAccount: dto.bankAccount !== undefined ? dto.bankAccount : undefined,
-                accountType: dto.accountType !== undefined ? dto.accountType : undefined,
+              upsert: {
+                create: {
+                  bankCode: dto.bankCode || "",
+                  bankAgency: dto.bankAgency || "",
+                  bankAccount: dto.bankAccount || "",
+                  accountType: dto.accountType || "CHECKING",
+                },
+                update: {
+                  bankCode: dto.bankCode !== undefined ? dto.bankCode : undefined,
+                  bankAgency: dto.bankAgency !== undefined ? dto.bankAgency : undefined,
+                  bankAccount: dto.bankAccount !== undefined ? dto.bankAccount : undefined,
+                  accountType: dto.accountType !== undefined ? dto.accountType : undefined,
+                },
               },
             },
           },
         });
       });
     } else {
-      await this.prisma.$transaction(async (tx) => {
-        await tx.employee.create({
-          data: {
-            userId: user.id,
-            firstName: dto.firstName || "Admin",
-            lastName: dto.lastName || "User",
-            email: user.email,
-            phone: dto.phone || "",
-            hireDate: new Date(),
-            salary: 0,
-            personalData: {
-              create: {
-                avatarUrl: finalAvatarUrl || "",
-                rg: dto.rg || "",
-                cpf: "",
-                birthDate: dto.birthDate ? new Date(dto.birthDate) : new Date("1970-01-01"),
-                gender: dto.gender || "OTHER",
-                maritalStatus: dto.maritalStatus || "SINGLE",
-              },
-            },
-            address: {
-              create: {
-                cep: dto.cep?.replace(/[^\d]/g, "") || "",
-                street: dto.street || "",
-                number: dto.number || "",
-                complement: dto.complement || "",
-                neighborhood: dto.neighborhood || "",
-                city: dto.city || "",
-                state: dto.state?.toUpperCase() || "",
-              },
-            },
-            bankAccount: {
-              create: {
-                bankCode: dto.bankCode || "",
-                bankAgency: dto.bankAgency || "",
-                bankAccount: dto.bankAccount || "",
-                accountType: dto.accountType || "CHECKING",
-              },
-            },
-          },
-        });
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          firstName: dto.firstName !== undefined ? dto.firstName : undefined,
+          lastName: dto.lastName !== undefined ? dto.lastName : undefined,
+          avatarUrl: finalAvatarUrl !== undefined ? finalAvatarUrl : undefined,
+        },
       });
     }
 

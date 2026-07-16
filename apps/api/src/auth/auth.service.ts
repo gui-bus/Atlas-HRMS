@@ -199,13 +199,16 @@ export class AuthService {
       email: user.email,
       role: user.role,
       isActive: user.isActive,
+      firstName: user.firstName || user.employee?.firstName || null,
+      lastName: user.lastName || user.employee?.lastName || null,
+      avatarUrl: user.avatarUrl || user.employee?.personalData?.avatarUrl || null,
       employee: user.employee
         ? {
             id: user.employee.id,
             firstName: user.employee.firstName,
             lastName: user.employee.lastName,
             phone: user.employee.phone || null,
-            avatarUrl: user.employee.personalData?.avatarUrl || null,
+            avatarUrl: user.employee.personalData?.avatarUrl || user.avatarUrl || null,
             rg: user.employee.personalData?.rg || null,
             cpf: user.employee.personalData?.cpf || null,
             birthDate: user.employee.personalData?.birthDate || null,

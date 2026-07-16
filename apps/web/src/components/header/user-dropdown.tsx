@@ -72,9 +72,9 @@ export function UserDropdown({ locale }: UserDropdownProps) {
               tabIndex={0}
               className="relative flex items-center justify-center h-9 w-9 rounded-full overflow-hidden bg-primary/10 text-primary hover:bg-primary/15 active:scale-95 transition-all cursor-pointer select-none outline-none focus:outline-none"
             >
-              {user?.employee?.avatarUrl ? (
+              {user?.employee?.avatarUrl || user?.avatarUrl ? (
                 <img
-                  src={user.employee.avatarUrl}
+                  src={user.employee?.avatarUrl || user.avatarUrl || ""}
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />
@@ -99,9 +99,9 @@ export function UserDropdown({ locale }: UserDropdownProps) {
           {/* Premium User Profile Header Card */}
           <div className="flex flex-col items-center text-center p-4 bg-muted/40 rounded-xl mb-1.5">
             <div className="w-12 h-12 rounded-full overflow-hidden bg-primary/10 text-primary flex items-center justify-center font-bold text-lg uppercase mb-2">
-              {user?.employee?.avatarUrl ? (
+              {user?.employee?.avatarUrl || user?.avatarUrl ? (
                 <img
-                  src={user.employee.avatarUrl}
+                  src={user.employee?.avatarUrl || user.avatarUrl || ""}
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />

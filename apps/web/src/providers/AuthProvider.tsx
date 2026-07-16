@@ -19,17 +19,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         const { accessToken } = response.data;
 
         if (accessToken) {
-          const payloadBase64 = accessToken.split(".")[1];
-          const decodedPayload = JSON.parse(atob(payloadBase64));
-          const userData = {
-            id: decodedPayload.sub,
-            email: decodedPayload.email,
-            role: decodedPayload.role,
-            isActive: true,
-            createdAt: "",
-            updatedAt: "",
-          };
-          setAuth(userData, accessToken);
+          api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+          const responseMe = await api.get("/auth/me");
+          setAuth(responseMe.data, accessToken);
         }
       } catch (err) {
         // Se falhar, limpa o estado (o usuário não possui um cookie válido)

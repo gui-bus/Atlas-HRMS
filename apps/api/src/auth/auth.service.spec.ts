@@ -233,6 +233,9 @@ describe("AuthService", () => {
         email: "u1@atlas.com",
         role: UserRole.ADMIN,
         isActive: true,
+        firstName: "John",
+        lastName: "Doe",
+        avatarUrl: "https://photo.png",
         employee: {
           id: "emp-1",
           firstName: "John",

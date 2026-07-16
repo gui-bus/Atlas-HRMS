@@ -72,33 +72,36 @@ export default function ProfilePage() {
   const [avatarPreview, setAvatarPreview] = useState<string>("");
 
   useEffect(() => {
-    if (user?.employee) {
-      setFirstName(user.employee.firstName || "");
-      setLastName(user.employee.lastName || "");
-      setPhone(user.employee.phone || "");
-      setAvatarPreview(user.employee.avatarUrl || "");
-      setRg(user.employee.rg || "");
-      if (user.employee.birthDate) {
-        setBirthDate(user.employee.birthDate.split("T")[0]);
-      }
-      setGender(user.employee.gender || "");
-      setMaritalStatus(user.employee.maritalStatus || "");
+    if (user) {
+      setFirstName(user.firstName || user.employee?.firstName || "");
+      setLastName(user.lastName || user.employee?.lastName || "");
+      setAvatarPreview(user.avatarUrl || user.employee?.avatarUrl || "");
 
-      if (user.employee.address) {
-        setCep(user.employee.address.cep || "");
-        setStreet(user.employee.address.street || "");
-        setNumber(user.employee.address.number || "");
-        setComplement(user.employee.address.complement || "");
-        setNeighborhood(user.employee.address.neighborhood || "");
-        setCity(user.employee.address.city || "");
-        setState(user.employee.address.state || "");
-      }
+      if (user.employee) {
+        setPhone(user.employee.phone || "");
+        setRg(user.employee.rg || "");
+        if (user.employee.birthDate) {
+          setBirthDate(user.employee.birthDate.split("T")[0]);
+        }
+        setGender(user.employee.gender || "");
+        setMaritalStatus(user.employee.maritalStatus || "");
 
-      if (user.employee.bankAccount) {
-        setBankCode(user.employee.bankAccount.bankCode || "");
-        setBankAgency(user.employee.bankAccount.bankAgency || "");
-        setBankAccount(user.employee.bankAccount.bankAccount || "");
-        setAccountType(user.employee.bankAccount.accountType || "");
+        if (user.employee.address) {
+          setCep(user.employee.address.cep || "");
+          setStreet(user.employee.address.street || "");
+          setNumber(user.employee.address.number || "");
+          setComplement(user.employee.address.complement || "");
+          setNeighborhood(user.employee.address.neighborhood || "");
+          setCity(user.employee.address.city || "");
+          setState(user.employee.address.state || "");
+        }
+
+        if (user.employee.bankAccount) {
+          setBankCode(user.employee.bankAccount.bankCode || "");
+          setBankAgency(user.employee.bankAccount.bankAgency || "");
+          setBankAccount(user.employee.bankAccount.bankAccount || "");
+          setAccountType(user.employee.bankAccount.accountType || "");
+        }
       }
     }
   }, [user]);
@@ -278,210 +281,222 @@ export default function ProfilePage() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="cpf">CPF (Não editável)</Label>
-                  <Input
-                    id="cpf"
-                    value={user?.employee?.cpf || ""}
-                    disabled
-                    className="h-10 rounded-2xl bg-muted/20 border-0 focus-visible:ring-1 opacity-65 cursor-not-allowed"
-                  />
-                </div>
+                {user?.employee && (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="cpf">CPF (Não editável)</Label>
+                      <Input
+                        id="cpf"
+                        value={user.employee.cpf || ""}
+                        disabled
+                        className="h-10 rounded-2xl bg-muted/20 border-0 focus-visible:ring-1 opacity-65 cursor-not-allowed"
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="rg">RG</Label>
-                  <Input
-                    id="rg"
-                    value={rg}
-                    onChange={(e) => setRg(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="rg">RG</Label>
+                      <Input
+                        id="rg"
+                        value={rg}
+                        onChange={(e) => setRg(e.target.value)}
+                        className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="birthDate">Data de Nascimento</Label>
-                  <Input
-                    id="birthDate"
-                    type="date"
-                    value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="birthDate">Data de Nascimento</Label>
+                      <Input
+                        id="birthDate"
+                        type="date"
+                        value={birthDate}
+                        onChange={(e) => setBirthDate(e.target.value)}
+                        className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="gender">Gênero</Label>
-                  <Select id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
-                    <Option value="MALE">Masculino</Option>
-                    <Option value="FEMALE">Feminino</Option>
-                    <Option value="OTHER">Outro / Prefiro não responder</Option>
-                  </Select>
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="gender">Gênero</Label>
+                      <Select
+                        id="gender"
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                      >
+                        <Option value="MALE">Masculino</Option>
+                        <Option value="FEMALE">Feminino</Option>
+                        <Option value="OTHER">Outro / Prefiro não responder</Option>
+                      </Select>
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="maritalStatus">Estado Civil</Label>
-                  <Select
-                    id="maritalStatus"
-                    value={maritalStatus}
-                    onChange={(e) => setMaritalStatus(e.target.value)}
-                  >
-                    <Option value="SINGLE">Solteiro(a)</Option>
-                    <Option value="MARRIED">Casado(a)</Option>
-                    <Option value="DIVORCED">Divorciado(a)</Option>
-                    <Option value="WIDOWED">Viúvo(a)</Option>
-                  </Select>
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="maritalStatus">Estado Civil</Label>
+                      <Select
+                        id="maritalStatus"
+                        value={maritalStatus}
+                        onChange={(e) => setMaritalStatus(e.target.value)}
+                      >
+                        <Option value="SINGLE">Solteiro(a)</Option>
+                        <Option value="MARRIED">Casado(a)</Option>
+                        <Option value="DIVORCED">Divorciado(a)</Option>
+                        <Option value="WIDOWED">Viúvo(a)</Option>
+                      </Select>
+                    </div>
 
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="phone">Telefone</Label>
-                  <Input
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                    placeholder="(00) 00000-0000"
-                  />
-                </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="phone">Telefone</Label>
+                      <Input
+                        id="phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                        placeholder="(00) 00000-0000"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
             {/* Address Section */}
-            <div className="bg-muted/5 p-6 rounded-3xl space-y-6 border-0">
-              <FormSectionHeader
-                title="Endereço Residencial"
-                description="Dados de localização residencial do colaborador."
-                icon={House}
-              />
+            {user?.employee && (
+              <div className="bg-muted/5 p-6 rounded-3xl space-y-6 border-0">
+                <FormSectionHeader
+                  title="Endereço Residencial"
+                  description="Dados de localização residencial del colaborador."
+                  icon={House}
+                />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="cep">CEP</Label>
-                  <Input
-                    id="cep"
-                    value={cep}
-                    onChange={(e) => setCep(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                    placeholder="00000-000"
-                  />
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cep">CEP</Label>
+                    <Input
+                      id="cep"
+                      value={cep}
+                      onChange={(e) => setCep(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                      placeholder="00000-000"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="street">Logradouro</Label>
-                  <Input
-                    id="street"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="street">Logradouro</Label>
+                    <Input
+                      id="street"
+                      value={street}
+                      onChange={(e) => setStreet(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="number">Número</Label>
-                  <Input
-                    id="number"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="number">Número</Label>
+                    <Input
+                      id="number"
+                      value={number}
+                      onChange={(e) => setNumber(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="complement">Complemento</Label>
-                  <Input
-                    id="complement"
-                    value={complement}
-                    onChange={(e) => setComplement(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="complement">Complemento</Label>
+                    <Input
+                      id="complement"
+                      value={complement}
+                      onChange={(e) => setComplement(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="neighborhood">Bairro</Label>
-                  <Input
-                    id="neighborhood"
-                    value={neighborhood}
-                    onChange={(e) => setNeighborhood(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="neighborhood">Bairro</Label>
+                    <Input
+                      id="neighborhood"
+                      value={neighborhood}
+                      onChange={(e) => setNeighborhood(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="city">Cidade</Label>
-                  <Input
-                    id="city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="city">Cidade</Label>
+                    <Input
+                      id="city"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    />
+                  </div>
 
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="state">Estado (UF)</Label>
-                  <Input
-                    id="state"
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                    placeholder="EX: SP"
-                    maxLength={2}
-                  />
+                  <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor="state">Estado (UF)</Label>
+                    <Input
+                      id="state"
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                      placeholder="EX: SP"
+                      maxLength={2}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Bank Account Section */}
-            <div className="bg-muted/5 p-6 rounded-3xl space-y-6 border-0">
-              <FormSectionHeader
-                title="Dados Bancários"
-                description="Conta para depósitos e pagamentos corporativos."
-                icon={CreditCard}
-              />
+            {user?.employee && (
+              <div className="bg-muted/5 p-6 rounded-3xl space-y-6 border-0">
+                <FormSectionHeader
+                  title="Dados Bancários"
+                  description="Conta para depósitos e pagamentos corporativos."
+                  icon={CreditCard}
+                />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="bankCode">Código do Banco</Label>
-                  <Input
-                    id="bankCode"
-                    value={bankCode}
-                    onChange={(e) => setBankCode(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                    placeholder="Ex: 341"
-                  />
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="bankCode">Código do Banco</Label>
+                    <Input
+                      id="bankCode"
+                      value={bankCode}
+                      onChange={(e) => setBankCode(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                      placeholder="Ex: 341"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="bankAgency">Agência bancária</Label>
-                  <Input
-                    id="bankAgency"
-                    value={bankAgency}
-                    onChange={(e) => setBankAgency(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bankAgency">Agência bancária</Label>
+                    <Input
+                      id="bankAgency"
+                      value={bankAgency}
+                      onChange={(e) => setBankAgency(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="bankAccount">Número da conta</Label>
-                  <Input
-                    id="bankAccount"
-                    value={bankAccount}
-                    onChange={(e) => setBankAccount(e.target.value)}
-                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bankAccount">Número da conta</Label>
+                    <Input
+                      id="bankAccount"
+                      value={bankAccount}
+                      onChange={(e) => setBankAccount(e.target.value)}
+                      className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="accountType">Tipo de Conta</Label>
-                  <Select
-                    id="accountType"
-                    value={accountType}
-                    onChange={(e) => setAccountType(e.target.value)}
-                  >
-                    <Option value="CHECKING">Conta Corrente</Option>
-                    <Option value="SAVINGS">Conta Poupança</Option>
-                  </Select>
+                  <div className="space-y-2">
+                    <Label htmlFor="accountType">Tipo de Conta</Label>
+                    <Select
+                      id="accountType"
+                      value={accountType}
+                      onChange={(e) => setAccountType(e.target.value)}
+                    >
+                      <Option value="CHECKING">Conta Corrente</Option>
+                      <Option value="SAVINGS">Conta Poupança</Option>
+                    </Select>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="flex justify-end pt-4">
               <Button
