@@ -12,6 +12,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Upload de Anexos em Solicitações de Afastamento**: Nova área de Dropzone interativa para upload de atestados médicos ou comprovantes de licença diretamente para o UploadThing através da nova rota `/upload` da API.
 - **Campo de Tipo Customizado de Afastamento**: Quando selecionado "Outros Afastamentos", um novo campo "Nome do Tipo de Afastamento" é exibido no formulário e enviado para a coluna `customType` criada no modelo de banco de dados `Leave`.
 - **Nova Rota de Upload na API**: Endpoint genérico `POST /upload` implementado no `UploadController` para upload de arquivos em geral.
+- **Script de População do Banco (Seed)**: Implementação de um script de seed completo (`prisma/seed.ts`) que gera dados realistas em português para popular todo o sistema (departamentos, cargos, administradores, gestores, funcionários, solicitações de férias, atestados com anexos, vagas de recrutamento abertas, candidatos reais com currículos e marcações de ponto históricas com saldo no banco de horas).
 
 ### Alterado
 
