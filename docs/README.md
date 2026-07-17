@@ -205,3 +205,75 @@ A API NestJS adota o **Jest** como runner padrão integrado com estratégias tra
 
 - **Git Hooks Locais (Husky)**: Configurado com travas ativas de pré-commit (`pre-commit`) que executam formatação de estilo (**Prettier**), linter estrito (**ESLint**) e a bateria local de testes obrigatórios, impedindo qualquer código quebrado de ser commitado.
 - **Pipeline de Integração Contínua (GitHub Actions)**: Pipeline configurado para rodar build de produção do monorepo, validação de tipagens do compilador TypeScript (`tsc --noEmit`), lint e testes completos a cada pull request aberto.
+
+---
+
+## 🏁 Inicialização Local (Getting Started)
+
+Siga os passos abaixo para configurar e rodar o projeto localmente:
+
+### 1. Pré-requisitos
+- Node.js (v24 ou superior)
+- Gerenciador de pacotes **pnpm** (`npm i -g pnpm`)
+- Banco de dados **PostgreSQL** ativo
+
+### 2. Configuração de Variáveis de Ambiente
+Crie arquivos `.env` em ambas as aplicações baseando-se nos modelos `.env.example` disponíveis em cada diretório:
+
+**Em `apps/api/.env`**:
+```env
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/atlas_hrms?schema=public"
+JWT_SECRET="sua_chave_secreta_super_segura"
+PORT=8080
+FRONTEND_URL="http://localhost:3000"
+UPLOADTHING_TOKEN="seu_token_do_uploadthing"
+RESEND_API_KEY="sua_api_key_do_resend"
+```
+
+**Em `apps/web/.env`**:
+```env
+NEXT_PUBLIC_API_URL="http://localhost:8080"
+```
+
+### 3. Instalação e Inicialização
+Execute os comandos abaixo na raiz do monorepo:
+
+```bash
+# Instalar todas as dependências do monorepo
+pnpm install
+
+# Executar as migrações do banco de dados e gerar o Prisma Client
+pnpm --filter api prisma:migrate
+
+# Executar o seed para popular dados fictícios realistas
+pnpm --filter api prisma:seed
+
+# Inicializar todos os workspaces do monorepo em modo de desenvolvimento paralelo
+pnpm dev
+```
+
+O Web App estará rodando em [http://localhost:3000](http://localhost:3000) e a API Server em [http://localhost:8080](http://localhost:8080).
+
+---
+
+## 🌱 Massa de Dados do Seed (Carga Inicial)
+
+O script de **seed** popula o banco de dados com uma estrutura organizacional corporativa robusta e realista para testes imediatos. Ele gera automaticamente:
+- **15 Departamentos** (Tecnologia, Recursos Humanos, Financeiro, Marketing, Operações, etc.)
+- **Mais de 25 Cargos** estruturados com faixas salariais ativas
+- **Contas de Acesso Pré-configuradas** (todas as contas utilizam a senha `Senha@123`):
+  - **Administrador**: `admin@atlas.com` (Nome: *Guilherme Administrador*)
+  - **Recursos Humanos (RH)**: `rh@atlas.com` (Nome: *Fernanda Souza*)
+  - **Gestor de Equipe**: `gestor.tech@atlas.com` (Nome: *Carlos Eduardo*)
+- Dezenas de funcionários ativos, logs de auditorias estruturados, solicitações pendentes de férias/ponto e candidaturas de teste no portal público.
+
+---
+
+## 📑 Documentação e Teste de Rotas (API Docs)
+
+A API do Atlas HRMS possui documentação interativa de rotas. Com o servidor NestJS rodando localmente (`pnpm dev`), acesse:
+
+- **Scalar Interactive Documentation**: [http://localhost:8080/reference](http://localhost:8080/reference) (Recomendado - Interface moderna e performática)
+- **Swagger UI**: [http://localhost:8080/api](http://localhost:8080/api) (Padrão clássico)
+
+Todas as rotas privadas exigem autenticação via JWT Header (`Authorization: Bearer <Token>`) ou são validadas de forma transparente pelo cookie Http-only seguro.
