@@ -49,21 +49,23 @@ export function Combobox({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          disabled={disabled}
-          className={cn(
-            "w-full justify-between rounded-2xl border-0 bg-muted/45 px-3 text-left font-normal h-10 hover:bg-muted/65 transition-colors cursor-pointer text-sm outline-none shadow-none",
-            !value && "text-muted-foreground",
-            className,
-          )}
-        >
-          <span className="truncate">{selectedOption ? selectedOption.label : placeholder}</span>
-          <CaretUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+      <PopoverTrigger
+        render={
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            disabled={disabled}
+            className={cn(
+              "w-full justify-between rounded-2xl border-0 bg-muted/45 px-3 text-left font-normal h-10 hover:bg-muted/65 transition-colors cursor-pointer text-sm outline-none shadow-none",
+              !value && "text-muted-foreground",
+              className,
+            )}
+          />
+        }
+      >
+        <span className="truncate">{selectedOption ? selectedOption.label : placeholder}</span>
+        <CaretUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </PopoverTrigger>
       <PopoverContent className="w-[var(--popover-trigger-width)] p-0" align="start">
         <Command className="w-full">

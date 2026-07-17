@@ -11,13 +11,14 @@
     "lang_pt": "Portuguese",
     "lang_en": "English",
     "lang_es": "Spanish",
+    "searchPlaceholder": "Search...",
+    "noResults": "No results found.",
     "pagination": {
       "previous": "Previous",
       "next": "Next",
       "more": "More pages",
       "previousLabel": "Go to previous page",
-      "nextLabel": "Go to next page",
-      "noResults": "No results found."
+      "nextLabel": "Go to next page"
     }
   },
   "Dashboard": {
