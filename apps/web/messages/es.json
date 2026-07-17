@@ -632,5 +632,20 @@
     "title": "Notificaciones",
     "unread": "no leídas",
     "empty": "No se encontraron notificaciones."
+  },
+  "LandingPage": {
+    "title": "La evolución en la gestión de personas",
+    "subtitle": "Plataforma corporativa moderna para el control de empleados, control de asistencia digital, banco de horas, gestión de vacaciones y procesos de contratación estructurados.",
+    "ctaAccess": "Acceder al Panel",
+    "ctaJobs": "Ver Vacantes Abiertas",
+    "features": {
+      "teamsTitle": "Control de Equipos",
+      "teamsDesc": "Gestión ágil de contratos, roles, departamentos y documentación en una interfaz unificada.",
+      "timeTitle": "Asistencia y Vacaciones",
+      "timeDesc": "Registro digital integrado, banco de horas automatizado y central de solicitudes de ausencia.",
+      "recruitmentTitle": "Reclutamiento Integrado",
+      "recruitmentDesc": "Publique ofertas de trabajo personalizadas y gestione solicitudes en un portal público unificado."
+    },
+    "employeePortal": "Área del Colaborador"
   }
 }

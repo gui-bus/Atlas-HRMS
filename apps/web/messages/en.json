@@ -632,5 +632,20 @@
     "title": "Notifications",
     "unread": "unread",
     "empty": "No notifications found."
+  },
+  "LandingPage": {
+    "title": "The evolution of people management",
+    "subtitle": "A modern corporate platform for employee management, digital time clock, hour bank, vacation tracking, and structured recruitment processes.",
+    "ctaAccess": "Access Dashboard",
+    "ctaJobs": "View Open Jobs",
+    "features": {
+      "teamsTitle": "Team Management",
+      "teamsDesc": "Agile management of contracts, roles, departments, and documentation in a unified workspace.",
+      "timeTitle": "Time & Attendance",
+      "timeDesc": "Integrated digital clock-in, automated hour bank, and central absence requests tracker.",
+      "recruitmentTitle": "Integrated Recruitment",
+      "recruitmentDesc": "Publish dynamic job openings and manage candidate flows through a public careers portal."
+    },
+    "employeePortal": "Employee Area"
   }
 }

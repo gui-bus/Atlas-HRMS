@@ -9,6 +9,8 @@ import {
   CircleNotch,
   CheckCircle,
   FileArrowUp,
+  Buildings,
+  GraduationCap,
 } from "@phosphor-icons/react";
 import { useParams, useRouter } from "next/navigation";
 import { recruitmentService } from "@/services/recruitment.service";
@@ -102,7 +104,7 @@ export default function PublicJobDetailPage() {
   if (!job) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground space-y-4">
-        <p className="text-muted-foreground">Vaga não encontrada ou encerrada.</p>
+        <p className="text-muted-foreground text-sm">Vaga não encontrada ou encerrada.</p>
         <Button onClick={() => router.push(`/${locale}/jobs`)} variant="outline">
           Voltar para Vagas
         </Button>
@@ -111,24 +113,11 @@ export default function PublicJobDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* Header */}
-      <header className="border-b border-muted/20 py-4 px-6 md:px-12 flex justify-between items-center bg-card/10 backdrop-blur-md sticky top-0 z-50">
-        <div
-          className="flex items-center space-x-3 cursor-pointer"
-          onClick={() => router.push(`/${locale}/jobs`)}
-        >
-          <div className="h-9 w-9 bg-primary rounded-xl flex items-center justify-center text-primary-foreground font-black text-lg">
-            A
-          </div>
-          <span className="font-bold tracking-tight text-lg">Atlas Carreiras</span>
-        </div>
-      </header>
-
-      {/* Main Details Panel */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-6 md:px-12 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left 2 Columns: Description and Info */}
-        <div className="lg:col-span-2 space-y-6">
+    <div className="min-h-screen bg-background text-foreground flex flex-col w-full">
+      {/* Main Details Panel (Clean, Premium, border-free) */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-6 md:px-12 py-10 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* Left Column: Job Info (col-span 7) */}
+        <div className="lg:col-span-7 space-y-8 animate-fade-in">
           <Button
             variant="ghost"
             onClick={() => router.push(`/${locale}/jobs`)}
@@ -138,36 +127,45 @@ export default function PublicJobDetailPage() {
             Voltar para vagas
           </Button>
 
-          <div className="space-y-3">
-            <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wider w-fit block">
-              {job.department?.name || "Geral"}
-            </span>
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wider w-fit">
+              <Buildings className="h-3 w-3" />
+              {job.departmentName || "Geral"}
+            </div>
+            
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
               {job.title}
             </h1>
+
             <div className="flex flex-wrap gap-4 text-xs text-muted-foreground font-semibold">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 bg-muted/15 px-3 py-1.5 rounded-2xl">
                 <Briefcase className="w-3.5 h-3.5 text-primary" />
                 {getSeniorityLabel(job.seniority)} • {job.employmentType}
               </span>
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 bg-muted/15 px-3 py-1.5 rounded-2xl">
                 <MapPin className="w-3.5 h-3.5 text-primary" />
                 {getWorkModelLabel(job.workModel)}
               </span>
             </div>
           </div>
 
-          <div className="border-t border-muted/20 pt-6 space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold">Descrição da Vaga</h3>
+          <div className="space-y-8 pt-6 border-t border-muted/10">
+            <div className="space-y-3">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <Briefcase className="w-4 h-4 text-primary" />
+                Descrição da Vaga
+              </h3>
               <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">
                 {job.description}
               </p>
             </div>
 
             {job.requirements && (
-              <div className="space-y-2">
-                <h3 className="text-lg font-bold">Requisitos</h3>
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-primary" />
+                  Requisitos & Habilidades
+                </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">
                   {job.requirements}
                 </p>
@@ -176,8 +174,8 @@ export default function PublicJobDetailPage() {
           </div>
         </div>
 
-        {/* Right 1 Column: Apply Form */}
-        <div className="bg-muted/10 p-6 md:p-8 rounded-3xl h-fit space-y-6">
+        {/* Right Column: Apply Form Card (col-span 5) */}
+        <div className="lg:col-span-5 bg-muted/10 p-6 md:p-8 rounded-3xl h-fit space-y-6 animate-fade-in">
           <h2 className="text-xl font-bold tracking-tight">Candidatar-se</h2>
           <p className="text-xs text-muted-foreground font-semibold">
             Preencha seus dados de contato e envie seu currículo em PDF.
@@ -211,30 +209,32 @@ export default function PublicJobDetailPage() {
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="firstName">
-                  Nome <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  required
-                />
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">
+                    Nome <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    required
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="lastName">
-                  Sobrenome <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  required
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">
+                    Sobrenome <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">

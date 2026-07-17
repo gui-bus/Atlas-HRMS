@@ -632,5 +632,20 @@
     "title": "Notificações",
     "unread": "não lidas",
     "empty": "Nenhuma notificação encontrada."
+  },
+  "LandingPage": {
+    "title": "A evolução na gestão de pessoas",
+    "subtitle": "Plataforma corporativa moderna para controle de colaboradores, ponto eletrônico digital, banco de horas, gerenciamento de férias e processos de recrutamento estruturados.",
+    "ctaAccess": "Acessar o Painel",
+    "ctaJobs": "Ver Vagas Abertas",
+    "features": {
+      "teamsTitle": "Controle de Equipes",
+      "teamsDesc": "Gestão ágil de dados contratuais, cargos, departamentos e documentação em uma interface unificada.",
+      "timeTitle": "Ponto & Férias",
+      "timeDesc": "Marcação digital integrada, banco de horas automatizado e central de solicitações de ausência.",
+      "recruitmentTitle": "Recrutamento Integrado",
+      "recruitmentDesc": "Publique vagas corporativas personalizadas e gerencie candidaturas em um portal público unificado."
+    },
+    "employeePortal": "Área do Colaborador"
   }
 }

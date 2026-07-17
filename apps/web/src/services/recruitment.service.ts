@@ -47,6 +47,10 @@ export const recruitmentService = {
     limit?: number;
     sortBy?: string;
     sortOrder?: string;
+    search?: string;
+    seniority?: string;
+    workModel?: string;
+    employmentType?: string;
   }): Promise<{ data: Recruitment[]; totalPages?: number }> {
     const response = await api.get<{ data: Recruitment[]; totalPages?: number }>("/recruitments", {
       params,

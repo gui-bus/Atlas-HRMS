@@ -37,7 +37,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
       console.error("Erro durante o logout", err);
     } finally {
       clearAuth();
-      router.push(`/${locale}/login`);
+      router.push(`/${locale}`);
       setLoggingOut(false);
     }
   };

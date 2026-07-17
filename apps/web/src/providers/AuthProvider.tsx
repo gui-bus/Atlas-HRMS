@@ -39,16 +39,19 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       pathname.endsWith("/login") ||
       pathname.endsWith("/register") ||
       pathname.includes("/forgot-password") ||
-      pathname.includes("/reset-password");
+      pathname.includes("/reset-password") ||
+      pathname.includes("/jobs") ||
+      pathname === `/${pathname.split("/")[1]}` ||
+      pathname === "/";
 
     if (!isAuthenticated && !isPublicRoute) {
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
       router.push(`/${locale}/login?redirect=${encodeURIComponent(pathname)}`);
-    } else if (isAuthenticated && isPublicRoute) {
+    } else if (isAuthenticated && (pathname.endsWith("/login") || pathname.endsWith("/register"))) {
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
-      router.push(`/${locale}`);
+      router.push(`/${locale}/dashboard`);
     }
   }, [isAuthenticated, isBootstrapped, pathname, router]);
 
@@ -56,7 +59,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     pathname.endsWith("/login") ||
     pathname.endsWith("/register") ||
     pathname.includes("/forgot-password") ||
-    pathname.includes("/reset-password");
+    pathname.includes("/reset-password") ||
+    pathname.includes("/jobs") ||
+    pathname === `/${pathname.split("/")[1]}` ||
+    pathname === "/";
 
   if (!isBootstrapped && !isPublicRoute) {
     return (
