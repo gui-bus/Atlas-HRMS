@@ -9,26 +9,27 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 ### Adicionado
 
 - **Quadro Kanban Interativo (Recrutamento)**: A página de detalhes de uma vaga (`/recruitment/[id]`) foi completamente reescrita como um quadro Kanban drag-and-drop funcional utilizando a biblioteca `@dnd-kit/core`, `@dnd-kit/sortable` e `@dnd-kit/utilities`.
-  - **Arrastar e Soltar entre Fases**: Candidatos podem ser movidos entre as fases do funil (`SUBMITTED → SCREENING → HR_INTERVIEW → TECHNICAL_TEST → MANAGER_INTERVIEW → OFFER → HIRED → REJECTED`) simplesmente arrastando os cartões.
+  - **Arrastar e Soltar entre Fases**: Candidatos podem ser movidos entre as fases do funil (`SCREENING → HR_INTERVIEW → TECHNICAL_TEST → OFFER → HIRED → REJECTED`) simplesmente arrastando os cartões.
   - **Atualizações Otimistas**: A interface atualiza imediatamente ao soltar o cartão, sem aguardar resposta do servidor. Em caso de erro, o estado é revertido automaticamente via mecanismo de rollback do TanStack Query.
   - **DragOverlay**: Um cartão fantasma é exibido durante o arraste para dar feedback visual preciso da posição do item sendo movido.
   - **Handle de Arraste**: Ícone `DotsSixVertical` posicionado no canto superior direito de cada cartão, evitando conflitos de clique com botões de ação.
-  - **Colunas Temáticas**: Coluna `HIRED` com fundo verde translúcido (`emerald-500/5`) e coluna `REJECTED` com fundo vermelho translúcido (`destructive/5`) para distinção visual rápida.
+- **Simplificação do Pipeline de Recrutamento (Backend & Frontend)**:
+  - O enum `ApplicationStatus` do Prisma foi reduzido para incluir apenas os 6 estados essenciais: `SCREENING` (novo default), `HR_INTERVIEW`, `TECHNICAL_TEST`, `OFFER`, `HIRED` e `REJECTED`.
+  - Remoção completa dos estados `SUBMITTED`, `TECHNICAL_INTERVIEW`, `FINAL_INTERVIEW`, `MANAGER_INTERVIEW` e `WITHDRAWN`.
+  - Alinhamento de DTOs, mocks, testes de integração e seed do banco de dados na API.
 - **Links de Portal Público de Vagas**:
   - Botão "Ver Portal de Vagas" adicionado no cabeçalho do Kanban (com botão de copiar link público via `navigator.clipboard`).
-  - Botão "Ver Portal de Vagas" adicionado na listagem de vagas (`/recruitment`) ao lado do botão "Criar Vaga".
-  - Link clicável "Ver Portal de Vagas" adicionado na seção "Funil de Recrutamento" do dashboard principal para administradores e RH.
+  - Link de redirecionamento "Ver Portal de Vagas" integrado na seção "Funil de Recrutamento" do dashboard principal para administradores e RH.
 
 ### Alterado
 
-- **Dashboard - Labels de Fases Traduzidos**: As labels das fases de candidatura na seção "Funil de Recrutamento" do dashboard (`stageLabels`) foram migradas de strings hardcoded em português para chaves de internacionalização, garantindo exibição correta em inglês e espanhol.
+- **Dashboard - Labels de Fases Traduzidos**: As labels das fases de candidatura na seção "Funil de Recrutamento" do dashboard (`stageLabels`) foram migradas de strings de texto hardcoded em português para chaves de internacionalização e reduzidas aos novos estágios simplificados.
 - **Dashboard - Mensagem de Estado Vazio Traduzida**: A mensagem "Nenhuma candidatura ativa no momento." foi substituída por chave i18n (`noActiveApplications`).
-- **Listagem de Vagas - Cabeçalho Expandido**: O `<PageHeader>` da listagem de vagas foi substituído por um layout inline que acomoda múltiplos botões de ação (criar vaga + ver portal).
 
 ### Internacionalização
 
 - **Novo namespace `Recruitment.kanban`** (pt/en/es): `resumeLink`, `admit`, `admitting`, `notFound`, `funnelLabel`, `noDepartment`, `viewJobsPortal`, `portalLinkCopied`, `copyPortalLink`.
-- **Novas chaves `Dashboard`** (pt/en/es): `viewJobsPortal`, `noActiveApplications`, `stageLabels.*` (cobre todas as 10 fases possíveis).
+- **Novas chaves `Dashboard`** (pt/en/es): `viewJobsPortal`, `noActiveApplications`, `stageLabels.*` (cobre apenas as fases ativas no novo pipeline).
 
 ---
 
