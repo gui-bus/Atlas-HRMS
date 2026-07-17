@@ -235,7 +235,25 @@
       "delete": "Delete",
       "deleteConfirmTitle": "Delete Record",
       "deleteConfirmDesc": "Are you sure you want to delete this record?"
-    }
+    },
+    "departmentsTitle": "Departments",
+    "departmentsSubTitle": "Manage structural sectors and departments of the company.",
+    "addDepartmentBtn": "Add Department",
+    "searchDepartmentsPlaceholder": "Search department...",
+    "emptyDepartments": "No departments found.",
+    "deleteDepartmentTitle": "Delete Department",
+    "deleteDepartmentDesc": "Are you sure you want to permanently delete this department? All links will be affected.",
+    "positionsTitle": "Positions",
+    "positionsSubTitle": "Manage company positions catalog, hierarchies and salary ranges.",
+    "addPositionBtn": "Add Position",
+    "searchPositionsPlaceholder": "Search position...",
+    "emptyPositions": "No positions found.",
+    "deletePositionTitle": "Delete Position",
+    "deletePositionDesc": "Are you sure you want to permanently delete this position?",
+    "allDepartments": "All departments",
+    "allStatuses": "All statuses",
+    "activeStatus": "Active",
+    "inactiveStatus": "Inactive"
   },
   "Absences": {
     "title": "Absence Management",
@@ -424,6 +442,34 @@
       "user": "Executor User",
       "timestamp": "Date/Time",
       "details": "Event Details"
+    },
+    "publicAnonymous": "Public / Anonymous",
+    "modalTitle": "Log Details",
+    "modalDescription": "Audit logs record metadata information for corporate security.",
+    "close": "Close",
+    "noDetails": "No additional details.",
+    "empty": "No audit logs found.",
+    "actions": {
+      "USER_LOGIN_SUCCESS": "Successful login",
+      "USER_LOGIN_FAILED": "Failed login",
+      "EMPLOYEE_CREATED": "Employee created",
+      "EMPLOYEE_UPDATED": "Employee updated",
+      "EMPLOYEE_DELETED": "Employee deleted",
+      "DEPARTMENT_CREATED": "Department created",
+      "DEPARTMENT_UPDATED": "Department updated",
+      "DEPARTMENT_DELETED": "Department deleted",
+      "POSITION_CREATED": "Position created",
+      "POSITION_UPDATED": "Position updated",
+      "POSITION_DELETED": "Position deleted",
+      "VACATION_REQUESTED": "Vacation requested",
+      "VACATION_APPROVED": "Vacation approved",
+      "VACATION_REJECTED": "Vacation rejected",
+      "LEAVE_REQUESTED": "Leave requested",
+      "LEAVE_APPROVED": "Leave approved",
+      "LEAVE_REJECTED": "Leave rejected",
+      "CANDIDATE_STATUS_CHANGED": "Candidate stage changed",
+      "DOCUMENT_UPLOADED": "Document uploaded",
+      "DOCUMENT_DELETED": "Document deleted"
     }
   },
   "Profile": {
@@ -440,6 +486,49 @@
     "saving": "Saving...",
     "changePassword": "Change Password",
     "changing": "Changing..."
+  },
+  "Users": {
+    "title": "User Accounts",
+    "subTitle": "View and manage access levels of active credentials in the system.",
+    "searchPlaceholder": "Search accounts by email...",
+    "allRoles": "All levels",
+    "empty": "No user accounts found.",
+    "table": {
+      "email": "Email",
+      "role": "Access Level",
+      "createdAt": "Creation Date",
+      "actions": "Actions"
+    },
+    "roles": {
+      "ADMIN": "Administrator",
+      "HR": "Human Resources",
+      "MANAGER": "Manager",
+      "EMPLOYEE": "Employee"
+    }
+  },
+  "TimeCorrections": {
+    "title": "Time Correction Requests",
+    "subTitle": "Review, approve or reject retroactive time clock correction requests made by company employees.",
+    "searchPlaceholder": "Search requests...",
+    "empty": "No pending correction requests.",
+    "successApprove": "Time correction approved successfully!",
+    "errorApprove": "Error approving correction.",
+    "successReject": "Time correction rejected successfully.",
+    "errorReject": "Error rejecting correction.",
+    "table": {
+      "employee": "Employee",
+      "date": "Correction Date",
+      "type": "Clock Type",
+      "proposedTime": "Proposed Time",
+      "reason": "Reason",
+      "actions": "Actions"
+    },
+    "types": {
+      "ENTRY": "Entry",
+      "INTERVAL_OUT": "Lunch Out",
+      "INTERVAL_IN": "Lunch In",
+      "EXIT": "Exit"
+    }
   },
   "Navigation": {
     "categories": {

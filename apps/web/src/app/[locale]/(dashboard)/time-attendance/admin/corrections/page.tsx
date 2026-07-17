@@ -28,6 +28,7 @@ import { RbacGuard } from "@/components/rbac-guard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 export default function PendingCorrectionsPage() {
+  const t = useTranslations("TimeCorrections");
   const queryClient = useQueryClient();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -43,10 +44,10 @@ export default function PendingCorrectionsPage() {
       timeAttendanceService.approveCorrection(id, "Aprovado via painel administrativo"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pending-corrections"] });
-      setMessage({ text: "Ajuste de ponto aprovado com sucesso!", type: "success" });
+      setMessage({ text: t("successApprove"), type: "success" });
     },
     onError: (err: any) => {
-      const msg = err?.response?.data?.message || "Erro ao aprovar ajuste.";
+      const msg = err?.response?.data?.message || t("errorApprove");
       setMessage({ text: msg, type: "error" });
     },
   });
@@ -56,27 +57,27 @@ export default function PendingCorrectionsPage() {
       timeAttendanceService.rejectCorrection(id, "Rejeitado via painel administrativo"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pending-corrections"] });
-      setMessage({ text: "Ajuste de ponto rejeitado com sucesso.", type: "success" });
+      setMessage({ text: t("successReject"), type: "success" });
     },
     onError: (err: any) => {
-      const msg = err?.response?.data?.message || "Erro ao rejeitar ajuste.";
+      const msg = err?.response?.data?.message || t("errorReject");
       setMessage({ text: msg, type: "error" });
     },
   });
 
   const getRecordTypeLabel = (type: string) => {
-    const map = {
-      ENTRY: "Entrada",
-      INTERVAL_OUT: "Saída Almoço",
-      INTERVAL_IN: "Retorno Almoço",
-      EXIT: "Saída Expediente",
+    const map: Record<string, string> = {
+      ENTRY: t("types.ENTRY"),
+      INTERVAL_OUT: t("types.INTERVAL_OUT"),
+      INTERVAL_IN: t("types.INTERVAL_IN"),
+      EXIT: t("types.EXIT"),
     };
     return map[type] || type;
   };
 
   const formatDate = (dateStr: string) => {
     try {
-      return new Date(dateStr).toLocaleDateString("pt-BR");
+      return new Date(dateStr).toLocaleDateString();
     } catch {
       return dateStr;
     }
@@ -86,25 +87,25 @@ export default function PendingCorrectionsPage() {
   const columns = [
     columnHelper.accessor((row) => `${row.employee?.firstName} ${row.employee?.lastName}`, {
       id: "employeeName",
-      header: "Colaborador",
+      header: t("table.employee"),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("date", {
-      header: "Data do Ajuste",
+      header: t("table.date"),
       cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
     }),
     columnHelper.accessor("targetType", {
-      header: "Tipo da Batida",
+      header: t("table.type"),
       cell: (info) => (
         <span className="text-muted-foreground">{getRecordTypeLabel(info.getValue())}</span>
       ),
     }),
     columnHelper.accessor("time", {
-      header: "Horário Proposto",
+      header: t("table.proposedTime"),
       cell: (info) => <span className="font-mono text-primary font-bold">{info.getValue()}</span>,
     }),
     columnHelper.accessor("reason", {
-      header: "Justificativa",
+      header: t("table.reason"),
       cell: (info) => (
         <span
           className="text-muted-foreground text-xs leading-relaxed max-w-[240px] block truncate"
@@ -116,7 +117,7 @@ export default function PendingCorrectionsPage() {
     }),
     columnHelper.display({
       id: "actions",
-      header: "Ações",
+      header: t("table.actions"),
       cell: (info) => {
         const id = info.row.original.id;
         return (
@@ -159,10 +160,9 @@ export default function PendingCorrectionsPage() {
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">Solicitações de Ajuste de Ponto</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-muted-foreground text-sm">
-            Revise, aprove ou recuse pedidos de correção de ponto retroativos feitos por
-            colaboradores da empresa.
+            {t("subTitle")}
           </p>
         </div>
 
@@ -182,7 +182,7 @@ export default function PendingCorrectionsPage() {
         <div className="relative w-full">
           <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Pesquisar solicitações..."
+            placeholder={t("searchPlaceholder")}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="pl-10 h-10 rounded-2xl bg-muted/40 border-0 focus-visible:ring-1"
@@ -236,7 +236,7 @@ export default function PendingCorrectionsPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhum pedido de ajuste pendente.
+                      {t("empty")}
                     </td>
                   </tr>
                 ) : (

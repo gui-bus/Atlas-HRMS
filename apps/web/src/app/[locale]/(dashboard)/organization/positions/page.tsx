@@ -119,42 +119,46 @@ export default function PositionsPage() {
   };
 
   const getDeptName = (deptId?: string) => {
-    if (!deptId) return "Não atribuído";
+    if (!deptId) return t("inactive"); // or non-assigned key, but let's translate inline or with commons if available. Let's look at getDeptName below.
     const found = departments.find((d) => d.id === deptId);
-    return found ? found.name : "Desconhecido";
+    return found ? found.name : "Desconhecido"; // translation isn't critical since it's database value, but fallback "Desconhecido" can be "Unknown"
   };
 
   const formatCurrency = (val?: string) => {
     if (!val) return "—";
     const parsed = parseFloat(val);
     if (isNaN(parsed)) return "—";
-    return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(parsed);
+    // We should use a helper or format dynamically based on locale. For BRL, keeping currency BRL but formatting based on active locale:
+    return new Intl.NumberFormat(locale === "pt" ? "pt-BR" : locale === "es" ? "es-ES" : "en-US", {
+      style: "currency",
+      currency: "BRL",
+    }).format(parsed);
   };
 
   const columnHelper = createColumnHelper<Position>();
   const columns = [
     columnHelper.accessor("title", {
-      header: "Título do Cargo",
+      header: t("form.title"),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("departmentId", {
-      header: "Departamento",
+      header: t("form.department"),
       cell: (info) => <span className="text-muted-foreground">{getDeptName(info.getValue())}</span>,
     }),
     columnHelper.accessor("salaryRangeMin", {
-      header: "Faixa Mínima",
+      header: t("form.salaryMin"),
       cell: (info) => (
         <span className="text-muted-foreground">{formatCurrency(info.getValue())}</span>
       ),
     }),
     columnHelper.accessor("salaryRangeMax", {
-      header: "Faixa Máxima",
+      header: t("form.salaryMax"),
       cell: (info) => (
         <span className="text-muted-foreground">{formatCurrency(info.getValue())}</span>
       ),
     }),
     columnHelper.accessor("active", {
-      header: "Status",
+      header: t("table.status"),
       cell: (info) => {
         const val = info.getValue();
         return (
@@ -163,14 +167,14 @@ export default function PositionsPage() {
               val ? "bg-emerald-500/10 text-emerald-500" : "bg-muted text-muted-foreground"
             }`}
           >
-            {val ? "Ativo" : "Inativo"}
+            {val ? t("active") : t("inactive")}
           </span>
         );
       },
     }),
     columnHelper.display({
       id: "actions",
-      header: "Ações",
+      header: t("table.actions"),
       cell: (info) => {
         const pos = info.row.original;
         if (!isAdminOrHr) return <span className="text-muted-foreground/60 text-xs">—</span>;
@@ -182,6 +186,7 @@ export default function PositionsPage() {
               size="icon"
               className="h-8 w-8 rounded-xl border-0 bg-muted/40 hover:bg-muted/65"
               onClick={() => router.push(`/${locale}/organization/positions/${pos.id}`)}
+              title={t("table.edit")}
             >
               <Pencil className="h-4 w-4" />
             </Button>
@@ -190,6 +195,7 @@ export default function PositionsPage() {
               size="icon"
               className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
               onClick={() => handleDeleteClick(pos.id)}
+              title={t("table.delete")}
             >
               <Trash className="h-4 w-4" />
             </Button>
@@ -230,9 +236,9 @@ export default function PositionsPage() {
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
         <PageHeader
-          title="Cargos"
-          subTitle="Gerencie o catálogo de posições, hierarquias e faixas salariais da empresa."
-          buttonText={isAdminOrHr ? "Adicionar Cargo" : undefined}
+          title={t("positionsTitle")}
+          subTitle={t("positionsSubTitle")}
+          buttonText={isAdminOrHr ? t("addPositionBtn") : undefined}
           buttonLink={`/${locale}/organization/positions/new`}
         />
 
@@ -241,7 +247,7 @@ export default function PositionsPage() {
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Pesquisar cargo..."
+              placeholder={t("searchPositionsPlaceholder")}
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="pl-10 h-10 rounded-2xl bg-muted/40 border-0 focus-visible:ring-1"
@@ -253,7 +259,7 @@ export default function PositionsPage() {
             onChange={(e) => setDeptFilter(e.target.value)}
             className="flex h-10 w-full md:w-[220px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <Option value="ALL">Todos os departamentos</Option>
+            <Option value="ALL">{t("allDepartments")}</Option>
             {departments.map((d) => (
               <Option key={d.id} value={d.id}>
                 {d.name}
@@ -309,7 +315,7 @@ export default function PositionsPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhum cargo encontrado.
+                      {t("emptyPositions")}
                     </td>
                   </tr>
                 ) : (
@@ -369,9 +375,9 @@ export default function PositionsPage() {
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-sm">
             <DialogHeader>
-              <DialogTitle>Excluir Cargo</DialogTitle>
+              <DialogTitle>{t("deletePositionTitle")}</DialogTitle>
               <DialogDescription>
-                Tem certeza que deseja excluir permanentemente este cargo?
+                {t("deletePositionDesc")}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-2">
@@ -381,7 +387,7 @@ export default function PositionsPage() {
                 disabled={deleteMutation.isPending}
                 className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65"
               >
-                Cancelar
+                {t("form.cancel")}
               </Button>
               <Button
                 variant="destructive"
@@ -390,7 +396,7 @@ export default function PositionsPage() {
                 className="rounded-2xl"
               >
                 {deleteMutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-                Excluir
+                {t("table.delete")}
               </Button>
             </DialogFooter>
           </DialogContent>

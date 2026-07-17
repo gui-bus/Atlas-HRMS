@@ -235,7 +235,25 @@
       "delete": "Eliminar",
       "deleteConfirmTitle": "Eliminar Registro",
       "deleteConfirmDesc": "¿Está seguro de que desea eliminar este registro?"
-    }
+    },
+    "departmentsTitle": "Departamentos",
+    "departmentsSubTitle": "Gestione los sectores y departamentos estructurales de la empresa.",
+    "addDepartmentBtn": "Añadir Departamento",
+    "searchDepartmentsPlaceholder": "Buscar departamento...",
+    "emptyDepartments": "No se encontraron departamentos.",
+    "deleteDepartmentTitle": "Eliminar Departamento",
+    "deleteDepartmentDesc": "¿Está seguro de que desea eliminar permanentemente este departamento? Todos los vínculos se verán afectados.",
+    "positionsTitle": "Cargos",
+    "positionsSubTitle": "Gestione el catálogo de cargos, jerarquías y rangos salariales de la empresa.",
+    "addPositionBtn": "Añadir Cargo",
+    "searchPositionsPlaceholder": "Buscar cargo...",
+    "emptyPositions": "No se encontraron cargos.",
+    "deletePositionTitle": "Eliminar Cargo",
+    "deletePositionDesc": "¿Está seguro de que desea eliminar permanentemente este cargo?",
+    "allDepartments": "Todos los departamentos",
+    "allStatuses": "Todos los estados",
+    "activeStatus": "Activos",
+    "inactiveStatus": "Inactivos"
   },
   "Absences": {
     "title": "Gestión de Ausencias",
@@ -424,6 +442,34 @@
       "user": "Usuario Ejecutor",
       "timestamp": "Fecha/Hora",
       "details": "Detalles del Evento"
+    },
+    "publicAnonymous": "Público / Anónimo",
+    "modalTitle": "Detalles del Log",
+    "modalDescription": "Los registros de auditoría registran información de metadatos para la seguridad corporativa.",
+    "close": "Cerrar",
+    "noDetails": "Sin detalles adicionales.",
+    "empty": "No se encontraron logs de auditoría.",
+    "actions": {
+      "USER_LOGIN_SUCCESS": "Inicio de sesión exitoso",
+      "USER_LOGIN_FAILED": "Inicio de sesión fallido",
+      "EMPLOYEE_CREATED": "Empleado creado",
+      "EMPLOYEE_UPDATED": "Empleado actualizado",
+      "EMPLOYEE_DELETED": "Empleado eliminado",
+      "DEPARTMENT_CREATED": "Departamento creado",
+      "DEPARTMENT_UPDATED": "Departamento actualizado",
+      "DEPARTMENT_DELETED": "Departamento eliminado",
+      "POSITION_CREATED": "Cargo creado",
+      "POSITION_UPDATED": "Cargo actualizado",
+      "POSITION_DELETED": "Cargo eliminado",
+      "VACATION_REQUESTED": "Vacaciones solicitadas",
+      "VACATION_APPROVED": "Vacaciones aprobadas",
+      "VACATION_REJECTED": "Vacaciones rechazadas",
+      "LEAVE_REQUESTED": "Licencia solicitada",
+      "LEAVE_APPROVED": "Licencia aprobada",
+      "LEAVE_REJECTED": "Licencia rechazada",
+      "CANDIDATE_STATUS_CHANGED": "Fase de candidato cambiada",
+      "DOCUMENT_UPLOADED": "Documento cargado",
+      "DOCUMENT_DELETED": "Documento eliminado"
     }
   },
   "Profile": {
@@ -440,6 +486,49 @@
     "saving": "Guardando...",
     "changePassword": "Cambiar Contraseña",
     "changing": "Cambiando..."
+  },
+  "Users": {
+    "title": "Cuentas de Usuario",
+    "subTitle": "Visualice y gestione los niveles de acceso de las credenciales activas en el sistema.",
+    "searchPlaceholder": "Buscar cuentas por correo...",
+    "allRoles": "Todos los niveles",
+    "empty": "No se encontraron cuentas de usuario.",
+    "table": {
+      "email": "Correo electrónico",
+      "role": "Nivel de Acceso",
+      "createdAt": "Fecha de Creación",
+      "actions": "Acciones"
+    },
+    "roles": {
+      "ADMIN": "Administrador",
+      "HR": "Recursos Humanos",
+      "MANAGER": "Gestor",
+      "EMPLOYEE": "Colaborador"
+    }
+  },
+  "TimeCorrections": {
+    "title": "Solicitudes de Ajuste de Reloj",
+    "subTitle": "Revise, apruebe o rechace las solicitudes de corrección de reloj de control retroactivas realizadas por los empleados.",
+    "searchPlaceholder": "Buscar solicitudes...",
+    "empty": "No hay solicitudes de corrección pendientes.",
+    "successApprove": "¡Ajuste de reloj aprobado con éxito!",
+    "errorApprove": "Error al aprobar el ajuste.",
+    "successReject": "Ajuste de reloj rechazado con éxito.",
+    "errorReject": "Error al rechazar el ajuste.",
+    "table": {
+      "employee": "Colaborador",
+      "date": "Fecha del Ajuste",
+      "type": "Tipo de Marcación",
+      "proposedTime": "Hora Propuesta",
+      "reason": "Justificación",
+      "actions": "Acciones"
+    },
+    "types": {
+      "ENTRY": "Entrada",
+      "INTERVAL_OUT": "Salida Almuerzo",
+      "INTERVAL_IN": "Retorno Almuerzo",
+      "EXIT": "Salida"
+    }
   },
   "Navigation": {
     "categories": {

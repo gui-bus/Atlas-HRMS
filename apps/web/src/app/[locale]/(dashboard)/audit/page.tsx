@@ -50,7 +50,7 @@ export default function AuditLogsPage() {
 
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [search, setSearch] = useQueryState("search", parseAsString.withDefault(""));
-  const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
+  const [logId, setLogId] = useQueryState("logId", parseAsString.withDefault(""));
 
   // --- Fetch List ---
   const { data: auditResponse, isLoading } = useQuery({
@@ -62,8 +62,39 @@ export default function AuditLogsPage() {
   const logs = auditResponse?.data || [];
   const totalPages = (auditResponse as any)?.totalPages || 1;
 
+  const selectedLog = React.useMemo(() => {
+    if (!logId) return null;
+    return logs.find((l) => l.id === logId) || null;
+  }, [logs, logId]);
+
+  const getActionLabel = (action: string) => {
+    const map: Record<string, string> = {
+      USER_LOGIN_SUCCESS: t("actions.USER_LOGIN_SUCCESS"),
+      USER_LOGIN_FAILED: t("actions.USER_LOGIN_FAILED"),
+      EMPLOYEE_CREATED: t("actions.EMPLOYEE_CREATED"),
+      EMPLOYEE_UPDATED: t("actions.EMPLOYEE_UPDATED"),
+      EMPLOYEE_DELETED: t("actions.EMPLOYEE_DELETED"),
+      DEPARTMENT_CREATED: t("actions.DEPARTMENT_CREATED"),
+      DEPARTMENT_UPDATED: t("actions.DEPARTMENT_UPDATED"),
+      DEPARTMENT_DELETED: t("actions.DEPARTMENT_DELETED"),
+      POSITION_CREATED: t("actions.POSITION_CREATED"),
+      POSITION_UPDATED: t("actions.POSITION_UPDATED"),
+      POSITION_DELETED: t("actions.POSITION_DELETED"),
+      VACATION_REQUESTED: t("actions.VACATION_REQUESTED"),
+      VACATION_APPROVED: t("actions.VACATION_APPROVED"),
+      VACATION_REJECTED: t("actions.VACATION_REJECTED"),
+      LEAVE_REQUESTED: t("actions.LEAVE_REQUESTED"),
+      LEAVE_APPROVED: t("actions.LEAVE_APPROVED"),
+      LEAVE_REJECTED: t("actions.LEAVE_REJECTED"),
+      CANDIDATE_STATUS_CHANGED: t("actions.CANDIDATE_STATUS_CHANGED"),
+      DOCUMENT_UPLOADED: t("actions.DOCUMENT_UPLOADED"),
+      DOCUMENT_DELETED: t("actions.DOCUMENT_DELETED"),
+    };
+    return map[action] || action;
+  };
+
   const getPrettyDetails = (details?: string) => {
-    if (!details) return "Sem detalhes adicionais.";
+    if (!details) return t("noDetails");
     try {
       const parsed = JSON.parse(details);
       return JSON.stringify(parsed, null, 2);
@@ -78,14 +109,14 @@ export default function AuditLogsPage() {
     columnHelper.accessor("action", {
       header: t("table.action"),
       cell: (info) => (
-        <span className="font-semibold text-foreground font-mono text-xs">{info.getValue()}</span>
+        <span className="font-semibold text-foreground font-mono text-xs">{getActionLabel(info.getValue())}</span>
       ),
     }),
     columnHelper.accessor("user", {
       header: t("table.user"),
       cell: (info) => {
         const u = info.getValue();
-        return <span className="text-muted-foreground">{u?.email || "Público / Anônimo"}</span>;
+        return <span className="text-muted-foreground">{u?.email || t("publicAnonymous")}</span>;
       },
     }),
     columnHelper.accessor("timestamp", {
@@ -102,7 +133,7 @@ export default function AuditLogsPage() {
             variant="outline"
             size="icon"
             className="h-8 w-8 rounded-xl border-0 bg-muted/40 hover:bg-muted/65"
-            onClick={() => setSelectedLog(log)}
+            onClick={() => setLogId(log.id)}
           >
             <Info className="h-4 w-4" />
           </Button>
@@ -173,7 +204,7 @@ export default function AuditLogsPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhum log de auditoria encontrado.
+                      {t("empty")}
                     </td>
                   </tr>
                 ) : (
@@ -230,18 +261,20 @@ export default function AuditLogsPage() {
         )}
 
         {/* --- Details Dialog --- */}
-        <Dialog open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
+        <Dialog open={!!logId} onOpenChange={(open) => !open && setLogId("")}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-2xl">
             <DialogHeader>
-              <DialogTitle>{selectedLog?.action}</DialogTitle>
+              <DialogTitle>
+                {selectedLog ? getActionLabel(selectedLog.action) : t("modalTitle")}
+              </DialogTitle>
               <DialogDescription>
-                Logs de auditoria registram informações de metadados para segurança corporativa.
+                {t("modalDescription")}
               </DialogDescription>
             </DialogHeader>
 
             {selectedLog && (
               <div className="pt-2">
-                <pre className="font-mono text-xs bg-muted/30 p-4 rounded-2xl overflow-x-auto max-h-[300px]">
+                <pre className="font-mono text-xs bg-muted/30 p-4 rounded-2xl overflow-x-auto whitespace-pre-wrap break-all break-words max-h-[300px]">
                   {getPrettyDetails(selectedLog.details)}
                 </pre>
               </div>
@@ -250,10 +283,10 @@ export default function AuditLogsPage() {
             <div className="flex justify-end pt-4">
               <Button
                 variant="outline"
-                onClick={() => setSelectedLog(null)}
+                onClick={() => setLogId("")}
                 className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65"
               >
-                Fechar
+                {t("close")}
               </Button>
             </div>
           </DialogContent>

@@ -47,7 +47,7 @@ export default function UserAccountsPage() {
   const router = useRouter();
   const params = useParams();
   const locale = params?.locale || "pt";
-  const t = useTranslations("Common"); // Reuse dashboard translation scope or commons
+  const t = useTranslations("Users");
   // State
   const [globalFilter, setGlobalFilter] = useState("");
   const [roleFilter, setRoleFilter] = useQueryState("role", parseAsString.withDefault("ALL"));
@@ -70,18 +70,18 @@ export default function UserAccountsPage() {
   const totalPages = accountsData?.totalPages || 1;
 
   const getRoleLabel = (role: string) => {
-    const rolesMap = {
-      ADMIN: "Administrador",
-      HR: "Recursos Humanos",
-      MANAGER: "Gestor",
-      EMPLOYEE: "Colaborador",
+    const rolesMap: Record<string, string> = {
+      ADMIN: t("roles.ADMIN"),
+      HR: t("roles.HR"),
+      MANAGER: t("roles.MANAGER"),
+      EMPLOYEE: t("roles.EMPLOYEE"),
     };
     return rolesMap[role] || role;
   };
 
   const formatDate = (dateString: string) => {
     try {
-      return new Date(dateString).toLocaleDateString();
+      return new Date(dateString).toLocaleDateString(locale === "pt" ? "pt-BR" : locale === "es" ? "es-ES" : "en-US");
     } catch {
       return dateString;
     }
@@ -98,14 +98,14 @@ export default function UserAccountsPage() {
   const columnHelper = createColumnHelper<UserAccount>();
   const columns = [
     columnHelper.accessor("email", {
-      header: "E-mail",
+      header: t("table.email"),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("role", {
-      header: "Nível de Acesso",
+      header: t("table.role"),
       cell: (info) => {
         const val = info.getValue();
-        const colors = {
+        const colors: Record<string, string> = {
           ADMIN: "bg-primary/10 text-primary",
           HR: "bg-emerald-500/10 text-emerald-500",
           MANAGER: "bg-amber-500/10 text-amber-500",
@@ -113,7 +113,7 @@ export default function UserAccountsPage() {
         };
         return (
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colors[val]}`}
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colors[val] ?? "bg-muted text-muted-foreground"}`}
           >
             {getRoleLabel(val)}
           </span>
@@ -121,12 +121,12 @@ export default function UserAccountsPage() {
       },
     }),
     columnHelper.accessor("createdAt", {
-      header: "Data de Criação",
+      header: t("table.createdAt"),
       cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
     }),
     columnHelper.display({
       id: "actions",
-      header: "Ações",
+      header: t("table.actions"),
       cell: (info) => {
         const rowData = info.row.original;
         return (
@@ -176,8 +176,8 @@ export default function UserAccountsPage() {
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
         <PageHeader
-          title="Contas de Usuário"
-          subTitle="Visualize e gerencie os níveis de acesso das credenciais ativas no sistema."
+          title={t("title")}
+          subTitle={t("subTitle")}
         />
 
         {/* Toolbar */}
@@ -185,7 +185,7 @@ export default function UserAccountsPage() {
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Pesquisar contas por e-mail..."
+              placeholder={t("searchPlaceholder")}
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="pl-10 h-10 rounded-2xl bg-muted/40 border-0 focus-visible:ring-1"
@@ -197,11 +197,11 @@ export default function UserAccountsPage() {
             onChange={(e) => setRoleFilter(e.target.value)}
             className="flex h-10 w-full md:w-[200px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <Option value="ALL">Todos os níveis</Option>
-            <Option value="ADMIN">Administrador</Option>
-            <Option value="HR">Recursos Humanos</Option>
-            <Option value="MANAGER">Gestor</Option>
-            <Option value="EMPLOYEE">Colaborador</Option>
+            <Option value="ALL">{t("allRoles")}</Option>
+            <Option value="ADMIN">{t("roles.ADMIN")}</Option>
+            <Option value="HR">{t("roles.HR")}</Option>
+            <Option value="MANAGER">{t("roles.MANAGER")}</Option>
+            <Option value="EMPLOYEE">{t("roles.EMPLOYEE")}</Option>
           </Select>
         </div>
 
@@ -252,7 +252,7 @@ export default function UserAccountsPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhuma conta cadastrada encontrada.
+                      {t("empty")}
                     </td>
                   </tr>
                 ) : (

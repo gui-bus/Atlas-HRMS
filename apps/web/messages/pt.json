@@ -235,7 +235,25 @@
       "delete": "Excluir",
       "deleteConfirmTitle": "Excluir Registro",
       "deleteConfirmDesc": "Tem certeza que deseja excluir este registro?"
-    }
+    },
+    "departmentsTitle": "Departamentos",
+    "departmentsSubTitle": "Gerencie os setores e departamentos estruturais da empresa.",
+    "addDepartmentBtn": "Adicionar Departamento",
+    "searchDepartmentsPlaceholder": "Pesquisar departamento...",
+    "emptyDepartments": "Nenhum departamento encontrado.",
+    "deleteDepartmentTitle": "Excluir Departamento",
+    "deleteDepartmentDesc": "Tem certeza que deseja excluir permanentemente este departamento? Todos os vínculos serão afetados.",
+    "positionsTitle": "Cargos",
+    "positionsSubTitle": "Gerencie o catálogo de posições, hierarquias e faixas salariais da empresa.",
+    "addPositionBtn": "Adicionar Cargo",
+    "searchPositionsPlaceholder": "Pesquisar cargo...",
+    "emptyPositions": "Nenhum cargo encontrado.",
+    "deletePositionTitle": "Excluir Cargo",
+    "deletePositionDesc": "Tem certeza que deseja excluir permanentemente este cargo.",
+    "allDepartments": "Todos os departamentos",
+    "allStatuses": "Todos os status",
+    "activeStatus": "Ativos",
+    "inactiveStatus": "Inativos"
   },
   "Absences": {
     "title": "Gestão de Ausências",
@@ -424,6 +442,34 @@
       "user": "Usuário Executor",
       "timestamp": "Data/Hora",
       "details": "Detalhes do Evento"
+    },
+    "publicAnonymous": "Público / Anônimo",
+    "modalTitle": "Detalhes do Log",
+    "modalDescription": "Logs de auditoria registram informações de metadados para segurança corporativa.",
+    "close": "Fechar",
+    "noDetails": "Sem detalhes adicionais.",
+    "empty": "Nenhum log de auditoria encontrado.",
+    "actions": {
+      "USER_LOGIN_SUCCESS": "Login com sucesso",
+      "USER_LOGIN_FAILED": "Falha no login",
+      "EMPLOYEE_CREATED": "Colaborador criado",
+      "EMPLOYEE_UPDATED": "Colaborador atualizado",
+      "EMPLOYEE_DELETED": "Colaborador excluído",
+      "DEPARTMENT_CREATED": "Departamento criado",
+      "DEPARTMENT_UPDATED": "Departamento atualizado",
+      "DEPARTMENT_DELETED": "Departamento excluído",
+      "POSITION_CREATED": "Cargo criado",
+      "POSITION_UPDATED": "Cargo atualizado",
+      "POSITION_DELETED": "Cargo excluído",
+      "VACATION_REQUESTED": "Férias solicitadas",
+      "VACATION_APPROVED": "Férias aprovadas",
+      "VACATION_REJECTED": "Férias rejeitadas",
+      "LEAVE_REQUESTED": "Licença solicitada",
+      "LEAVE_APPROVED": "Licença aprovada",
+      "LEAVE_REJECTED": "Licença rejeitada",
+      "CANDIDATE_STATUS_CHANGED": "Fase de candidato alterada",
+      "DOCUMENT_UPLOADED": "Documento enviado",
+      "DOCUMENT_DELETED": "Documento excluído"
     }
   },
   "Profile": {
@@ -440,6 +486,49 @@
     "saving": "Salvando...",
     "changePassword": "Alterar Senha",
     "changing": "Alterando..."
+  },
+  "Users": {
+    "title": "Contas de Usuário",
+    "subTitle": "Visualize e gerencie os níveis de acesso das credenciais ativas no sistema.",
+    "searchPlaceholder": "Pesquisar contas por e-mail...",
+    "allRoles": "Todos os níveis",
+    "empty": "Nenhuma conta de usuário encontrada.",
+    "table": {
+      "email": "E-mail",
+      "role": "Nível de Acesso",
+      "createdAt": "Data de Criação",
+      "actions": "Ações"
+    },
+    "roles": {
+      "ADMIN": "Administrador",
+      "HR": "Recursos Humanos",
+      "MANAGER": "Gestor",
+      "EMPLOYEE": "Colaborador"
+    }
+  },
+  "TimeCorrections": {
+    "title": "Solicitações de Ajuste de Ponto",
+    "subTitle": "Revise, aprove ou recuse pedidos de correção de ponto retroativos feitos por colaboradores da empresa.",
+    "searchPlaceholder": "Pesquisar solicitações...",
+    "empty": "Nenhum pedido de ajuste pendente.",
+    "successApprove": "Ajuste de ponto aprovado com sucesso!",
+    "errorApprove": "Erro ao aprovar ajuste.",
+    "successReject": "Ajuste de ponto rejeitado com sucesso.",
+    "errorReject": "Erro ao rejeitar ajuste.",
+    "table": {
+      "employee": "Colaborador",
+      "date": "Data do Ajuste",
+      "type": "Tipo da Batida",
+      "proposedTime": "Horário Proposto",
+      "reason": "Justificativa",
+      "actions": "Ações"
+    },
+    "types": {
+      "ENTRY": "Entrada",
+      "INTERVAL_OUT": "Saída Almoço",
+      "INTERVAL_IN": "Retorno Almoço",
+      "EXIT": "Saída Expediente"
+    }
   },
   "Navigation": {
     "categories": {

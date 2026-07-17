@@ -113,21 +113,21 @@ export default function DepartmentsPage() {
   const columnHelper = createColumnHelper<Department>();
   const columns = [
     columnHelper.accessor("name", {
-      header: "Nome",
+      header: t("table.name"),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("code", {
-      header: "Código",
+      header: t("table.code"),
       cell: (info) => (
         <span className="text-muted-foreground font-mono text-xs">{info.getValue()}</span>
       ),
     }),
     columnHelper.accessor("employeesCount", {
-      header: "Colaboradores",
+      header: t("table.employeesCount"),
       cell: (info) => <span className="text-muted-foreground">{info.getValue() ?? 0}</span>,
     }),
     columnHelper.accessor("active", {
-      header: "Status",
+      header: t("table.status"),
       cell: (info) => {
         const val = info.getValue();
         return (
@@ -136,14 +136,14 @@ export default function DepartmentsPage() {
               val ? "bg-emerald-500/10 text-emerald-500" : "bg-muted text-muted-foreground"
             }`}
           >
-            {val ? "Ativo" : "Inativo"}
+            {val ? t("active") : t("inactive")}
           </span>
         );
       },
     }),
     columnHelper.display({
       id: "actions",
-      header: "Ações",
+      header: t("table.actions"),
       cell: (info) => {
         const dept = info.row.original;
         // Hide edit/delete actions if not ADMIN or HR
@@ -156,6 +156,7 @@ export default function DepartmentsPage() {
               size="icon"
               className="h-8 w-8 rounded-xl border-0 bg-muted/40 hover:bg-muted/65"
               onClick={() => router.push(`/${locale}/organization/departments/${dept.id}`)}
+              title={t("table.edit")}
             >
               <Pencil className="h-4 w-4" />
             </Button>
@@ -164,6 +165,7 @@ export default function DepartmentsPage() {
               size="icon"
               className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
               onClick={() => handleDeleteClick(dept.id)}
+              title={t("table.delete")}
             >
               <Trash className="h-4 w-4" />
             </Button>
@@ -204,9 +206,9 @@ export default function DepartmentsPage() {
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
         <PageHeader
-          title="Departamentos"
-          subTitle="Gerencie os setores e departamentos estruturais da empresa."
-          buttonText={isAdminOrHr ? "Adicionar Departamento" : undefined}
+          title={t("departmentsTitle")}
+          subTitle={t("departmentsSubTitle")}
+          buttonText={isAdminOrHr ? t("addDepartmentBtn") : undefined}
           buttonLink={`/${locale}/organization/departments/new`}
         />
 
@@ -215,7 +217,7 @@ export default function DepartmentsPage() {
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Pesquisar departamento..."
+              placeholder={t("searchDepartmentsPlaceholder")}
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="pl-10 h-10 rounded-2xl bg-muted/40 border-0 focus-visible:ring-1"
@@ -227,9 +229,9 @@ export default function DepartmentsPage() {
             onChange={(e) => setStatusFilter(e.target.value as any)}
             className="flex h-10 w-full md:w-[180px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <Option value="ALL">Todos os status</Option>
-            <Option value="ACTIVE">Ativos</Option>
-            <Option value="INACTIVE">Inativos</Option>
+            <Option value="ALL">{t("allStatuses")}</Option>
+            <Option value="ACTIVE">{t("activeStatus")}</Option>
+            <Option value="INACTIVE">{t("inactiveStatus")}</Option>
           </Select>
         </div>
 
@@ -280,7 +282,7 @@ export default function DepartmentsPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhum departamento encontrado.
+                      {t("emptyDepartments")}
                     </td>
                   </tr>
                 ) : (
@@ -340,10 +342,9 @@ export default function DepartmentsPage() {
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-sm">
             <DialogHeader>
-              <DialogTitle>Excluir Departamento</DialogTitle>
+              <DialogTitle>{t("deleteDepartmentTitle")}</DialogTitle>
               <DialogDescription>
-                Tem certeza que deseja excluir permanentemente este departamento? Todos os vínculos
-                serão afetados.
+                {t("deleteDepartmentDesc")}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-2">
@@ -353,7 +354,7 @@ export default function DepartmentsPage() {
                 disabled={deleteMutation.isPending}
                 className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65"
               >
-                Cancelar
+                {t("form.cancel")}
               </Button>
               <Button
                 variant="destructive"
@@ -362,7 +363,7 @@ export default function DepartmentsPage() {
                 className="rounded-2xl"
               >
                 {deleteMutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-                Excluir
+                {t("table.delete")}
               </Button>
             </DialogFooter>
           </DialogContent>
