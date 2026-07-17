@@ -99,7 +99,6 @@ export class DashboardService {
       this.prisma.application.count({
         where: {
           ...applicationWhere,
-          status: { not: ApplicationStatus.WITHDRAWN },
         },
       }),
 
@@ -125,7 +124,6 @@ export class DashboardService {
         by: ["status"],
         where: {
           ...applicationWhere,
-          status: { not: ApplicationStatus.WITHDRAWN },
         },
         _count: { status: true },
       }),
