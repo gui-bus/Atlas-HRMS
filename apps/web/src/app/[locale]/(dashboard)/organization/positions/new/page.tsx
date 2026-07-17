@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -19,9 +19,11 @@ import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
 import { FormHeader } from "@/components/form-header";
 import { FormActions } from "@/components/form-actions";
+import { Combobox } from "@/components/ui/combobox";
 
 export default function NewPositionPage() {
   const t = useTranslations("Organization");
+  const tCommon = useTranslations("Common");
   const params = useParams();
   const router = useRouter();
   const locale = params?.locale || "pt";
@@ -37,6 +39,7 @@ export default function NewPositionPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<PositionFormValues>({
     resolver: zodResolver(positionSchema),
@@ -84,18 +87,23 @@ export default function NewPositionPage() {
                 <Label htmlFor="departmentId">
                   Departamento de Lotação <span className="text-destructive">*</span>
                 </Label>
-                <Select
-                  id="departmentId"
-                  {...register("departmentId")}
-                  className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
-                >
-                  <Option value="">Selecione um departamento</Option>
-                  {departments.map((d) => (
-                    <Option key={d.id} value={d.id}>
-                      {d.name}
-                    </Option>
-                  ))}
-                </Select>
+                <Controller
+                  control={control}
+                  name="departmentId"
+                  render={({ field }) => (
+                    <Combobox
+                      options={departments.map((d) => ({
+                        value: d.id,
+                        label: d.name,
+                      }))}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Selecione um departamento"
+                      searchPlaceholder={tCommon("searchPlaceholder")}
+                      emptyMessage={tCommon("noResults")}
+                    />
+                  )}
+                />
                 {errors.departmentId && (
                   <p className="text-xs text-destructive">{errors.departmentId.message}</p>
                 )}

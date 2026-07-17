@@ -16,7 +16,8 @@
       "next": "Siguiente",
       "more": "Más páginas",
       "previousLabel": "Ir a la página anterior",
-      "nextLabel": "Ir a la siguiente página"
+      "nextLabel": "Ir a la siguiente página",
+      "noResults": "Ningún resultado encontrado."
     }
   },
   "Dashboard": {
@@ -122,7 +123,7 @@
     "statusInactive": "Inactivo",
     "statusOnLeave": "De Licencia",
     "statusSuspended": "Suspendido",
-    "requiredFieldsNotice": "Indica campos obligatorios",
+    "requiredFieldsNotice": "Los campos marcados con * son obligatorios.",
     "tabs": {
       "professional": "Datos Profesionales",
       "personal": "Datos Personales",
@@ -204,7 +205,7 @@
     "editPosition": "Editar Cargo",
     "active": "Activo",
     "inactive": "Inactivo",
-    "requiredFieldsNotice": "Indica campos obligatorios",
+    "requiredFieldsNotice": "Los campos marcados con * son obligatorios.",
     "form": {
       "name": "Nombre del Departamento",
       "code": "Código / Sigla",
@@ -256,7 +257,7 @@
     "cancel": "Cancelar",
     "save": "Enviar Solicitud",
     "rejectionReason": "Motivo del Rechazo",
-    "requiredFieldsNotice": "Indica campos obligatorios",
+    "requiredFieldsNotice": "Los campos marcados con * son obligatorios.",
     "attachment": "Adjunto / Certificado",
     "statusPending": "Pendiente",
     "statusApproved": "Aprobado",
@@ -284,7 +285,7 @@
     "subTitle": "Gestione y almacene contratos, acuerdos y comprobantes de los empleados.",
     "addDocument": "Añadir Documento",
     "addDocumentDesc": "Registre términos, contratos o comprobantes de empleados cargando el archivo directamente.",
-    "requiredFieldsNotice": "Indica campos obligatorios",
+    "requiredFieldsNotice": "Los campos marcados con * son obligatorios.",
     "uploadArea": "Arrastre y suelte el archivo aquí o haga clic para seleccionar",
     "uploadHint": "PDF, DOC, DOCX, PNG o JPG (máx. 10MB)",
     "employeeSelectPlaceholder": "Seleccione un empleado",
@@ -327,7 +328,7 @@
     "title": "Reclutamiento y Selección (ATS)",
     "subTitle": "Gestione los procesos de selección y candidatos del embudo de contratación.",
     "addJob": "Crear Vacante",
-    "requiredFieldsNotice": "Indica campos obligatorios",
+    "requiredFieldsNotice": "Los campos marcados con * son obligatorios.",
     "form": {
       "title": "Título de la Vacante",
       "description": "Descripción Detallada",

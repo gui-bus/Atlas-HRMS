@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -22,9 +22,11 @@ import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
 import { FormHeader } from "@/components/form-header";
 import { FormActions } from "@/components/form-actions";
+import { Combobox } from "@/components/ui/combobox";
 
 export default function NewVacancyPage() {
   const t = useTranslations("Recruitment");
+  const tCommon = useTranslations("Common");
   const params = useParams();
   const router = useRouter();
   const locale = params?.locale || "pt";
@@ -48,6 +50,7 @@ export default function NewVacancyPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<RecruitmentFormValues>({
     resolver: zodResolver(recruitmentSchema),
@@ -210,20 +213,25 @@ export default function NewVacancyPage() {
                 <Label htmlFor="departmentId">
                   {t("form.department")} <span className="text-destructive">*</span>
                 </Label>
-                <Select
-                  id="departmentId"
-                  {...register("departmentId")}
-                  className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
-                >
-                  <Option value="">Selecione o departamento...</Option>
-                  {departments
-                    .filter((d) => d.active)
-                    .map((d) => (
-                      <Option key={d.id} value={d.id}>
-                        {d.name}
-                      </Option>
-                    ))}
-                </Select>
+                <Controller
+                  control={control}
+                  name="departmentId"
+                  render={({ field }) => (
+                    <Combobox
+                      options={departments
+                        .filter((d) => d.active)
+                        .map((d) => ({
+                          value: d.id,
+                          label: d.name,
+                        }))}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Selecione o departamento..."
+                      searchPlaceholder={tCommon("searchPlaceholder")}
+                      emptyMessage={tCommon("noResults")}
+                    />
+                  )}
+                />
                 {errors.departmentId && (
                   <p className="text-xs text-destructive">{errors.departmentId.message}</p>
                 )}
@@ -233,20 +241,25 @@ export default function NewVacancyPage() {
                 <Label htmlFor="positionId">
                   {t("form.position")} <span className="text-destructive">*</span>
                 </Label>
-                <Select
-                  id="positionId"
-                  {...register("positionId")}
-                  className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
-                >
-                  <Option value="">Selecione o cargo...</Option>
-                  {positions
-                    .filter((p) => p.active)
-                    .map((p) => (
-                      <Option key={p.id} value={p.id}>
-                        {p.title}
-                      </Option>
-                    ))}
-                </Select>
+                <Controller
+                  control={control}
+                  name="positionId"
+                  render={({ field }) => (
+                    <Combobox
+                      options={positions
+                        .filter((p) => p.active)
+                        .map((p) => ({
+                          value: p.id,
+                          label: p.title,
+                        }))}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Selecione o cargo..."
+                      searchPlaceholder={tCommon("searchPlaceholder")}
+                      emptyMessage={tCommon("noResults")}
+                    />
+                  )}
+                />
                 {errors.positionId && (
                   <p className="text-xs text-destructive">{errors.positionId.message}</p>
                 )}

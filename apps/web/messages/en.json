@@ -16,7 +16,8 @@
       "next": "Next",
       "more": "More pages",
       "previousLabel": "Go to previous page",
-      "nextLabel": "Go to next page"
+      "nextLabel": "Go to next page",
+      "noResults": "No results found."
     }
   },
   "Dashboard": {
@@ -122,7 +123,7 @@
     "statusInactive": "Inactive",
     "statusOnLeave": "On Leave",
     "statusSuspended": "Suspended",
-    "requiredFieldsNotice": "Indicates required fields",
+    "requiredFieldsNotice": "Fields marked with * are required.",
     "tabs": {
       "professional": "Professional Info",
       "personal": "Personal Info",
@@ -204,7 +205,7 @@
     "editPosition": "Edit Position",
     "active": "Active",
     "inactive": "Inactive",
-    "requiredFieldsNotice": "Indicates required fields",
+    "requiredFieldsNotice": "Fields marked with * are required.",
     "form": {
       "name": "Department Name",
       "code": "Code / Acronym",
@@ -256,7 +257,7 @@
     "cancel": "Cancel",
     "save": "Submit Request",
     "rejectionReason": "Rejection Reason",
-    "requiredFieldsNotice": "Indicates required fields",
+    "requiredFieldsNotice": "Fields marked with * are required.",
     "attachment": "Attachment / Certificate",
     "statusPending": "Pending",
     "statusApproved": "Approved",
@@ -284,7 +285,7 @@
     "subTitle": "Manage and store employee contracts, agreements and receipts.",
     "addDocument": "Add Document",
     "addDocumentDesc": "Register terms, contracts or receipts for employees by uploading the file directly.",
-    "requiredFieldsNotice": "Indicates required fields",
+    "requiredFieldsNotice": "Fields marked with * are required.",
     "uploadArea": "Drag and drop the file here or click to select",
     "uploadHint": "PDF, DOC, DOCX, PNG or JPG (max. 10MB)",
     "employeeSelectPlaceholder": "Select an employee",
@@ -327,7 +328,7 @@
     "title": "Recruitment & Selection (ATS)",
     "subTitle": "Manage vacancies and candidate pipeline stages.",
     "addJob": "Create Job",
-    "requiredFieldsNotice": "Indicates required fields",
+    "requiredFieldsNotice": "Fields marked with * are required.",
     "form": {
       "title": "Job Title",
       "description": "Detailed Description",

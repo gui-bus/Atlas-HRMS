@@ -16,7 +16,8 @@
       "next": "Próxima",
       "more": "Mais páginas",
       "previousLabel": "Ir para a página anterior",
-      "nextLabel": "Ir para a próxima página"
+      "nextLabel": "Ir para a próxima página",
+      "noResults": "Nenhum resultado encontrado."
     }
   },
   "Dashboard": {

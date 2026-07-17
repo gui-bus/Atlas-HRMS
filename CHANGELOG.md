@@ -4,6 +4,15 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.7.0] - 2026-07-17
+
+### Adicionado
+
+- **Componente Combobox (Shadcn/ui)**: Integração dos componentes popover e command do Shadcn/ui para disponibilizar um componente wrapper `<Combobox />` pesquisável.
+- **Busca de Relações em Formulários**: Substituição do select tradicional de colaborador pelo novo Combobox interativo na tela de Envio de Documento (`documents/new/page.tsx`), e substituição dos selects de departamento e cargo na tela de Criação de Vagas (`recruitment/new/page.tsx`) e criação de Cargos (`positions/new/page.tsx`).
+
+---
+
 ## [1.6.0] - 2026-07-17
 
 ### Adicionado

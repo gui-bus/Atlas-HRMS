@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -20,9 +20,11 @@ import { FormSectionHeader } from "@/components/form-section-header";
 import { FormHeader } from "@/components/form-header";
 import { FormActions } from "@/components/form-actions";
 import { useToast } from "@/components/ui/toast";
+import { Combobox } from "@/components/ui/combobox";
 
 export default function NewDocumentPage() {
   const t = useTranslations("Documents");
+  const tCommon = useTranslations("Common");
   const params = useParams();
   const router = useRouter();
   const locale = params?.locale || "pt";
@@ -40,6 +42,7 @@ export default function NewDocumentPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<DocumentFormValues>({
     resolver: zodResolver(documentSchema),
@@ -131,14 +134,24 @@ export default function NewDocumentPage() {
                 <Label htmlFor="employeeId">
                   {t("form.employee")} <span className="text-destructive">*</span>
                 </Label>
-                <Select id="employeeId" {...register("employeeId")}>
-                  <Option value="">{t("employeeSelectPlaceholder")}</Option>
-                  {employees.map((emp) => (
-                    <Option key={emp.id} value={emp.id}>
-                      {emp.firstName} {emp.lastName} ({emp.email})
-                    </Option>
-                  ))}
-                </Select>
+                <Controller
+                  control={control}
+                  name="employeeId"
+                  render={({ field }) => (
+                    <Combobox
+                      options={employees.map((emp) => ({
+                        value: emp.id,
+                        label: `${emp.firstName} ${emp.lastName} (${emp.email})`,
+                        searchLabel: `${emp.firstName} ${emp.lastName} ${emp.email}`,
+                      }))}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={t("employeeSelectPlaceholder")}
+                      searchPlaceholder={tCommon("searchPlaceholder")}
+                      emptyMessage={tCommon("noResults")}
+                    />
+                  )}
+                />
                 {errors.employeeId && (
                   <p className="text-xs text-destructive">{errors.employeeId.message}</p>
                 )}
