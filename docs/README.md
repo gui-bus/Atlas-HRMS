@@ -1,8 +1,8 @@
 # 🗺️ Atlas HRMS — Sistema de Gestão de Pessoas e ATS Corporativo
 
-O **Atlas HRMS** é um ecossistema corporativo completo de gerenciamento de recursos humanos e rastreamento de candidatos (ATS - Applicant Tracking System). Projetado sobre uma arquitetura de monorepo moderna e escalável, o sistema integra de ponta a ponta as rotinas operacionais de departamento pessoal, ponto eletrônico digital com banco de horas, gerenciamento de ausências por conformidade CLT, controle de cargos/departamentos estruturados e um portal público de vagas integrado.
+O **Atlas HRMS** é um ecossistema completo de gerenciamento de recursos humanos e rastreamento de candidatos (ATS - Applicant Tracking System). Projetado sobre uma arquitetura de monorepo moderna e escalável, o sistema integra de ponta a ponta as rotinas operacionais de departamento pessoal, ponto eletrônico digital com banco de horas, gerenciamento de ausências por conformidade CLT, controle de cargos/departamentos estruturados e um portal público de vagas integrado.
 
-Este repositório foi construído para servir como uma referência de código limpo, aplicação estrita de segurança corporativa, testes abrangentes e práticas premium de design system.
+Este repositório serve como uma referência técnica de código limpo, aplicação estrita de segurança corporativa, testes automatizados e design system premium.
 
 ---
 
@@ -26,7 +26,7 @@ flowchart TD
 
 ---
 
-## 🚀 Módulos e Destaques Técnicos
+## 🚀 Módulos e Detalhes Técnicos
 
 ### 1. Portal de Carreiras e ATS Integrado (Público & Privado)
 - **Portal Público de Vagas**: Listagem responsiva em grid de 100% de largura, com filtros dinâmicos rápidos por **Senioridade**, **Modelo de Trabalho** e **Regime de Contratação**, sem necessidade de autenticação.
@@ -109,10 +109,23 @@ sequenceDiagram
 
 Todas as especificações técnicas, diagramas adicionais e guias de infraestrutura detalhados do monorepo estão divididos nos seguintes artigos na pasta `/docs`:
 
-- [**Sumário e Índice Técnico Geral (INDEX.md)**](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/INDEX.md)
-- [Arquitetura do Monorepo & Fluxos](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/architecture.md)
-- [Modelo de Entidade-Relacionamento e Dicionário de Banco de Dados](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/database.md)
-- [Autenticação JWT, Lockout de Segurança e RBAC](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/authentication.md)
-- [Módulo de Controle de Ponto Digital](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/time-attendance.md)
-- [Módulo de Férias e Ausências CLT](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/vacations-leaves.md)
-- [Estrutura de Candidaturas e Fluxo ATS](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/recruitment.md)
+### [📖 Sumário e Índice Técnico Geral (INDEX.md)](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/INDEX.md)
+*Contém o mapa de todos os arquivos de documentação técnica do sistema.*
+
+### [🏛️ Arquitetura do Monorepo & Fluxos](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/architecture.md)
+*Explicação detalhada sobre a estrutura em Monorepo, divisão de pacotes Turborepo e diagramas de fluxo de tráfego de dados entre cliente e servidor.*
+
+### [🗄️ Modelo de Entidade-Relacionamento e Dicionário de Banco de Dados](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/database.md)
+*Diagrama de banco de dados interativo (Mermaid ER), cardinalidades, restrições e dicionário das tabelas e enums do PostgreSQL.*
+
+### [🔐 Autenticação JWT, Lockout de Segurança e RBAC](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/authentication.md)
+*Explicação do fluxo JWT híbrido (Cookie HTTP-Only), algoritmo Bcrypt, lógica de proteção anti-força bruta (Lockout) e controle de permissões por perfil.*
+
+### [⏰ Módulo de Controle de Ponto Digital](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/time-attendance.md)
+*Lógica de processamento de batidas diárias, cálculo e integração do banco de horas, e workflow de aprovação de ajustes pelos gestores.*
+
+### [🏖️ Módulo de Férias e Ausências CLT](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/vacations-leaves.md)
+*Regras de conformidade do período aquisitivo de 1 ano para férias, envio e validação de atestados e afastamentos médicos legais.*
+
+### [📢 Estrutura de Candidaturas e Fluxo ATS](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/recruitment.md)
+*Funcionamento do portal público de vagas, upload de currículos PDF na nuvem, transição de fases no Kanban e workflow de contratação de candidatos.*
