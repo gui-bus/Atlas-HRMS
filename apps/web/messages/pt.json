@@ -313,6 +313,11 @@
     },
     "searchPlaceholder": "Pesquisar documento...",
     "allTypes": "Todos os tipos",
+    "empty": "Nenhum documento encontrado.",
+    "deleteTitle": "Excluir Documento",
+    "deleteDescription": "Deseja mesmo excluir permanentemente este documento?",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
     "types": {
       "contract": "Contrato",
       "identification": "Identificação (RG/CNH)",
@@ -332,10 +337,13 @@
     "title": "Recrutamento & Seleção (ATS)",
     "subTitle": "Gerencie os processos seletivos e candidatos do funil de contratação.",
     "addJob": "Criar Vaga",
+    "addJobSubTitle": "Abra uma nova vaga de emprego para atrair talentos.",
     "requiredFieldsNotice": "Os campos marcados com * são obrigatórios",
     "form": {
       "title": "Título da Vaga",
+      "titlePlaceholder": "Ex: Desenvolvedor Full Stack Sênior",
       "description": "Descrição detalhada",
+      "descriptionPlaceholder": "Descreva as responsabilidades e o dia a dia do cargo...",
       "requirements": "Requisitos Técnicos",
       "vacancies": "Quantidade de Vagas",
       "salaryMin": "Salário Mínimo (BRL - R$)",
@@ -348,7 +356,21 @@
       "status": "Situação da Vaga",
       "cancel": "Cancelar",
       "create": "Criar Vaga",
-      "save": "Salvar Alterações"
+      "save": "Salvar Alterações",
+      "selectDepartment": "Selecione o departamento",
+      "selectPosition": "Selecione o cargo correspondente"
+    },
+    "editTitle": "Editar Vaga",
+    "editSubTitle": "Modifique as informações do processo seletivo estruturado.",
+    "errorCreate": "Erro ao criar vaga. Verifique as informações fornecidas.",
+    "sectionJobInfo": "Informações da Vaga",
+    "sectionJobInfoDesc": "Informações de cargo, senioridade e descrição da oportunidade.",
+    "employmentTypes": {
+      "CLT": "CLT",
+      "PJ": "PJ",
+      "CONTRACTOR": "Prestador de Serviço",
+      "INTERNSHIP": "Estágio",
+      "TEMPORARY": "Temporário"
     },
     "stages": {
       "SUBMITTED": "Inscrito",
@@ -359,6 +381,38 @@
       "OFFER": "Proposta",
       "HIRED": "Contratado",
       "REJECTED": "Recusado"
+    },
+    "table": {
+      "vacancies": "Vagas",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "searchPlaceholder": "Pesquisar vaga...",
+    "allStatuses": "Todos os status",
+    "empty": "Nenhuma vaga cadastrada.",
+    "status": {
+      "DRAFT": "Rascunho",
+      "OPEN": "Aberta",
+      "ON_HOLD": "Em Espera",
+      "CLOSED": "Encerrada",
+      "CANCELLED": "Cancelada"
+    },
+    "seniority": {
+      "JUNIOR": "Júnior",
+      "MID": "Pleno",
+      "SENIOR": "Sênior",
+      "LEAD": "Tech Lead",
+      "EXECUTIVE": "Diretoria"
+    },
+    "workModelOptions": {
+      "REMOTE": "Remoto",
+      "HYBRID": "Híbrido",
+      "ONSITE": "Presencial"
+    },
+    "actions": {
+      "kanban": "Quadro Kanban",
+      "edit": "Editar Vaga",
+      "delete": "Excluir"
     }
   },
   "Audit": {

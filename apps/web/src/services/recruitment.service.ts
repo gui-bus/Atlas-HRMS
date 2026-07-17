@@ -12,7 +12,7 @@ export interface Recruitment {
   salaryMin?: string;
   salaryMax?: string;
   requirements?: string;
-  status: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
+  status: "DRAFT" | "OPEN" | "ON_HOLD" | "CLOSED" | "CANCELLED";
   departmentId: string;
   positionId: string;
   department?: {

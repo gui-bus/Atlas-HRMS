@@ -313,6 +313,11 @@
     },
     "searchPlaceholder": "Buscar documento...",
     "allTypes": "Todos los tipos",
+    "empty": "No se encontraron documentos.",
+    "deleteTitle": "Eliminar Documento",
+    "deleteDescription": "¿Está seguro de que desea eliminar permanentemente este documento?",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
     "types": {
       "contract": "Contrato",
       "identification": "Identificación (ID/Licencia)",
@@ -332,10 +337,13 @@
     "title": "Reclutamiento y Selección (ATS)",
     "subTitle": "Gestione los procesos de selección y candidatos del embudo de contratación.",
     "addJob": "Crear Vacante",
+    "addJobSubTitle": "Abra una nueva vacante de empleo para atraer talento.",
     "requiredFieldsNotice": "Los campos marcados con * son obligatorios.",
     "form": {
       "title": "Título de la Vacante",
+      "titlePlaceholder": "Ej: Desarrollador Full Stack Senior",
       "description": "Descripción Detallada",
+      "descriptionPlaceholder": "Describa las responsabilidades y el día a día del cargo...",
       "requirements": "Requisitos Técnicos",
       "vacancies": "Número de Vacantes",
       "salaryMin": "Salario Mínimo (BRL - R$)",
@@ -348,7 +356,21 @@
       "status": "Estado de la Vacante",
       "cancel": "Cancelar",
       "create": "Crear Vacante",
-      "save": "Guardar Cambios"
+      "save": "Guardar Cambios",
+      "selectDepartment": "Seleccione el departamento",
+      "selectPosition": "Seleccione el cargo correspondiente"
+    },
+    "editTitle": "Editar Vacante",
+    "editSubTitle": "Modifique la información del proceso de selección estructurado.",
+    "errorCreate": "Error al crear la vacante. Verifique la información proporcionada.",
+    "sectionJobInfo": "Información de la Vacante",
+    "sectionJobInfoDesc": "Cargo, nivel de senioridad y descripción de la oportunidad.",
+    "employmentTypes": {
+      "CLT": "CLT",
+      "PJ": "PJ",
+      "CONTRACTOR": "Contratista",
+      "INTERNSHIP": "Prácticas",
+      "TEMPORARY": "Temporal"
     },
     "stages": {
       "SUBMITTED": "Inscrito",
@@ -359,6 +381,38 @@
       "OFFER": "Oferta",
       "HIRED": "Contratado",
       "REJECTED": "Rechazado"
+    },
+    "table": {
+      "vacancies": "Vacantes",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "searchPlaceholder": "Buscar vacante...",
+    "allStatuses": "Todos los estados",
+    "empty": "No hay vacantes registradas.",
+    "status": {
+      "DRAFT": "Borrador",
+      "OPEN": "Abierta",
+      "ON_HOLD": "En Espera",
+      "CLOSED": "Cerrada",
+      "CANCELLED": "Cancelada"
+    },
+    "seniority": {
+      "JUNIOR": "Junior",
+      "MID": "Semi-senior",
+      "SENIOR": "Senior",
+      "LEAD": "Tech Lead",
+      "EXECUTIVE": "Ejecutivo"
+    },
+    "workModelOptions": {
+      "REMOTE": "Remoto",
+      "HYBRID": "Híbrido",
+      "ONSITE": "Presencial"
+    },
+    "actions": {
+      "kanban": "Tablero Kanban",
+      "edit": "Editar Vacante",
+      "delete": "Eliminar"
     }
   },
   "Audit": {

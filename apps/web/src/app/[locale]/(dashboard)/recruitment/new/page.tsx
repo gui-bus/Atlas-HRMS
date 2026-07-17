@@ -94,15 +94,15 @@ export default function NewVacancyPage() {
       <div className="p-6 md:p-8 space-y-6 w-full">
         <FormHeader
           title={t("addJob")}
-          subTitle="Abra uma nova vaga de emprego para atrair talentos."
+          subTitle={t("addJobSubTitle")}
           requiredNotice={t("requiredFieldsNotice")}
         />
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
           <div className="space-y-4">
             <FormSectionHeader
-              title={t("title")}
-              description="Informações de cargo, senioridade e descrição da oportunidade."
+              title={t("sectionJobInfo")}
+              description={t("sectionJobInfoDesc")}
               icon={Briefcase}
             />
 
@@ -111,7 +111,7 @@ export default function NewVacancyPage() {
                 <Label htmlFor="title">
                   {t("form.title")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="title" {...register("title")} />
+                <Input id="title" placeholder={t("form.titlePlaceholder")} {...register("title")} />
                 {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
               </div>
 
@@ -119,7 +119,11 @@ export default function NewVacancyPage() {
                 <Label htmlFor="description">
                   {t("form.description")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="description" {...register("description")} />
+                <Input
+                  id="description"
+                  placeholder={t("form.descriptionPlaceholder")}
+                  {...register("description")}
+                />
                 {errors.description && (
                   <p className="text-xs text-destructive">{errors.description.message}</p>
                 )}
@@ -136,9 +140,9 @@ export default function NewVacancyPage() {
                 >
                   <Option value="CLT">CLT</Option>
                   <Option value="PJ">PJ</Option>
-                  <Option value="CONTRACTOR">Prestador de Serviço</Option>
-                  <Option value="INTERNSHIP">Estágio</Option>
-                  <Option value="TEMPORARY">Temporário</Option>
+                  <Option value="CONTRACTOR">{t("employmentTypes.CONTRACTOR")}</Option>
+                  <Option value="INTERNSHIP">{t("employmentTypes.INTERNSHIP")}</Option>
+                  <Option value="TEMPORARY">{t("employmentTypes.TEMPORARY")}</Option>
                 </Select>
               </div>
 
@@ -151,9 +155,9 @@ export default function NewVacancyPage() {
                   {...register("workModel")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <Option value="REMOTE">Remoto</Option>
-                  <Option value="HYBRID">Híbrido</Option>
-                  <Option value="ONSITE">Presencial</Option>
+                  <Option value="REMOTE">{t("workModelOptions.REMOTE")}</Option>
+                  <Option value="HYBRID">{t("workModelOptions.HYBRID")}</Option>
+                  <Option value="ONSITE">{t("workModelOptions.ONSITE")}</Option>
                 </Select>
               </div>
 
@@ -166,11 +170,11 @@ export default function NewVacancyPage() {
                   {...register("seniority")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <Option value="JUNIOR">Júnior</Option>
-                  <Option value="MID">Pleno</Option>
-                  <Option value="SENIOR">Sênior</Option>
-                  <Option value="LEAD">Tech Lead</Option>
-                  <Option value="EXECUTIVE">Diretoria / Executivo</Option>
+                  <Option value="JUNIOR">{t("seniority.JUNIOR")}</Option>
+                  <Option value="MID">{t("seniority.MID")}</Option>
+                  <Option value="SENIOR">{t("seniority.SENIOR")}</Option>
+                  <Option value="LEAD">{t("seniority.LEAD")}</Option>
+                  <Option value="EXECUTIVE">{t("seniority.EXECUTIVE")}</Option>
                 </Select>
               </div>
 
@@ -178,7 +182,13 @@ export default function NewVacancyPage() {
                 <Label htmlFor="vacancies">
                   {t("form.vacancies")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="vacancies" type="number" {...register("vacancies")} />
+                <Input
+                  id="vacancies"
+                  type="number"
+                  min={1}
+                  placeholder="1"
+                  {...register("vacancies")}
+                />
                 {errors.vacancies && (
                   <p className="text-xs text-destructive">{errors.vacancies.message}</p>
                 )}
@@ -226,7 +236,7 @@ export default function NewVacancyPage() {
                         }))}
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder="Selecione o departamento..."
+                      placeholder={t("form.selectDepartment")}
                       searchPlaceholder={tCommon("searchPlaceholder")}
                       emptyMessage={tCommon("noResults")}
                     />
@@ -254,7 +264,7 @@ export default function NewVacancyPage() {
                         }))}
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder="Selecione o cargo..."
+                      placeholder={t("form.selectPosition")}
                       searchPlaceholder={tCommon("searchPlaceholder")}
                       emptyMessage={tCommon("noResults")}
                     />
@@ -268,9 +278,7 @@ export default function NewVacancyPage() {
           </div>
 
           {mutation.isError && (
-            <p className="text-sm text-destructive font-medium">
-              Erro ao criar vaga. Verifique as informações fornecidas.
-            </p>
+            <p className="text-sm text-destructive font-medium">{t("errorCreate")}</p>
           )}
 
           <FormActions

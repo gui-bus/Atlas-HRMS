@@ -13,6 +13,7 @@ import {
   CaretUp,
   CaretDown,
   CaretUpDown,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
 import {
   useReactTable,
@@ -128,19 +129,7 @@ export default function DocumentsPage() {
     return [
       columnHelper.accessor("name", {
         header: t("table.name"),
-        cell: (info) => {
-          const doc = info.row.original;
-          return (
-            <a
-              href={doc.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-primary hover:underline"
-            >
-              {info.getValue()}
-            </a>
-          );
-        },
+        cell: (info) => <span className="font-medium">{info.getValue()}</span>,
       }),
       columnHelper.accessor("type", {
         header: t("table.type"),
@@ -163,27 +152,37 @@ export default function DocumentsPage() {
           <span className="text-muted-foreground">{formatDate(info.getValue())}</span>
         ),
       }),
-      ...(!isEmployee
-        ? [
-            columnHelper.display({
-              id: "actions",
-              header: t("table.actions"),
-              cell: (info) => {
-                const doc = info.row.original;
-                return (
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
-                    onClick={() => handleOpenDeleteConfirm(doc.id)}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                );
-              },
-            }),
-          ]
-        : []),
+      columnHelper.display({
+        id: "actions",
+        header: t("table.actions"),
+        cell: (info) => {
+          const doc = info.row.original;
+          return (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:bg-accent rounded-xl border-0"
+                asChild
+              >
+                <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                  <ArrowSquareOut className="h-4 w-4" />
+                </a>
+              </Button>
+              {!isEmployee && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
+                  onClick={() => handleOpenDeleteConfirm(doc.id)}
+                >
+                  <Trash className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          );
+        },
+      }),
     ];
   }, [isEmployee, t]);
 
@@ -205,7 +204,7 @@ export default function DocumentsPage() {
         <PageHeader
           title={t("title")}
           subTitle={t("subTitle")}
-          buttonText={!isEmployee ? "Adicionar Documento" : undefined}
+          buttonText={!isEmployee ? t("addDocument") : undefined}
           buttonLink={`/${locale}/documents/new`}
         />
 
@@ -281,7 +280,7 @@ export default function DocumentsPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhum documento encontrado.
+                      {t("empty")}
                     </td>
                   </tr>
                 ) : (
@@ -310,10 +309,8 @@ export default function DocumentsPage() {
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-sm">
             <DialogHeader>
-              <DialogTitle>Excluir Documento</DialogTitle>
-              <DialogDescription>
-                Deseja mesmo excluir permanentemente este documento?
-              </DialogDescription>
+              <DialogTitle>{t("deleteTitle")}</DialogTitle>
+              <DialogDescription>{t("deleteDescription")}</DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-2">
               <Button
@@ -322,7 +319,7 @@ export default function DocumentsPage() {
                 disabled={deleteMutation.isPending}
                 className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65"
               >
-                Cancelar
+                {t("cancel")}
               </Button>
               <Button
                 variant="destructive"
@@ -331,7 +328,7 @@ export default function DocumentsPage() {
                 className="rounded-2xl"
               >
                 {deleteMutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-                Excluir
+                {t("delete")}
               </Button>
             </DialogFooter>
           </DialogContent>

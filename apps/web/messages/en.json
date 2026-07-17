@@ -313,6 +313,11 @@
     },
     "searchPlaceholder": "Search document...",
     "allTypes": "All types",
+    "empty": "No documents found.",
+    "deleteTitle": "Delete Document",
+    "deleteDescription": "Are you sure you want to permanently delete this document?",
+    "cancel": "Cancel",
+    "delete": "Delete",
     "types": {
       "contract": "Contract",
       "identification": "Identification (ID/DL)",
@@ -332,10 +337,13 @@
     "title": "Recruitment & Selection (ATS)",
     "subTitle": "Manage vacancies and candidate pipeline stages.",
     "addJob": "Create Job",
+    "addJobSubTitle": "Open a new job vacancy to attract talent.",
     "requiredFieldsNotice": "Fields marked with * are required.",
     "form": {
       "title": "Job Title",
+      "titlePlaceholder": "e.g. Senior Full Stack Developer",
       "description": "Detailed Description",
+      "descriptionPlaceholder": "Describe responsibilities and the day-to-day of the role...",
       "requirements": "Technical Requirements",
       "vacancies": "Number of Vacancies",
       "salaryMin": "Min Salary (BRL - R$)",
@@ -348,7 +356,21 @@
       "status": "Vacancy Status",
       "cancel": "Cancel",
       "create": "Create Job",
-      "save": "Save Changes"
+      "save": "Save Changes",
+      "selectDepartment": "Select department",
+      "selectPosition": "Select the matching position"
+    },
+    "editTitle": "Edit Vacancy",
+    "editSubTitle": "Modify the information of the structured selection process.",
+    "errorCreate": "Error creating vacancy. Please check the information provided.",
+    "sectionJobInfo": "Vacancy Information",
+    "sectionJobInfoDesc": "Job title, seniority level and opportunity description.",
+    "employmentTypes": {
+      "CLT": "CLT",
+      "PJ": "PJ",
+      "CONTRACTOR": "Contractor",
+      "INTERNSHIP": "Internship",
+      "TEMPORARY": "Temporary"
     },
     "stages": {
       "SUBMITTED": "Submitted",
@@ -359,6 +381,38 @@
       "OFFER": "Offer",
       "HIRED": "Hired",
       "REJECTED": "Rejected"
+    },
+    "table": {
+      "vacancies": "Vacancies",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "searchPlaceholder": "Search vacancy...",
+    "allStatuses": "All statuses",
+    "empty": "No vacancies registered.",
+    "status": {
+      "DRAFT": "Draft",
+      "OPEN": "Open",
+      "ON_HOLD": "On Hold",
+      "CLOSED": "Closed",
+      "CANCELLED": "Cancelled"
+    },
+    "seniority": {
+      "JUNIOR": "Junior",
+      "MID": "Mid-level",
+      "SENIOR": "Senior",
+      "LEAD": "Tech Lead",
+      "EXECUTIVE": "Executive"
+    },
+    "workModelOptions": {
+      "REMOTE": "Remote",
+      "HYBRID": "Hybrid",
+      "ONSITE": "On-site"
+    },
+    "actions": {
+      "kanban": "Kanban Board",
+      "edit": "Edit Vacancy",
+      "delete": "Delete"
     }
   },
   "Audit": {

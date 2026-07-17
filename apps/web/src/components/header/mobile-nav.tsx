@@ -23,6 +23,7 @@ import { api } from "@/lib/api";
 import { LanguageSwitcher } from "../LanguageSwitcher";
 import { ThemeSwitcher } from "../ThemeSwitcher";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Logo } from "./logo";
 
 interface MobileNavProps {
   locale: string;
@@ -188,7 +189,7 @@ export function MobileNav({ locale }: MobileNavProps) {
         <div className="space-y-6 overflow-y-auto pr-1">
           <SheetHeader className="p-0">
             <SheetTitle className="text-left font-bold text-lg uppercase tracking-wider text-primary">
-              ATLAS HRMS
+              <Logo locale={locale} />
             </SheetTitle>
           </SheetHeader>
 

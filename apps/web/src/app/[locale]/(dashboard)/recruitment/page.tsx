@@ -86,24 +86,34 @@ export default function RecruitmentListPage() {
   });
 
   const getStatusLabel = (val: string) => {
-    const statusMap = {
-      OPEN: "Aberta",
-      ON_HOLD: "Em Espera",
-      CLOSED: "Encerrada",
-      CANCELLED: "Cancelada",
+    const map: Record<string, string> = {
+      DRAFT: t("status.DRAFT"),
+      OPEN: t("status.OPEN"),
+      ON_HOLD: t("status.ON_HOLD"),
+      CLOSED: t("status.CLOSED"),
+      CANCELLED: t("status.CANCELLED"),
     };
-    return statusMap[val] || val;
+    return map[val] || val;
   };
 
   const getSeniorityLabel = (val: string) => {
-    const map = {
-      JUNIOR: "Júnior",
-      MID: "Pleno",
-      SENIOR: "Sênior",
-      LEAD: "Tech Lead",
-      EXECUTIVE: "Diretoria",
+    const map: Record<string, string> = {
+      JUNIOR: t("seniority.JUNIOR"),
+      MID: t("seniority.MID"),
+      SENIOR: t("seniority.SENIOR"),
+      LEAD: t("seniority.LEAD"),
+      EXECUTIVE: t("seniority.EXECUTIVE"),
     };
-    return map[val] || val;
+    return map[val] ?? val;
+  };
+
+  const getWorkModelLabel = (val: string) => {
+    const map: Record<string, string> = {
+      REMOTE: t("workModelOptions.REMOTE"),
+      HYBRID: t("workModelOptions.HYBRID"),
+      ONSITE: t("workModelOptions.ONSITE"),
+    };
+    return map[val] ?? val;
   };
 
   // Local Filter
@@ -128,23 +138,23 @@ export default function RecruitmentListPage() {
     }),
     columnHelper.accessor("workModel", {
       header: t("form.workModel"),
-      cell: (info) => {
-        const val = info.getValue();
-        const labels = { REMOTE: "Remoto", HYBRID: "Híbrido", ONSITE: "Presencial" };
-        return <span className="text-muted-foreground">{labels[val] || val}</span>;
-      },
+      cell: (info) => (
+        <span className="text-muted-foreground">{getWorkModelLabel(info.getValue())}</span>
+      ),
     }),
     columnHelper.accessor("vacancies", {
-      header: "Vagas",
+      header: t("table.vacancies"),
       cell: (info) => (
         <span className="text-muted-foreground font-semibold">{info.getValue()}</span>
       ),
     }),
     columnHelper.accessor("status", {
-      header: "Status",
+      header: t("table.status"),
       cell: (info) => {
         const val = info.getValue();
-        const colors = {
+        if (!val) return <span className="text-muted-foreground">—</span>;
+        const colors: Record<string, string> = {
+          DRAFT: "bg-blue-500/10 text-blue-500",
           OPEN: "bg-emerald-500/10 text-emerald-500",
           ON_HOLD: "bg-amber-500/10 text-amber-500",
           CLOSED: "bg-muted text-muted-foreground",
@@ -152,7 +162,9 @@ export default function RecruitmentListPage() {
         };
         return (
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colors[val]}`}
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              colors[val] ?? "bg-muted text-muted-foreground"
+            }`}
           >
             {getStatusLabel(val)}
           </span>
@@ -161,7 +173,7 @@ export default function RecruitmentListPage() {
     }),
     columnHelper.display({
       id: "actions",
-      header: "Ações",
+      header: t("table.actions"),
       cell: (info) => {
         const id = info.row.original.id;
         return (
@@ -171,7 +183,7 @@ export default function RecruitmentListPage() {
               size="icon"
               className="h-8 w-8 rounded-xl border-0 bg-muted/40 hover:bg-muted/65"
               onClick={() => router.push(`/${locale}/recruitment/${id}`)}
-              title="Quadro Kanban"
+              title={t("actions.kanban")}
             >
               <Eye className="h-4 w-4" />
             </Button>
@@ -182,7 +194,7 @@ export default function RecruitmentListPage() {
                   size="icon"
                   className="h-8 w-8 rounded-xl border-0 bg-muted/40 hover:bg-muted/65 text-primary"
                   onClick={() => router.push(`/${locale}/recruitment/${id}/edit`)}
-                  title="Editar Vaga"
+                  title={t("actions.edit")}
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
@@ -192,7 +204,7 @@ export default function RecruitmentListPage() {
                   className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl border-0"
                   disabled={deleteMutation.isPending}
                   onClick={() => deleteMutation.mutate(id)}
-                  title="Excluir"
+                  title={t("actions.delete")}
                 >
                   <Trash className="h-4 w-4" />
                 </Button>
@@ -246,7 +258,7 @@ export default function RecruitmentListPage() {
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Pesquisar vaga..."
+              placeholder={t("searchPlaceholder")}
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="pl-10 h-10 rounded-2xl bg-muted/40 border-0 focus-visible:ring-1"
@@ -258,11 +270,11 @@ export default function RecruitmentListPage() {
             onChange={(e) => setStatusFilter(e.target.value as any)}
             className="flex h-10 w-full md:w-[180px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <Option value="ALL">Todos os status</Option>
-            <Option value="OPEN">Aberta</Option>
-            <Option value="ON_HOLD">Em Espera</Option>
-            <Option value="CLOSED">Encerrada</Option>
-            <Option value="CANCELLED">Cancelada</Option>
+            <Option value="ALL">{t("allStatuses")}</Option>
+            <Option value="OPEN">{t("status.OPEN")}</Option>
+            <Option value="ON_HOLD">{t("status.ON_HOLD")}</Option>
+            <Option value="CLOSED">{t("status.CLOSED")}</Option>
+            <Option value="CANCELLED">{t("status.CANCELLED")}</Option>
           </Select>
         </div>
 
@@ -313,7 +325,7 @@ export default function RecruitmentListPage() {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground border-0"
                     >
-                      Nenhuma vaga cadastrada.
+                      {t("empty")}
                     </td>
                   </tr>
                 ) : (

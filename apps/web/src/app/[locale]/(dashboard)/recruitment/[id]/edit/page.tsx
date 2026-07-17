@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, CircleNotch, Briefcase } from "@phosphor-icons/react";
+import { CircleNotch, Briefcase } from "@phosphor-icons/react";
 
 import { recruitmentService } from "@/services/recruitment.service";
 import { departmentService } from "@/services/department.service";
@@ -18,6 +18,8 @@ import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
+import { FormHeader } from "@/components/form-header";
+import { FormActions } from "@/components/form-actions";
 
 export default function EditVacancyPage() {
   const t = useTranslations("Recruitment");
@@ -30,8 +32,7 @@ export default function EditVacancyPage() {
   // Fetch lists
   const { data: vacancy, isLoading: loadingVacancy } = useQuery({
     queryKey: ["vacancy", id],
-    queryFn: () =>
-      recruitmentService.getRecruitments().then((list) => list.find((v) => v.id === id)),
+    queryFn: () => recruitmentService.getRecruitment(id),
     enabled: !!id,
   });
 
@@ -108,31 +109,17 @@ export default function EditVacancyPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => router.back()}
-            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Editar Vaga</h1>
-            <p className="text-muted-foreground text-sm">
-              Modifique as informações do processo seletivo estruturado.
-            </p>
-            <p className="text-xs text-destructive/80 mt-1.5">
-              * Os campos marcados com * são obrigatórios
-            </p>
-          </div>
-        </div>
+        <FormHeader
+          title={t("editTitle")}
+          subTitle={t("editSubTitle")}
+          requiredNotice={t("requiredFieldsNotice")}
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
           <div className="space-y-4">
             <FormSectionHeader
-              title={t("title")}
-              description="Informações de cargo, senioridade e descrição da oportunidade."
+              title={t("sectionJobInfo")}
+              description={t("sectionJobInfoDesc")}
               icon={Briefcase}
             />
 
@@ -141,7 +128,7 @@ export default function EditVacancyPage() {
                 <Label htmlFor="title">
                   {t("form.title")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="title" {...register("title")} />
+                <Input id="title" placeholder={t("form.titlePlaceholder")} {...register("title")} />
                 {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
               </div>
 
@@ -149,7 +136,11 @@ export default function EditVacancyPage() {
                 <Label htmlFor="description">
                   {t("form.description")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="description" {...register("description")} />
+                <Input
+                  id="description"
+                  placeholder={t("form.descriptionPlaceholder")}
+                  {...register("description")}
+                />
                 {errors.description && (
                   <p className="text-xs text-destructive">{errors.description.message}</p>
                 )}
@@ -166,9 +157,9 @@ export default function EditVacancyPage() {
                 >
                   <Option value="CLT">CLT</Option>
                   <Option value="PJ">PJ</Option>
-                  <Option value="CONTRACTOR">Prestador de Serviço</Option>
-                  <Option value="INTERNSHIP">Estágio</Option>
-                  <Option value="TEMPORARY">Temporário</Option>
+                  <Option value="CONTRACTOR">{t("employmentTypes.CONTRACTOR")}</Option>
+                  <Option value="INTERNSHIP">{t("employmentTypes.INTERNSHIP")}</Option>
+                  <Option value="TEMPORARY">{t("employmentTypes.TEMPORARY")}</Option>
                 </Select>
               </div>
 
@@ -181,9 +172,9 @@ export default function EditVacancyPage() {
                   {...register("workModel")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <Option value="REMOTE">Remoto</Option>
-                  <Option value="HYBRID">Híbrido</Option>
-                  <Option value="ONSITE">Presencial</Option>
+                  <Option value="REMOTE">{t("workModelOptions.REMOTE")}</Option>
+                  <Option value="HYBRID">{t("workModelOptions.HYBRID")}</Option>
+                  <Option value="ONSITE">{t("workModelOptions.ONSITE")}</Option>
                 </Select>
               </div>
 
@@ -196,11 +187,11 @@ export default function EditVacancyPage() {
                   {...register("seniority")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <Option value="JUNIOR">Júnior</Option>
-                  <Option value="MID">Pleno</Option>
-                  <Option value="SENIOR">Sênior</Option>
-                  <Option value="LEAD">Tech Lead</Option>
-                  <Option value="EXECUTIVE">Diretoria / Executivo</Option>
+                  <Option value="JUNIOR">{t("seniority.JUNIOR")}</Option>
+                  <Option value="MID">{t("seniority.MID")}</Option>
+                  <Option value="SENIOR">{t("seniority.SENIOR")}</Option>
+                  <Option value="LEAD">{t("seniority.LEAD")}</Option>
+                  <Option value="EXECUTIVE">{t("seniority.EXECUTIVE")}</Option>
                 </Select>
               </div>
 
@@ -208,7 +199,13 @@ export default function EditVacancyPage() {
                 <Label htmlFor="vacancies">
                   {t("form.vacancies")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="vacancies" type="number" {...register("vacancies")} />
+                <Input
+                  id="vacancies"
+                  type="number"
+                  min={1}
+                  placeholder="1"
+                  {...register("vacancies")}
+                />
                 {errors.vacancies && (
                   <p className="text-xs text-destructive">{errors.vacancies.message}</p>
                 )}
@@ -248,7 +245,7 @@ export default function EditVacancyPage() {
                   {...register("departmentId")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <Option value="">Selecione o departamento</Option>
+                  <Option value="">{t("form.selectDepartment")}</Option>
                   {departments.map((dept) => (
                     <Option key={dept.id} value={dept.id}>
                       {dept.name}
@@ -269,7 +266,7 @@ export default function EditVacancyPage() {
                   {...register("positionId")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <Option value="">Selecione o cargo correspondente</Option>
+                  <Option value="">{t("form.selectPosition")}</Option>
                   {positions.map((pos) => (
                     <Option key={pos.id} value={pos.id}>
                       {pos.title}
@@ -282,35 +279,26 @@ export default function EditVacancyPage() {
               </div>
 
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="status">Status da Vaga</Label>
+                <Label htmlFor="status">{t("form.status")}</Label>
                 <Select
                   id="status"
                   {...register("status")}
                   className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
-                  <Option value="OPEN">Aberta</Option>
-                  <Option value="ON_HOLD">Em Espera</Option>
-                  <Option value="CLOSED">Encerrada</Option>
-                  <Option value="CANCELLED">Cancelada</Option>
+                  <Option value="OPEN">{t("status.OPEN")}</Option>
+                  <Option value="ON_HOLD">{t("status.ON_HOLD")}</Option>
+                  <Option value="CLOSED">{t("status.CLOSED")}</Option>
+                  <Option value="CANCELLED">{t("status.CANCELLED")}</Option>
                 </Select>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-6 border-t border-transparent">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar Alterações
-            </Button>
-          </div>
+          <FormActions
+            cancelText={t("form.cancel")}
+            submitText={t("form.save")}
+            isSubmitting={mutation.isPending}
+          />
         </form>
       </div>
     </RbacGuard>
