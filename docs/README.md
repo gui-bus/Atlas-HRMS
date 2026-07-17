@@ -101,4 +101,23 @@ _Consulte o ecossistema de disparo e consumo de notificações internas._
 - **Filtro de Leitura**: Mapeamento do usuário autenticado no token JWT via `@CurrentUser()`.
 - **RBAC**: Permissão de criação restrita a `ADMIN` e `HR`. Donos podem marcar como lidas.
 
+### 🏖️ [Férias e Licenças](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/vacations-leaves.md)
 
+_Consulte o regulamento do ciclo de férias CLT e afastamentos/atestados._
+
+- **Período Aquisitivo**: Regra mínima de 1 ano completo de tempo de empresa para liberação de solicitações.
+- **Atestados Legais**: Upload de comprovantes médicos e suporte a tipos customizados de afastamento.
+
+### ⏰ [Controle de Ponto e Saldo](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/time-attendance.md)
+
+_Consulte o funcionamento da marcação de horários de jornada e banco de horas._
+
+- **Saldo Acumulado**: Registro de saldo de horas trabalhadas versus jornada padrão com controle de banco.
+- **Ajustes e Correções**: Processamento de aprovação de inconsistências e justificativas por gestores.
+
+### ☁️ [Integração UploadThing](https://github.com/gui-bus/Atlas-HRMS/blob/master/docs/uploadthing.md)
+
+_Consulte os fluxos de integração de arquivos direto na nuvem._
+
+- **Bucket Remoto**: Estrutura de storage e remoção limpa de arquivos órfãos via SDK do UploadThing.
+- **API Wrapper**: Middleware NestJS para persistência de tokens e validações de tamanho de payloads.
