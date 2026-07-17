@@ -144,6 +144,7 @@
       "phone": "Contact Phone",
       "status": "Employee Status",
       "hireDate": "Hire Date",
+      "terminationDate": "Termination Date (Optional)",
       "salary": "Monthly Salary",
       "department": "Department",
       "position": "Position",

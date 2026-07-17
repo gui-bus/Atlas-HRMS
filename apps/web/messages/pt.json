@@ -144,6 +144,7 @@
       "phone": "Telefone de Contato",
       "status": "Status do Colaborador",
       "hireDate": "Data de Admissão",
+      "terminationDate": "Data de Rescisão (Opcional)",
       "salary": "Salário Mensal (R$)",
       "department": "Departamento",
       "position": "Cargo",

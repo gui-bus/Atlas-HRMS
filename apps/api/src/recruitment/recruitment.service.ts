@@ -204,31 +204,38 @@ export class RecruitmentService {
     };
   }
 
-  async findBySlugPublic(slug: string) {
+  async findBySlugPublic(slugOrId: string) {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slugOrId);
     const recruitment = await this.prisma.recruitment.findUnique({
-      where: { slug },
+      where: isUuid ? { id: slugOrId } : { slug: slugOrId },
       include: {
         department: { select: { name: true } },
         position: { select: { title: true } },
       },
     });
 
-    if (!recruitment || recruitment.deletedAt || recruitment.status !== RecruitmentStatus.OPEN) {
+    if (!recruitment || recruitment.deletedAt) {
       throw new NotFoundException("Vaga não encontrada ou não está disponível");
     }
 
-    if (recruitment.expiresAt && recruitment.expiresAt < new Date()) {
+    if (!isUuid) {
+      if (recruitment.status !== RecruitmentStatus.OPEN) {
+        throw new NotFoundException("Vaga não encontrada ou não está disponível");
+      }
+
+      if (recruitment.expiresAt && recruitment.expiresAt < new Date()) {
+        await this.prisma.recruitment.update({
+          where: { id: recruitment.id },
+          data: { status: RecruitmentStatus.CLOSED },
+        });
+        throw new NotFoundException("Esta vaga expirou e não está mais disponível");
+      }
+
       await this.prisma.recruitment.update({
         where: { id: recruitment.id },
-        data: { status: RecruitmentStatus.CLOSED },
+        data: { views: { increment: 1 } },
       });
-      throw new NotFoundException("Esta vaga expirou e não está mais disponível");
     }
-
-    await this.prisma.recruitment.update({
-      where: { id: recruitment.id },
-      data: { views: { increment: 1 } },
-    });
 
     return {
       id: recruitment.id,
@@ -239,8 +246,8 @@ export class RecruitmentService {
       workModel: recruitment.workModel,
       seniority: recruitment.seniority,
       vacancies: recruitment.vacancies,
-      salaryMin: recruitment.isSalaryVisible ? recruitment.salaryMin : null,
-      salaryMax: recruitment.isSalaryVisible ? recruitment.salaryMax : null,
+      salaryMin: recruitment.isSalaryVisible || isUuid ? recruitment.salaryMin : null,
+      salaryMax: recruitment.isSalaryVisible || isUuid ? recruitment.salaryMax : null,
       city: recruitment.city,
       state: recruitment.state,
       country: recruitment.country,
@@ -250,6 +257,7 @@ export class RecruitmentService {
       publishedAt: recruitment.publishedAt,
       departmentName: recruitment.department.name,
       positionTitle: recruitment.position.title,
+      status: recruitment.status,
     };
   }
 
@@ -432,58 +440,60 @@ export class RecruitmentService {
       throw new ConflictException("Este candidato já foi contratado");
     }
 
-    return this.prisma.$transaction(async (tx) => {
-      const emailExists = await tx.employee.findUnique({
-        where: { email: application.candidate.email },
-      });
+    return this.prisma
+      .$transaction(async (tx) => {
+        const emailExists = await tx.employee.findUnique({
+          where: { email: application.candidate.email },
+        });
 
-      if (emailExists) {
-        throw new ConflictException(
-          "Já existe um funcionário cadastrado com o e-mail deste candidato",
+        if (emailExists) {
+          throw new ConflictException(
+            "Já existe um funcionário cadastrado com o e-mail deste candidato",
+          );
+        }
+
+        const employee = await tx.employee.create({
+          data: {
+            firstName: application.candidate.firstName,
+            lastName: application.candidate.lastName,
+            email: application.candidate.email,
+            phone: application.candidate.phone,
+            hireDate: new Date(),
+            salary: application.recruitment.position.salaryRangeMin,
+            departmentId: application.recruitment.departmentId,
+            positionId: application.recruitment.positionId,
+          },
+        });
+
+        await tx.application.update({
+          where: { id: applicationId },
+          data: {
+            status: ApplicationStatus.HIRED,
+            hiredAt: new Date(),
+          },
+        });
+
+        await this.auditService.logAction(
+          userId,
+          AuditAction.CANDIDATE_CONVERTED_TO_EMPLOYEE,
+          `Candidato ${application.candidate.firstName} ${application.candidate.lastName} contratado como funcionário (Employee ID: ${employee.id}) via vaga "${application.recruitment.title}"`,
         );
-      }
 
-      const employee = await tx.employee.create({
-        data: {
-          firstName: application.candidate.firstName,
-          lastName: application.candidate.lastName,
-          email: application.candidate.email,
-          phone: application.candidate.phone,
-          hireDate: new Date(),
-          salary: application.recruitment.position.salaryRangeMin,
-          departmentId: application.recruitment.departmentId,
-          positionId: application.recruitment.positionId,
-        },
+        return employee;
+      })
+      .then(async (employee) => {
+        // Find user matching the candidate's email if already created, or schedule a welcome notification if user exists
+        const associatedUser = await this.prisma.user.findFirst({
+          where: { email: employee.email, deletedAt: null },
+        });
+        if (associatedUser) {
+          await this.notificationsService.create(
+            associatedUser.id,
+            `Boas-vindas ao Atlas HRMS! Sua admissão para o cargo de ${application.recruitment.position.title} foi concluída com sucesso.`,
+          );
+        }
+        return employee;
       });
-
-      await tx.application.update({
-        where: { id: applicationId },
-        data: {
-          status: ApplicationStatus.HIRED,
-          hiredAt: new Date(),
-        },
-      });
-
-      await this.auditService.logAction(
-        userId,
-        AuditAction.CANDIDATE_CONVERTED_TO_EMPLOYEE,
-        `Candidato ${application.candidate.firstName} ${application.candidate.lastName} contratado como funcionário (Employee ID: ${employee.id}) via vaga "${application.recruitment.title}"`,
-      );
-
-      return employee;
-    }).then(async (employee) => {
-      // Find user matching the candidate's email if already created, or schedule a welcome notification if user exists
-      const associatedUser = await this.prisma.user.findFirst({
-        where: { email: employee.email, deletedAt: null },
-      });
-      if (associatedUser) {
-        await this.notificationsService.create(
-          associatedUser.id,
-          `Boas-vindas ao Atlas HRMS! Sua admissão para o cargo de ${application.recruitment.position.title} foi concluída com sucesso.`,
-        );
-      }
-      return employee;
-    });
   }
 
   private generateSlug(title: string): string {
