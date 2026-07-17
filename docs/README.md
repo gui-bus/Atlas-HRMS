@@ -167,11 +167,41 @@ sequenceDiagram
 - **RBAC (Role Based Access Control)**: Restrição automatizada de endpoints baseada em funções (`ADMIN`, `HR`, `MANAGER`, `EMPLOYEE`) injetadas via decorators e verificadas por guards no pipeline do NestJS.
 - **Logs de Auditoria (Audit Trail)**: Rastreabilidade total de todas as ações de escrita executadas no banco de dados (ex: `EMPLOYEE_CREATED`, `VACATION_APPROVED`, `CANDIDATE_STATUS_CHANGED`), identificando usuário executor, IP e payload da mudança.
 
+## 🧪 Estrutura de Testes Automatizados
+
+O monorepo adota uma estratégia rigorosa de garantia de qualidade por meio de uma pirâmide de testes automatizados distribuídos entre o Frontend (Web) e o Backend (API):
+
+```mermaid
+flowchart TD
+    subgraph TestSuite ["Bateria de Testes do Monorepo"]
+        subgraph FrontTests ["Frontend (Web App)"]
+            A["Testes de Unidade (Vitest + Testing Library)"]
+            B["Testes de Integração (MSW Mock Service Worker)"]
+            C["Testes End-to-End E2E (Playwright)"]
+        end
+        subgraph BackTests ["Backend (API Server)"]
+            D["Testes Unitários (Jest + Custom Mocks)"]
+            E["Testes de Integração (Jest + Supertest + Postgres Test Database)"]
+        end
+    end
+```
+
+### 💻 1. Testes no Frontend (`apps/web`)
+
+A aplicação cliente utiliza um conjunto de ferramentas focadas em performance de execução e fidelidade com o comportamento do usuário:
+- **Testes Unitários e de Componente**: Executados via **Vitest** (substituto de alta velocidade para o Jest) em conjunto com **React Testing Library** e **jsdom**, isolando o comportamento lógico e renderização de componentes Shadcn/UI de forma limpa.
+- **Mock de Requisições de Rede**: Utilização de **MSW (Mock Service Worker)** para interceptar requisições HTTP da API em nível de rede nos testes de componentes, permitindo simular payloads reais, loadings e cenários de erros sem tocar no servidor real.
+- **Testes End-to-End (E2E)**: Implementados com **Playwright** para cobrir jornadas completas do usuário (ex: fluxo completo de candidatura pública no portal, e processo de login com transição para o dashboard privado) simulando interações nativas do navegador.
+
+### ⚙️ 2. Testes no Backend (`apps/api`)
+
+A API NestJS adota o **Jest** como runner padrão integrado com estratégias transacionais no banco de dados:
+- **Testes Unitários**: Isolam a lógica pura de services e middlewares mockando dependências do banco de dados (Prisma Client Mock) de forma síncrona.
+- **Testes de Integração (E2E API)**: Utilizam **Supertest** para disparar requisições HTTP reais contra o pipeline HTTP do NestJS. Estes testes realizam transações físicas temporárias no banco PostgreSQL para validar comportamentos reais de chaves únicas, restrições e triggers (ex: validação física de lockout após falhas seguidas de login, e reativação em soft-delete).
+
 ---
 
-## 🧪 Qualidade de Código e CI/CD
+## 🛠️ Qualidade de Código e Integração Contínua (CI/CD)
 
-- **Testes Automáticos**: Cobertura obrigatória de testes unitários (`.spec.ts`) e testes de integração com banco de dados em memória (`supertest`).
-- **Garantia de Estilo e Padronização**: Linter (ESLint) e formatador de código (Prettier) integrados.
-- **Git Hooks (Husky)**: Bloqueio local automático que impede commits se houver lints pendentes ou falhas em testes de integração executados em pre-commit.
-- **GitHub Actions**: Workflow de CI integrado rodando build, lint e testes a cada Pull Request.
+- **Git Hooks Locais (Husky)**: Configurado com travas ativas de pré-commit (`pre-commit`) que executam formatação de estilo (**Prettier**), linter estrito (**ESLint**) e a bateria local de testes obrigatórios, impedindo qualquer código quebrado de ser commitado.
+- **Pipeline de Integração Contínua (GitHub Actions)**: Pipeline configurado para rodar build de produção do monorepo, validação de tipagens do compilador TypeScript (`tsc --noEmit`), lint e testes completos a cada pull request aberto.
