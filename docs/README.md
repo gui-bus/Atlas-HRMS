@@ -96,14 +96,14 @@ graph TB
     DashboardPanel -->|Queries Otimistas| ReactQuery
     CareersPortal -->|Queries Otimistas| ReactQuery
     
-    ReactQuery -->|Endpoints Privados (JWT)| AuthController
-    ReactQuery -->|Métricas Paralelas| DashboardController
-    ReactQuery -->|Ajuste de Ponto| TimeCorrectionController
-    ReactQuery -->|Movimentação Kanban| RecruitmentController
+    ReactQuery -->|"Endpoints Privados (JWT)"| AuthController
+    ReactQuery -->|"Métricas Paralelas"| DashboardController
+    ReactQuery -->|"Ajuste de Ponto"| TimeCorrectionController
+    ReactQuery -->|"Movimentação Kanban"| RecruitmentController
     
-    CareersPortal -->|Upload de PDF Direto| UploadThing
-    RecruitmentController -->|Consome PDF Link| UploadThing
-    AuthController -->|Dispara Tokens de Recuperação| ResendMail
+    CareersPortal -->|"Upload de PDF Direto"| UploadThing
+    RecruitmentController -->|"Consome PDF Link"| UploadThing
+    AuthController -->|"Dispara Tokens de Recuperação"| ResendMail
     
     AuthController --> PrismaORM
     DashboardController --> PrismaORM
