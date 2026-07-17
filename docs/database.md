@@ -15,6 +15,7 @@ erDiagram
     users ||--o{ notifications : "userId (1:N)"
     employees }|--|| departments : "departmentId (N:1)"
     employees ||--o{ vacations : "employeeId (1:N)"
+    employees ||--o{ leaves : "employeeId (1:N)"
     employees ||--o{ documents : "employeeId (1:N)"
     departments ||--o{ recruitments : "departmentId (1:N)"
     departments }|--o| employees : "managerId (N:1)"
@@ -86,6 +87,20 @@ erDiagram
         datetime startDate
         datetime endDate
         VacationStatus status
+        string employeeId FK
+        string approvedById
+    }
+
+    leaves {
+        string id PK
+        datetime startDate
+        datetime endDate
+        LeaveType type
+        string customType
+        string description
+        LeaveStatus status
+        string rejectionReason
+        string attachmentUrl
         string employeeId FK
         string approvedById
     }
