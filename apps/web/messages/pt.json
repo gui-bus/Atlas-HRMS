@@ -320,8 +320,11 @@
       "address_proof": "Comprovante de Residência",
       "other": "Outros",
       "CONTRACT": "Contrato",
+      "IDENTIFICATION": "Identificação (RG/CNH)",
       "ID_CARD": "Identidade",
+      "EDUCATION": "Diploma/Educação",
       "CERTIFICATE": "Certificado",
+      "ADDRESS_PROOF": "Comprovante de Residência",
       "OTHER": "Outros"
     }
   },

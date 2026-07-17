@@ -43,6 +43,7 @@ export class DocumentsService {
   async findAll() {
     return this.prisma.document.findMany({
       where: { deletedAt: null },
+      include: { employee: true },
       orderBy: { createdAt: "desc" },
     });
   }
@@ -60,6 +61,7 @@ export class DocumentsService {
 
     return this.prisma.document.findMany({
       where: { employeeId, deletedAt: null },
+      include: { employee: true },
       orderBy: { createdAt: "desc" },
     });
   }

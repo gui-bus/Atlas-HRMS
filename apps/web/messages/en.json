@@ -320,8 +320,11 @@
       "address_proof": "Proof of Address",
       "other": "Others",
       "CONTRACT": "Contract",
+      "IDENTIFICATION": "Identification (ID/DL)",
       "ID_CARD": "Identity Card",
+      "EDUCATION": "Diploma/Education",
       "CERTIFICATE": "Certificate",
+      "ADDRESS_PROOF": "Proof of Address",
       "OTHER": "Others"
     }
   },

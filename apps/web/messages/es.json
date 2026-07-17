@@ -320,8 +320,11 @@
       "address_proof": "Comprobante de Domicilio",
       "other": "Otros",
       "CONTRACT": "Contrato",
+      "IDENTIFICATION": "Identificación (ID/Licencia)",
       "ID_CARD": "Documento de Identidad",
+      "EDUCATION": "Diploma/Educación",
       "CERTIFICATE": "Certificado",
+      "ADDRESS_PROOF": "Comprobante de Domicilio",
       "OTHER": "Otros"
     }
   },

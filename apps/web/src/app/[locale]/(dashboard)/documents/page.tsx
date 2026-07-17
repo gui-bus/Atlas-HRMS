@@ -92,8 +92,11 @@ export default function DocumentsPage() {
   const getDocTypeLabel = (type: string) => {
     const labels = {
       CONTRACT: t("types.CONTRACT"),
+      IDENTIFICATION: t("types.IDENTIFICATION"),
       ID_CARD: t("types.ID_CARD"),
+      EDUCATION: t("types.EDUCATION"),
       CERTIFICATE: t("types.CERTIFICATE"),
+      ADDRESS_PROOF: t("types.ADDRESS_PROOF"),
       OTHER: t("types.OTHER"),
     };
     return labels[type as keyof typeof labels] || type;
