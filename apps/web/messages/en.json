@@ -56,6 +56,20 @@
     "newJob": "New Job (ATS)",
     "manageVacations": "Manage Vacations",
     "fileRepository": "File Repository",
+    "viewJobsPortal": "View Jobs Portal",
+    "noActiveApplications": "No active applications at the moment.",
+    "stageLabels": {
+      "SUBMITTED": "Submitted",
+      "SCREENING": "Screening",
+      "HR_INTERVIEW": "HR Interview",
+      "TECHNICAL_TEST": "Technical Test",
+      "TECHNICAL_INTERVIEW": "Technical Interview",
+      "FINAL_INTERVIEW": "Final Interview",
+      "MANAGER_INTERVIEW": "Manager Interview",
+      "OFFER": "Offer",
+      "HIRED": "Hired",
+      "REJECTED": "Rejected"
+    },
     "myHourBank": "Hour Bank",
     "myHourBankDesc": "Accumulated balance",
     "myVacations": "Upcoming Vacation",
@@ -431,6 +445,17 @@
       "kanban": "Kanban Board",
       "edit": "Edit Vacancy",
       "delete": "Delete"
+    },
+    "kanban": {
+      "resumeLink": "Resume",
+      "admit": "Admit",
+      "admitting": "Admitting...",
+      "notFound": "Vacancy not found.",
+      "funnelLabel": "Recruitment Funnel",
+      "noDepartment": "No Department",
+      "viewJobsPortal": "View Jobs Portal",
+      "portalLinkCopied": "Link copied!",
+      "copyPortalLink": "Copy public link"
     }
   },
   "Audit": {

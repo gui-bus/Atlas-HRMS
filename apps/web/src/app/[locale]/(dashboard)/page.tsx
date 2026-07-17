@@ -349,6 +349,14 @@ export default function DashboardPage() {
               <span className="font-bold text-emerald-500">{stats?.hiredCount ?? 0}</span>{" "}
               {t("hired")}
             </span>
+            {isAdminOrHr && (
+              <button
+                onClick={() => router.push(`/${locale}/jobs`)}
+                className="text-primary hover:text-primary/80 font-semibold transition-colors flex items-center gap-1">
+                <SuitcaseSimple className="h-3.5 w-3.5" />
+                {t("viewJobsPortal")}
+              </button>
+            )}
           </div>
         </div>
 
@@ -361,7 +369,7 @@ export default function DashboardPage() {
             </div>
           ) : totalStageApplications === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Nenhuma candidatura ativa no momento.
+              {t("noActiveApplications")}
             </p>
           ) : (
             <div className="space-y-2.5">
@@ -374,15 +382,16 @@ export default function DashboardPage() {
                 const isRejected = stage === "REJECTED";
 
                 const stageLabels: Record<string, string> = {
-                  SUBMITTED: "Inscrito",
-                  SCREENING: "Triagem",
-                  HR_INTERVIEW: "Entrevista RH",
-                  TECHNICAL_TEST: "Teste Técnico",
-                  TECHNICAL_INTERVIEW: "Entrevista Técnica",
-                  FINAL_INTERVIEW: "Entrevista Final",
-                  OFFER: "Proposta",
-                  HIRED: "Contratado",
-                  REJECTED: "Recusado",
+                  SUBMITTED: t("stageLabels.SUBMITTED"),
+                  SCREENING: t("stageLabels.SCREENING"),
+                  HR_INTERVIEW: t("stageLabels.HR_INTERVIEW"),
+                  TECHNICAL_TEST: t("stageLabels.TECHNICAL_TEST"),
+                  TECHNICAL_INTERVIEW: t("stageLabels.TECHNICAL_INTERVIEW"),
+                  FINAL_INTERVIEW: t("stageLabels.FINAL_INTERVIEW"),
+                  MANAGER_INTERVIEW: t("stageLabels.MANAGER_INTERVIEW"),
+                  OFFER: t("stageLabels.OFFER"),
+                  HIRED: t("stageLabels.HIRED"),
+                  REJECTED: t("stageLabels.REJECTED"),
                 };
 
                 return (

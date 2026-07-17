@@ -56,6 +56,20 @@
     "newJob": "Nova Vaga (ATS)",
     "manageVacations": "Controlar Férias",
     "fileRepository": "Repositório de Arquivos",
+    "viewJobsPortal": "Ver Portal de Vagas",
+    "noActiveApplications": "Nenhuma candidatura ativa no momento.",
+    "stageLabels": {
+      "SUBMITTED": "Inscrito",
+      "SCREENING": "Triagem",
+      "HR_INTERVIEW": "Entrevista RH",
+      "TECHNICAL_TEST": "Teste Técnico",
+      "TECHNICAL_INTERVIEW": "Entrevista Técnica",
+      "FINAL_INTERVIEW": "Entrevista Final",
+      "MANAGER_INTERVIEW": "Entrevista Gestor",
+      "OFFER": "Proposta",
+      "HIRED": "Contratado",
+      "REJECTED": "Recusado"
+    },
     "myHourBank": "Banco de Horas",
     "myHourBankDesc": "Saldo acumulado",
     "myVacations": "Próximas Férias",
@@ -431,6 +445,17 @@
       "kanban": "Quadro Kanban",
       "edit": "Editar Vaga",
       "delete": "Excluir"
+    },
+    "kanban": {
+      "resumeLink": "Currículo",
+      "admit": "Admitir",
+      "admitting": "Admitindo...",
+      "notFound": "Vaga não encontrada.",
+      "funnelLabel": "Funil de Recrutamento",
+      "noDepartment": "Sem Departamento",
+      "viewJobsPortal": "Ver Portal de Vagas",
+      "portalLinkCopied": "Link copiado!",
+      "copyPortalLink": "Copiar link público"
     }
   },
   "Audit": {

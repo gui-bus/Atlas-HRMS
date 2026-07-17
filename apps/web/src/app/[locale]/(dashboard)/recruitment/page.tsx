@@ -17,6 +17,7 @@ import {
   CaretUp,
   CaretDown,
   CaretUpDown,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
 import {
   useReactTable,
@@ -32,7 +33,6 @@ import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 import { useAuthStore } from "@/store/useAuthStore";
 import { recruitmentService, Recruitment } from "@/services/recruitment.service";
 import { RbacGuard } from "@/components/rbac-guard";
-import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -246,12 +246,31 @@ export default function RecruitmentListPage() {
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
-        <PageHeader
-          title={t("title")}
-          subTitle={t("subTitle")}
-          buttonText={isAdminOrHr ? t("addJob") : undefined}
-          buttonLink={`/${locale}/recruitment/new`}
-        />
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Button
+              variant="outline"
+              className="gap-2 h-12 rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-sm font-semibold px-4"
+              onClick={() => router.push(`/${locale}/jobs`)}
+            >
+              <ArrowSquareOut className="h-4 w-4" />
+              {t("kanban.viewJobsPortal")}
+            </Button>
+            {isAdminOrHr && (
+              <Button
+                className="gap-2 h-12 w-full md:max-w-56 rounded-2xl text-sm font-semibold px-4 cursor-pointer"
+                onClick={() => router.push(`/${locale}/recruitment/new`)}
+              >
+                <Plus className="h-5 w-5" weight="duotone" />
+                {t("addJob")}
+              </Button>
+            )}
+          </div>
+        </div>
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3">
