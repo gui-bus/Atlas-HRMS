@@ -3,7 +3,16 @@
 import React, { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { MagnifyingGlass, CircleNotch, ArrowsDownUp, Check, X } from "@phosphor-icons/react";
+import {
+  MagnifyingGlass,
+  CircleNotch,
+  ArrowsDownUp,
+  Check,
+  X,
+  CaretUp,
+  CaretDown,
+  CaretUpDown,
+} from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -77,16 +86,7 @@ export default function PendingCorrectionsPage() {
   const columns = [
     columnHelper.accessor((row) => `${row.employee?.firstName} ${row.employee?.lastName}`, {
       id: "employeeName",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
-        >
-          Colaborador
-          <ArrowsDownUp className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      header: "Colaborador",
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("date", {
@@ -199,9 +199,25 @@ export default function PendingCorrectionsPage() {
                     {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        onClick={
+                          header.column.getCanSort()
+                            ? header.column.getToggleSortingHandler()
+                            : undefined
+                        }
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${
+                          header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                        } ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        <div className="flex items-center gap-1">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() &&
+                            ({
+                              asc: <CaretUp className="h-4 w-4" />,
+                              desc: <CaretDown className="h-4 w-4" />,
+                            }[header.column.getIsSorted() as string] ?? (
+                              <CaretUpDown className="h-4 w-4 opacity-50" />
+                            ))}
+                        </div>
                       </th>
                     ))}
                   </tr>

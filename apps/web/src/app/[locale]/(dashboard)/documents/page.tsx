@@ -4,7 +4,16 @@ import React, { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { Plus, Trash, CircleNotch, MagnifyingGlass, ArrowsDownUp } from "@phosphor-icons/react";
+import {
+  Plus,
+  Trash,
+  CircleNotch,
+  MagnifyingGlass,
+  ArrowsDownUp,
+  CaretUp,
+  CaretDown,
+  CaretUpDown,
+} from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -19,6 +28,7 @@ import { documentService, Document } from "@/services/document.service";
 import { employeeService } from "@/services/employee.service";
 import { useAuthStore } from "@/store/useAuthStore";
 import { RbacGuard } from "@/components/rbac-guard";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -114,16 +124,7 @@ export default function DocumentsPage() {
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("name", {
-        header: ({ column }) => (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
-          >
-            {t("table.name")}
-            <ArrowsDownUp className="ml-2 h-4 w-4" />
-          </Button>
-        ),
+        header: t("table.name"),
         cell: (info) => {
           const doc = info.row.original;
           return (
@@ -198,21 +199,12 @@ export default function DocumentsPage() {
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER", "EMPLOYEE"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
-          </div>
-          {!isEmployee && (
-            <Button
-              onClick={() => router.push(`/${locale}/documents/new`)}
-              className="gap-2 rounded-2xl"
-            >
-              <Plus className="h-4 w-4" />
-              Adicionar Documento
-            </Button>
-          )}
-        </div>
+        <PageHeader
+          title={t("title")}
+          subTitle={t("subTitle")}
+          buttonText={!isEmployee ? "Adicionar Documento" : undefined}
+          buttonLink={`/${locale}/documents/new`}
+        />
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3">
@@ -249,9 +241,25 @@ export default function DocumentsPage() {
                     {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        onClick={
+                          header.column.getCanSort()
+                            ? header.column.getToggleSortingHandler()
+                            : undefined
+                        }
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${
+                          header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                        } ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        <div className="flex items-center gap-1">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() &&
+                            ({
+                              asc: <CaretUp className="h-4 w-4" />,
+                              desc: <CaretDown className="h-4 w-4" />,
+                            }[header.column.getIsSorted() as string] ?? (
+                              <CaretUpDown className="h-4 w-4 opacity-50" />
+                            ))}
+                        </div>
                       </th>
                     ))}
                   </tr>

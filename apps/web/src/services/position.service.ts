@@ -17,7 +17,12 @@ export interface Position {
 }
 
 export const positionService = {
-  async getPositions(params?: { page?: number; limit?: number }): Promise<any> {
+  async getPositions(params?: {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Promise<any> {
     const response = await api.get<any>("/positions", { params });
     return response.data;
   },

@@ -115,6 +115,7 @@
     "statusInactive": "Inactive",
     "statusOnLeave": "On Leave",
     "statusSuspended": "Suspended",
+    "requiredFieldsNotice": "Indicates required fields",
     "tabs": {
       "professional": "Professional Info",
       "personal": "Personal Info",

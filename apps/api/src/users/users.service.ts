@@ -19,6 +19,14 @@ export class UsersService {
     const page = query?.page;
     const limit = query?.limit;
 
+    let orderBy: any = { createdAt: "desc" };
+    if (query?.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (["email", "role", "isActive", "createdAt"].includes(query.sortBy)) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
     if (!page && !limit) {
       return this.prisma.user.findMany({
         where: { deletedAt: null },
@@ -30,6 +38,7 @@ export class UsersService {
           createdAt: true,
           updatedAt: true,
         },
+        orderBy,
       });
     }
 
@@ -50,7 +59,7 @@ export class UsersService {
         },
         skip,
         take: currentLimit,
-        orderBy: { createdAt: "desc" },
+        orderBy,
       }),
       this.prisma.user.count({ where: { deletedAt: null } }),
     ]);

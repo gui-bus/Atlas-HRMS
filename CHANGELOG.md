@@ -4,6 +4,20 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.6.0] - 2026-07-17
+
+### Adicionado
+
+- **Ordenação Dinâmica no Backend (Server-side Sorting)**: Suporte à ordenação dinâmica adicionado às queries do Prisma para listagens paginadas (`page` e `limit`) através dos novos parâmetros globais `sortBy` e `sortOrder` em `QueryPaginationDto`.
+- **Setas Interativas nas Colunas (Frontend Sorting)**: Atualização dos cabeçalhos das tabelas de Funcionários, Férias, Licenças, Quadro de Vagas, Departamentos, Cargos, Contas de Usuários e Documentos no frontend com setas de ordenação clicáveis e indicadores visuais (`CaretUp`, `CaretDown` e `CaretUpDown`) utilizando Phosphor Icons.
+- **Componente PageHeader Reutilizável**: Criação e integração do componente `PageHeader` para padronizar os cabeçalhos de título, subtítulo e botões de ação nas listagens do sistema.
+- **Componente FormHeader Reutilizável**: Criação e integração do componente `FormHeader` para padronizar os cabeçalhos de formulário (contendo botão de voltar, título, subtítulo e aviso de preenchimento obrigatório).
+- **Componente FormActions Reutilizável**: Criação e integração do componente `FormActions` para padronizar as ações de rodapé (salvar/cancelar) com suporte a spinner de carregamento dinâmico.
+- **Sincronização de Ordenação com a URL**: Estados de ordenação integrados à biblioteca `nuqs` para manter o estado atual refletido na URL e garantir consistência na paginação.
+- **Remoção de Filtros Duplicados**: Correção dos cabeçalhos das tabelas para eliminar botões de ordenação redundantes (`ArrowsDownUp`) da primeira coluna, mantendo exclusivamente a ordenação dinâmica.
+
+---
+
 ## [1.5.0] - 2026-07-17
 
 ### Adicionado
@@ -125,7 +139,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Módulo de Recrutamento & Seleção (ATS)**: Fluxo completo de vagas e candidaturas, incluindo um pipeline de triagem visual (Kanban) para avançar candidatos de fase e botão de admissão imediata convertendo o candidato em funcionário.
 - **Módulo de Auditoria**: Interface administrativa para visualização de logs de auditoria corporativa com pesquisa textual, paginação e detalhamento de dados JSON estruturados.
 - **Componente FormSectionHeader**: Cabeçalho de subdivisão de formulário padronizado com suporte a ícones duotone do Phosphor Icons, títulos e descrições.
-- **Aviso de Campos Obrigatórios**: Indicador visual global de campos obrigatórios (`* Indica campos obrigatórios`) e asterisco vermelho nos labels dos formulários para melhor usabilidade.
+- **Aviso de Campos Obrigatórios**: Indicador visual global de campos obrigatórios (`* Os campos marcados com * são obrigatórios`) e asterisco vermelho nos labels dos formulários para melhor usabilidade.
 - **Testes e Validações Gerais**: Suites de testes automatizados (`organization.spec.tsx`, `absences.spec.tsx`, `documents.spec.tsx`, `recruitment.spec.tsx` e `audit.spec.tsx`) com 100% de cobertura.
 
 ### Alterado

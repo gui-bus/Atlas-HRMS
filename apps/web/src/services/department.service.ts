@@ -18,7 +18,12 @@ export interface Department {
 }
 
 export const departmentService = {
-  async getDepartments(params?: { page?: number; limit?: number }): Promise<any> {
+  async getDepartments(params?: {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Promise<any> {
     const response = await api.get<any>("/departments", { params });
     return response.data;
   },

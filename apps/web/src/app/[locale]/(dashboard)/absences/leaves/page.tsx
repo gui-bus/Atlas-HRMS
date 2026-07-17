@@ -12,6 +12,9 @@ import {
   CircleNotch,
   CaretLeft,
   CaretRight,
+  CaretUp,
+  CaretDown,
+  CaretUpDown,
 } from "@phosphor-icons/react";
 import {
   useReactTable,
@@ -27,6 +30,7 @@ import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 import { useAuthStore } from "@/store/useAuthStore";
 import { vacationService, Leave } from "@/services/vacation.service";
 import { RbacGuard } from "@/components/rbac-guard";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -49,15 +53,22 @@ export default function LeavesAdminPage() {
   const locale = params?.locale || "pt";
 
   // State
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useQueryState("status", parseAsString.withDefault("ALL"));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
+  const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
   // Fetch
   const { data: leavesData, isLoading } = useQuery({
-    queryKey: ["leaves", page],
-    queryFn: () => vacationService.getLeaves({ page, limit: 10 }),
+    queryKey: ["leaves", { page, sortBy, sortOrder }],
+    queryFn: () =>
+      vacationService.getLeaves({
+        page,
+        limit: 10,
+        sortBy: sortBy || undefined,
+        sortOrder: sortOrder || undefined,
+      }),
   });
   const leaves = leavesData?.data || [];
   const totalPages = leavesData?.totalPages || 1;
@@ -90,16 +101,7 @@ export default function LeavesAdminPage() {
   const columns = [
     columnHelper.accessor((row) => `${row.employee?.firstName} ${row.employee?.lastName}`, {
       id: "employee",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
-        >
-          Colaborador
-          <ArrowsDownUp className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      header: "Colaborador",
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("type", {
@@ -181,14 +183,29 @@ export default function LeavesAdminPage() {
     }),
   ];
 
+  const sorting = React.useMemo(() => {
+    return sortBy && sortOrder ? [{ id: sortBy, desc: sortOrder === "desc" }] : [];
+  }, [sortBy, sortOrder]);
+
   const table = useReactTable({
     data: filteredData,
     columns,
     state: { sorting, globalFilter },
-    onSortingChange: setSorting,
+    onSortingChange: (updater: any) => {
+      const nextState = typeof updater === "function" ? updater(sorting) : updater;
+      const sort = nextState[0];
+      if (sort) {
+        setSortBy(sort.id);
+        setSortOrder(sort.desc ? "desc" : "asc");
+      } else {
+        setSortBy("");
+        setSortOrder("");
+      }
+      setPage(1);
+    },
     onGlobalFilterChange: setGlobalFilter,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
 
@@ -196,12 +213,10 @@ export default function LeavesAdminPage() {
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">Atestados & Licenças</h1>
-          <p className="text-muted-foreground text-sm">
-            Visualize, aprove ou rejeite solicitações de afastamentos e licenças médicas.
-          </p>
-        </div>
+        <PageHeader
+          title="Atestados & Licenças"
+          subTitle="Visualize, aprove ou rejeite solicitações de afastamentos e licenças médicas."
+        />
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3">
@@ -237,9 +252,25 @@ export default function LeavesAdminPage() {
                     {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        onClick={
+                          header.column.getCanSort()
+                            ? header.column.getToggleSortingHandler()
+                            : undefined
+                        }
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${
+                          header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                        } ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        <div className="flex items-center gap-1">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() &&
+                            ({
+                              asc: <CaretUp className="h-4 w-4" />,
+                              desc: <CaretDown className="h-4 w-4" />,
+                            }[header.column.getIsSorted() as string] ?? (
+                              <CaretUpDown className="h-4 w-4 opacity-50" />
+                            ))}
+                        </div>
                       </th>
                     ))}
                   </tr>

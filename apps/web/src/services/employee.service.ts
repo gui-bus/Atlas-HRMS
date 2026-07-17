@@ -64,6 +64,8 @@ export interface GetEmployeesQueryParams {
   status?: string;
   departmentId?: string;
   positionId?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }
 
 export const employeeService = {

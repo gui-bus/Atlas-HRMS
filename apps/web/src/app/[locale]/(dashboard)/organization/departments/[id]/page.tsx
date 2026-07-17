@@ -101,7 +101,9 @@ export default function EditDepartmentPage() {
             <p className="text-muted-foreground text-sm">
               Modifique as informações do departamento selecionado.
             </p>
-            <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
+            <p className="text-xs text-destructive/80 mt-1.5">
+              * Os campos marcados com * são obrigatórios
+            </p>
           </div>
         </div>
 

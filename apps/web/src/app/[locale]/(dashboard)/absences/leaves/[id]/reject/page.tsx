@@ -81,7 +81,9 @@ export default function RejectLeavePage() {
             <p className="text-muted-foreground text-sm">
               Explique o motivo de indeferimento da licença ou afastamento.
             </p>
-            <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
+            <p className="text-xs text-destructive/80 mt-1.5">
+              * Os campos marcados com * são obrigatórios
+            </p>
           </div>
         </div>
 

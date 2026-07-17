@@ -11,7 +11,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const router = useRouter();
 
-  // Tenta restaurar a sessão no mount do app usando o refresh token do cookie
   useEffect(() => {
     const bootstrapSession = async () => {
       try {
@@ -24,7 +23,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
           setAuth(responseMe.data, accessToken);
         }
       } catch (err) {
-        // Se falhar, limpa o estado (o usuário não possui um cookie válido)
         clearAuth();
       } finally {
         setIsBootstrapped(true);
@@ -34,11 +32,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     bootstrapSession();
   }, [setAuth, clearAuth]);
 
-  // Controle de rotas protegidas
   useEffect(() => {
     if (!isBootstrapped) return;
 
-    // Detecta o locale do path, por exemplo: "/pt/login" -> true
     const isPublicRoute =
       pathname.endsWith("/login") ||
       pathname.endsWith("/register") ||
@@ -46,30 +42,25 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       pathname.includes("/reset-password");
 
     if (!isAuthenticated && !isPublicRoute) {
-      // Se não autenticado e tentando acessar rota privada, manda para o login
-      // Mantendo o prefixo de locale (ex: /pt)
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
       router.push(`/${locale}/login?redirect=${encodeURIComponent(pathname)}`);
     } else if (isAuthenticated && isPublicRoute) {
-      // Se já autenticado e acessando tela de login/cadastro, manda para o dashboard raiz
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
       router.push(`/${locale}`);
     }
   }, [isAuthenticated, isBootstrapped, pathname, router]);
 
-  // Previne a tela de bloqueio de boot se estiver em uma rota pública
   const isPublicRoute =
     pathname.endsWith("/login") ||
     pathname.endsWith("/register") ||
     pathname.includes("/forgot-password") ||
     pathname.includes("/reset-password");
 
-  // Tela de carregamento premium enquanto restaura a sessão (apenas se for rota privada)
   if (!isBootstrapped && !isPublicRoute) {
     return (
-      <div className=" bg-background text-foreground flex flex-col justify-center items-center space-y-4">
+      <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center space-y-4">
         <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
         <span className="text-muted-foreground text-sm font-medium animate-pulse">
           Carregando Atlas...
@@ -78,7 +69,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     );
   }
 
-  // Previne renderização de rotas privadas se não estiver logado
   if (!isAuthenticated && !isPublicRoute) {
     return (
       <div className=" bg-background text-foreground flex flex-col justify-center items-center">

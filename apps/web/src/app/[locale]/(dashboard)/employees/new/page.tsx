@@ -17,6 +17,8 @@ import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
+import { FormHeader } from "@/components/form-header";
+import { FormActions } from "@/components/form-actions";
 
 export default function NewEmployeePage() {
   const t = useTranslations("Employees");
@@ -102,30 +104,20 @@ export default function NewEmployeePage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR"]}>
       <div className="p-6 md:p-8 space-y-6 w-full">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => router.back()}
-            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t("addEmployee")}</h1>
-            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
-            <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
-          </div>
-        </div>
+        <FormHeader
+          title={t("addEmployee")}
+          subTitle={t("subTitle")}
+          requiredNotice={t("requiredFieldsNotice")}
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
-          {/* Section 1: Professional Info */}
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.professional")}
               description="Informações contratuais, cargo e situação ativa do colaborador."
               icon={Briefcase}
             />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 w-full">
               <div className="space-y-2">
                 <Label htmlFor="firstName">
@@ -209,7 +201,6 @@ export default function NewEmployeePage() {
             </div>
           </div>
 
-          {/* Section 2: Personal Info */}
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.personal")}
@@ -267,7 +258,6 @@ export default function NewEmployeePage() {
             </div>
           </div>
 
-          {/* Section 3: Address */}
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.address")}
@@ -347,7 +337,6 @@ export default function NewEmployeePage() {
             </div>
           </div>
 
-          {/* Section 4: Bank Details */}
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.bank")}
@@ -418,7 +407,6 @@ export default function NewEmployeePage() {
             </div>
           </div>
 
-          {/* Section 5: Emergency Contacts */}
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.emergency")}
@@ -505,21 +493,11 @@ export default function NewEmployeePage() {
             </p>
           )}
 
-          {/* Action Controls */}
-          <div className="flex justify-end gap-3 pt-6 border-t border-transparent">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-            >
-              {t("table.cancel")}
-            </Button>
-            <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-              {t("form.create")}
-            </Button>
-          </div>
+          <FormActions
+            cancelText={t("table.cancel")}
+            submitText={t("form.create")}
+            isSubmitting={mutation.isPending}
+          />
         </form>
       </div>
     </RbacGuard>

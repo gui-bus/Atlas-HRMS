@@ -18,6 +18,16 @@ export class DepartmentsService {
     const page = query?.page;
     const limit = query?.limit;
 
+    let orderBy: any = undefined;
+    if (query?.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (query.sortBy === "manager") {
+        orderBy = { manager: { firstName: order } };
+      } else if (["name", "code", "description", "active", "createdAt"].includes(query.sortBy)) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
     if (!page && !limit) {
       return this.prisma.department.findMany({
         where: { deletedAt: null },
@@ -37,6 +47,7 @@ export class DepartmentsService {
             },
           },
         },
+        ...(orderBy ? { orderBy } : {}),
       });
     }
 
@@ -65,7 +76,7 @@ export class DepartmentsService {
         },
         skip,
         take: currentLimit,
-        orderBy: { createdAt: "desc" },
+        orderBy: orderBy || { createdAt: "desc" },
       }),
       this.prisma.department.count({ where: { deletedAt: null } }),
     ]);

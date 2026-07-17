@@ -20,6 +20,8 @@ import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
+import { FormHeader } from "@/components/form-header";
+import { FormActions } from "@/components/form-actions";
 
 export default function NewVacancyPage() {
   const t = useTranslations("Recruitment");
@@ -87,23 +89,11 @@ export default function NewVacancyPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR"]}>
       <div className="p-6 md:p-8 space-y-6 w-full">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => router.back()}
-            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t("addJob")}</h1>
-            <p className="text-muted-foreground text-sm">
-              Abra uma nova vaga de emprego para atrair talentos.
-            </p>
-            <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
-          </div>
-        </div>
+        <FormHeader
+          title={t("addJob")}
+          subTitle="Abra uma nova vaga de emprego para atrair talentos."
+          requiredNotice={t("requiredFieldsNotice")}
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
           <div className="space-y-4">
@@ -270,20 +260,11 @@ export default function NewVacancyPage() {
             </p>
           )}
 
-          <div className="flex justify-end gap-3 pt-6 border-t border-transparent">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-            >
-              {t("form.cancel")}
-            </Button>
-            <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
-              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-              {t("form.create")}
-            </Button>
-          </div>
+          <FormActions
+            cancelText={t("form.cancel")}
+            submitText={t("form.create")}
+            isSubmitting={mutation.isPending}
+          />
         </form>
       </div>
     </RbacGuard>

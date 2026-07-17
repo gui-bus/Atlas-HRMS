@@ -1,33 +1,8 @@
-import { IsOptional, IsString, IsInt, Min, Max } from "class-validator";
-import { Type } from "class-transformer";
+import { IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { QueryPaginationDto } from "../../common/dto/pagination.dto";
 
-export class QueryEmployeeDto {
-  @ApiProperty({
-    description: "Página atual do resultado",
-    example: 1,
-    required: false,
-    default: 1,
-  })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @IsOptional()
-  page?: number = 1;
-
-  @ApiProperty({
-    description: "Tamanho da página do resultado",
-    example: 10,
-    required: false,
-    default: 10,
-  })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(100)
-  @IsOptional()
-  limit?: number = 10;
-
+export class QueryEmployeeDto extends QueryPaginationDto {
   @ApiProperty({
     description: "Pesquisa por nome, sobrenome ou e-mail",
     example: "João",

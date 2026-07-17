@@ -1,15 +1,12 @@
 import { z } from "zod";
 
-// Helper function to validate CPF (Cadastro de Pessoas Físicas)
 const validateCPF = (cpf: string) => {
   const cleanCPF = cpf.replace(/[^\d]/g, "");
 
   if (cleanCPF.length !== 11) return false;
 
-  // Check if all digits are the same
   if (/^(\d)\1{10}$/.test(cleanCPF)) return false;
 
-  // Validation algorithms
   let sum = 0;
   let remainder;
 

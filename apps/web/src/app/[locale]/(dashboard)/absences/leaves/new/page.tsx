@@ -145,7 +145,9 @@ export default function NewLeaveRequestPage() {
             <p className="text-muted-foreground text-sm">
               Registre atestados médicos ou licenças legais regulamentares.
             </p>
-            <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
+            <p className="text-xs text-destructive/80 mt-1.5">
+              * Os campos marcados com * são obrigatórios
+            </p>
           </div>
         </div>
 

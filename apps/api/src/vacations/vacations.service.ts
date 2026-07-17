@@ -31,13 +31,25 @@ export class VacationsService {
     const limit = query.limit ?? 10;
     const skip = (page - 1) * limit;
 
+    let orderBy: any = { createdAt: "desc" };
+    if (query.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (query.sortBy === "employee" || query.sortBy === "employeeName") {
+        orderBy = { employee: { firstName: order } };
+      } else if (
+        ["startDate", "endDate", "status", "daysRequested", "createdAt"].includes(query.sortBy)
+      ) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.vacation.findMany({
         where: { deletedAt: null },
         include: { employee: true },
         skip,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy,
       }),
       this.prisma.vacation.count({ where: { deletedAt: null } }),
     ]);
@@ -178,13 +190,23 @@ export class VacationsService {
     const limit = query.limit ?? 10;
     const skip = (page - 1) * limit;
 
+    let orderBy: any = { createdAt: "desc" };
+    if (query.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (query.sortBy === "employee" || query.sortBy === "employeeName") {
+        orderBy = { employee: { firstName: order } };
+      } else if (["type", "startDate", "endDate", "status", "createdAt"].includes(query.sortBy)) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.leave.findMany({
         where: { deletedAt: null },
         include: { employee: true },
         skip,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy,
       }),
       this.prisma.leave.count({ where: { deletedAt: null } }),
     ]);

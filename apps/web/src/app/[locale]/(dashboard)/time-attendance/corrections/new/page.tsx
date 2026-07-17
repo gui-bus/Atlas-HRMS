@@ -74,7 +74,9 @@ export default function NewCorrectionRequestPage() {
             Informe a data, o tipo da batida e o horário correto. A solicitação passará por
             aprovação do gestor.
           </p>
-          <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
+          <p className="text-xs text-destructive/80 mt-1.5">
+            * Os campos marcados com * são obrigatórios
+          </p>
         </div>
       </div>
 

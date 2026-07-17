@@ -5,13 +5,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Plus,
   MagnifyingGlass,
   Eye,
   Trash,
-  CaretLeft,
-  CaretRight,
   CircleNotch,
+  CaretUp,
+  CaretDown,
+  CaretUpDown,
 } from "@phosphor-icons/react";
 import {
   useReactTable,
@@ -23,6 +23,7 @@ import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 import { employeeService, EmployeeWithDetails } from "@/services/employee.service";
 import { RbacGuard } from "@/components/rbac-guard";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -53,29 +54,29 @@ export default function EmployeesListPage() {
   const queryClient = useQueryClient();
   const locale = params?.locale || "pt";
 
-  // Filter States
   const [search, setSearch] = useQueryState("search", parseAsString.withDefault(""));
   const [status, setStatus] = useQueryState("status", parseAsString.withDefault(""));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
+  const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
   const limit = 10;
 
-  // Delete State
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
 
-  // Fetch Employees
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["employees", { page, limit, search, status }],
+    queryKey: ["employees", { page, limit, search, status, sortBy, sortOrder }],
     queryFn: () =>
       employeeService.getEmployees({
         page,
         limit,
         search: search || undefined,
         status: status || undefined,
+        sortBy: sortBy || undefined,
+        sortOrder: (sortOrder as "asc" | "desc") || undefined,
       }),
   });
 
-  // Delete Mutation
   const deleteMutation = useMutation({
     mutationFn: (id: string) => employeeService.deleteEmployee(id),
     onSuccess: () => {
@@ -96,7 +97,6 @@ export default function EmployeesListPage() {
     }
   };
 
-  // TanStack Table setup
   const columnHelper = createColumnHelper<EmployeeWithDetails>();
 
   const columns = [
@@ -127,7 +127,7 @@ export default function EmployeesListPage() {
           badgeVariant = "secondary";
           statusLabel = t("statusInactive");
         } else if (val === "ON_LEAVE") {
-          badgeVariant = "secondary"; // Using secondary for warning state in minimal theme
+          badgeVariant = "secondary";
           statusLabel = t("statusOnLeave");
         } else if (val === "SUSPENDED") {
           badgeVariant = "destructive";
@@ -194,9 +194,27 @@ export default function EmployeesListPage() {
     }),
   ];
 
+  const sorting = React.useMemo(() => {
+    return sortBy && sortOrder ? [{ id: sortBy, desc: sortOrder === "desc" }] : [];
+  }, [sortBy, sortOrder]);
+
   const table = useReactTable({
     data: data?.data || [],
     columns,
+    state: { sorting },
+    onSortingChange: (updater: any) => {
+      const nextState = typeof updater === "function" ? updater(sorting) : updater;
+      const sort = nextState[0];
+      if (sort) {
+        setSortBy(sort.id);
+        setSortOrder(sort.desc ? "desc" : "asc");
+      } else {
+        setSortBy("");
+        setSortOrder("");
+      }
+      setPage(1);
+    },
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -205,19 +223,13 @@ export default function EmployeesListPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6">
-        {/* Header section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
-          </div>
-          <Button onClick={() => router.push(`/${locale}/employees/new`)} className="gap-2">
-            <Plus className="h-4 w-4" />
-            {t("addEmployee")}
-          </Button>
-        </div>
+        <PageHeader
+          title={t("title")}
+          subTitle={t("subTitle")}
+          buttonText={t("addEmployee")}
+          buttonLink={`/${locale}/employees/new`}
+        />
 
-        {/* Filters section */}
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
@@ -257,13 +269,27 @@ export default function EmployeesListPage() {
                     {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
+                        onClick={
+                          header.column.getCanSort()
+                            ? header.column.getToggleSortingHandler()
+                            : undefined
+                        }
                         className={`h-10 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 border-0 ${
-                          index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"
-                        }`}
+                          header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                        } ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                        <div className="flex items-center gap-1">
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() &&
+                            ({
+                              asc: <CaretUp className="h-4 w-4" />,
+                              desc: <CaretDown className="h-4 w-4" />,
+                            }[header.column.getIsSorted() as string] ?? (
+                              <CaretUpDown className="h-4 w-4 opacity-50" />
+                            ))}
+                        </div>
                       </th>
                     ))}
                   </tr>

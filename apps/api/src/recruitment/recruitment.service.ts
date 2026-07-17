@@ -159,12 +159,24 @@ export class RecruitmentService {
     if (query.workModel) where.workModel = query.workModel;
     if (query.employmentType) where.employmentType = query.employmentType;
 
+    let orderBy: any = { publishedAt: "desc" };
+    if (query.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (query.sortBy === "department" || query.sortBy === "departmentName") {
+        orderBy = { department: { name: order } };
+      } else if (
+        ["title", "workModel", "employmentType", "publishedAt", "createdAt"].includes(query.sortBy)
+      ) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.recruitment.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { publishedAt: "desc" },
+        orderBy,
         include: {
           department: { select: { name: true } },
           position: { select: { title: true } },

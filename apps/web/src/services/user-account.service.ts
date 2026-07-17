@@ -8,7 +8,12 @@ export interface UserAccount {
 }
 
 export const userAccountService = {
-  async getUserAccounts(params?: { page?: number; limit?: number }): Promise<any> {
+  async getUserAccounts(params?: {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Promise<any> {
     const response = await api.get<any>("/users", { params });
     return response.data;
   },

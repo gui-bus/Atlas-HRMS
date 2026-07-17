@@ -115,6 +115,7 @@
     "statusInactive": "Inativo",
     "statusOnLeave": "Em Licença",
     "statusSuspended": "Suspenso",
+    "requiredFieldsNotice": "Os campos marcados com * são obrigatórios",
     "tabs": {
       "professional": "Dados Profissionais",
       "personal": "Dados Pessoais",
@@ -189,7 +190,7 @@
     "editPosition": "Editar Cargo",
     "active": "Ativo",
     "inactive": "Inativo",
-    "requiredFieldsNotice": "Indica campos obrigatórios",
+    "requiredFieldsNotice": "Os campos marcados com * são obrigatórios",
     "form": {
       "name": "Nome do Departamento",
       "code": "Código / Sigla",
@@ -241,7 +242,7 @@
     "cancel": "Cancelar",
     "save": "Enviar Solicitação",
     "rejectionReason": "Motivo da Reprovação",
-    "requiredFieldsNotice": "Indica campos obrigatórios",
+    "requiredFieldsNotice": "Os campos marcados com * são obrigatórios",
     "attachment": "Anexo / Comprovante",
     "statusPending": "Pendente",
     "statusApproved": "Aprovado",
@@ -262,7 +263,7 @@
     "subTitle": "Gerencie e armazene contratos, termos e comprovantes dos colaboradores.",
     "addDocument": "Adicionar Documento",
     "addDocumentDesc": "Registre termos, contratos ou comprovantes de colaboradores realizando o upload direto do arquivo.",
-    "requiredFieldsNotice": "Indica campos obrigatórios",
+    "requiredFieldsNotice": "Os campos marcados com * são obrigatórios",
     "uploadArea": "Arraste e solte o arquivo aqui ou clique para selecionar",
     "uploadHint": "PDF, DOC, DOCX, PNG ou JPG (máx. 10MB)",
     "employeeSelectPlaceholder": "Selecione um funcionário",
@@ -298,7 +299,7 @@
     "title": "Recrutamento & Seleção (ATS)",
     "subTitle": "Gerencie os processos seletivos e candidatos do funil de contratação.",
     "addJob": "Criar Vaga",
-    "requiredFieldsNotice": "Indica campos obrigatórios",
+    "requiredFieldsNotice": "Os campos marcados com * são obrigatórios",
     "form": {
       "title": "Título da Vaga",
       "description": "Descrição detalhada",

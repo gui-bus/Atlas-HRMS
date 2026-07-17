@@ -18,6 +18,25 @@ export class PositionsService {
     const page = query?.page;
     const limit = query?.limit;
 
+    let orderBy: any = undefined;
+    if (query?.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (query.sortBy === "department") {
+        orderBy = { department: { name: order } };
+      } else if (
+        [
+          "title",
+          "description",
+          "salaryRangeMin",
+          "salaryRangeMax",
+          "active",
+          "createdAt",
+        ].includes(query.sortBy)
+      ) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
     if (!page && !limit) {
       return this.prisma.position.findMany({
         where: { deletedAt: null },
@@ -35,6 +54,7 @@ export class PositionsService {
             },
           },
         },
+        ...(orderBy ? { orderBy } : {}),
       });
     }
 
@@ -61,7 +81,7 @@ export class PositionsService {
         },
         skip,
         take: currentLimit,
-        orderBy: { createdAt: "desc" },
+        orderBy: orderBy || { createdAt: "desc" },
       }),
       this.prisma.position.count({ where: { deletedAt: null } }),
     ]);

@@ -14,6 +14,9 @@ import {
   CircleNotch,
   CaretLeft,
   CaretRight,
+  CaretUp,
+  CaretDown,
+  CaretUpDown,
 } from "@phosphor-icons/react";
 import {
   useReactTable,
@@ -29,6 +32,7 @@ import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 import { useAuthStore } from "@/store/useAuthStore";
 import { recruitmentService, Recruitment } from "@/services/recruitment.service";
 import { RbacGuard } from "@/components/rbac-guard";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -53,15 +57,22 @@ export default function RecruitmentListPage() {
   const isAdminOrHr = user?.role === "ADMIN" || user?.role === "HR";
 
   // State
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useQueryState("status", parseAsString.withDefault("ALL"));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
+  const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
   // --- Fetch List ---
   const { data: recruitmentsData, isLoading } = useQuery({
-    queryKey: ["recruitments", page],
-    queryFn: () => recruitmentService.getRecruitments({ page, limit: 10 }),
+    queryKey: ["recruitments", { page, sortBy, sortOrder }],
+    queryFn: () =>
+      recruitmentService.getRecruitments({
+        page,
+        limit: 10,
+        sortBy: sortBy || undefined,
+        sortOrder: sortOrder || undefined,
+      }),
   });
   const recruitments = recruitmentsData?.data || [];
   const totalPages = recruitmentsData?.totalPages || 1;
@@ -106,16 +117,7 @@ export default function RecruitmentListPage() {
   const columnHelper = createColumnHelper<Recruitment>();
   const columns = [
     columnHelper.accessor("title", {
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
-        >
-          {t("form.title")}
-          <ArrowsDownUp className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      header: t("form.title"),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("seniority", {
@@ -202,14 +204,29 @@ export default function RecruitmentListPage() {
     }),
   ];
 
+  const sorting = React.useMemo(() => {
+    return sortBy && sortOrder ? [{ id: sortBy, desc: sortOrder === "desc" }] : [];
+  }, [sortBy, sortOrder]);
+
   const table = useReactTable({
     data: filteredData,
     columns,
     state: { sorting, globalFilter },
-    onSortingChange: setSorting,
+    onSortingChange: (updater: any) => {
+      const nextState = typeof updater === "function" ? updater(sorting) : updater;
+      const sort = nextState[0];
+      if (sort) {
+        setSortBy(sort.id);
+        setSortOrder(sort.desc ? "desc" : "asc");
+      } else {
+        setSortBy("");
+        setSortOrder("");
+      }
+      setPage(1);
+    },
     onGlobalFilterChange: setGlobalFilter,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
 
@@ -217,21 +234,12 @@ export default function RecruitmentListPage() {
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
-          </div>
-          {isAdminOrHr && (
-            <Button
-              onClick={() => router.push(`/${locale}/recruitment/new`)}
-              className="gap-2 rounded-2xl animate-fade-in"
-            >
-              <Plus className="h-4 w-4" />
-              {t("addJob")}
-            </Button>
-          )}
-        </div>
+        <PageHeader
+          title={t("title")}
+          subTitle={t("subTitle")}
+          buttonText={isAdminOrHr ? t("addJob") : undefined}
+          buttonLink={`/${locale}/recruitment/new`}
+        />
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3">
@@ -268,9 +276,25 @@ export default function RecruitmentListPage() {
                     {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        onClick={
+                          header.column.getCanSort()
+                            ? header.column.getToggleSortingHandler()
+                            : undefined
+                        }
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${
+                          header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                        } ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        <div className="flex items-center gap-1">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() &&
+                            ({
+                              asc: <CaretUp className="h-4 w-4" />,
+                              desc: <CaretDown className="h-4 w-4" />,
+                            }[header.column.getIsSorted() as string] ?? (
+                              <CaretUpDown className="h-4 w-4 opacity-50" />
+                            ))}
+                        </div>
                       </th>
                     ))}
                   </tr>

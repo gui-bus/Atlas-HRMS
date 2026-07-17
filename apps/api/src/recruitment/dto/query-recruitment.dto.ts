@@ -1,31 +1,9 @@
-import { IsOptional, IsString, IsEnum, IsInt, Min } from "class-validator";
+import { IsOptional, IsString, IsEnum } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 import { EmploymentType, WorkModel, Seniority } from "@prisma/client";
+import { QueryPaginationDto } from "../../common/dto/pagination.dto";
 
-export class QueryRecruitmentDto {
-  @ApiProperty({
-    description: "Número da página",
-    example: 1,
-    required: false,
-  })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @IsOptional()
-  page?: number;
-
-  @ApiProperty({
-    description: "Quantidade de itens por página",
-    example: 10,
-    required: false,
-  })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @IsOptional()
-  limit?: number;
-
+export class QueryRecruitmentDto extends QueryPaginationDto {
   @ApiProperty({
     description: "Busca textual no título ou descrição da vaga",
     example: "NestJS",

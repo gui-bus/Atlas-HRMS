@@ -36,12 +36,24 @@ export class EmployeesService {
       ];
     }
 
+    let orderBy: Prisma.EmployeeOrderByWithRelationInput = { createdAt: "desc" };
+    if (query.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (query.sortBy === "name") {
+        orderBy = { firstName: order };
+      } else if (
+        ["email", "phone", "status", "hireDate", "salary", "createdAt"].includes(query.sortBy)
+      ) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.employee.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy,
         include: {
           personalData: true,
           address: true,

@@ -66,6 +66,8 @@ export const vacationService = {
   async getVacations(params?: {
     page?: number;
     limit?: number;
+    sortBy?: string;
+    sortOrder?: string;
   }): Promise<PaginatedVacationsResponse> {
     const response = await api.get<PaginatedVacationsResponse>("/vacations", { params });
     return response.data;
@@ -103,7 +105,12 @@ export const vacationService = {
   },
 
   // --- Leaves endpoints ---
-  async getLeaves(params?: { page?: number; limit?: number }): Promise<PaginatedLeavesResponse> {
+  async getLeaves(params?: {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Promise<PaginatedLeavesResponse> {
     const response = await api.get<PaginatedLeavesResponse>("/vacations/leaves", { params });
     return response.data;
   },

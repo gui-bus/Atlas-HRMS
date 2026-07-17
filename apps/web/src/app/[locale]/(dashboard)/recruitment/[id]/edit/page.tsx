@@ -122,7 +122,9 @@ export default function EditVacancyPage() {
             <p className="text-muted-foreground text-sm">
               Modifique as informações do processo seletivo estruturado.
             </p>
-            <p className="text-xs text-destructive/80 mt-1.5">* Indica campos obrigatórios</p>
+            <p className="text-xs text-destructive/80 mt-1.5">
+              * Os campos marcados com * são obrigatórios
+            </p>
           </div>
         </div>
 

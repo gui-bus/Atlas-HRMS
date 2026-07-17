@@ -11,6 +11,9 @@ import {
   Eye,
   CaretLeft,
   CaretRight,
+  CaretUp,
+  CaretDown,
+  CaretUpDown,
 } from "@phosphor-icons/react";
 import {
   useReactTable,
@@ -25,6 +28,7 @@ import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 import { userAccountService, UserAccount } from "@/services/user-account.service";
 import { RbacGuard } from "@/components/rbac-guard";
+import { PageHeader } from "@/components/page-header";
 import { Input } from "@/components/ui/input";
 import { Select, Option } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -45,15 +49,22 @@ export default function UserAccountsPage() {
   const locale = params?.locale || "pt";
   const t = useTranslations("Common"); // Reuse dashboard translation scope or commons
   // State
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [roleFilter, setRoleFilter] = useQueryState("role", parseAsString.withDefault("ALL"));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
+  const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
   // --- Fetch List ---
   const { data: accountsData, isLoading } = useQuery({
-    queryKey: ["user-accounts", page],
-    queryFn: () => userAccountService.getUserAccounts({ page, limit: 10 }),
+    queryKey: ["user-accounts", { page, sortBy, sortOrder }],
+    queryFn: () =>
+      userAccountService.getUserAccounts({
+        page,
+        limit: 10,
+        sortBy: sortBy || undefined,
+        sortOrder: sortOrder || undefined,
+      }),
   });
   const accounts = accountsData?.data || [];
   const totalPages = accountsData?.totalPages || 1;
@@ -87,16 +98,7 @@ export default function UserAccountsPage() {
   const columnHelper = createColumnHelper<UserAccount>();
   const columns = [
     columnHelper.accessor("email", {
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent p-0 text-muted-foreground font-semibold"
-        >
-          E-mail
-          <ArrowsDownUp className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      header: "E-mail",
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("role", {
@@ -143,14 +145,29 @@ export default function UserAccountsPage() {
     }),
   ];
 
+  const sorting = React.useMemo(() => {
+    return sortBy && sortOrder ? [{ id: sortBy, desc: sortOrder === "desc" }] : [];
+  }, [sortBy, sortOrder]);
+
   const table = useReactTable({
     data: filteredData,
     columns,
     state: { sorting, globalFilter },
-    onSortingChange: setSorting,
+    onSortingChange: (updater: any) => {
+      const nextState = typeof updater === "function" ? updater(sorting) : updater;
+      const sort = nextState[0];
+      if (sort) {
+        setSortBy(sort.id);
+        setSortOrder(sort.desc ? "desc" : "asc");
+      } else {
+        setSortBy("");
+        setSortOrder("");
+      }
+      setPage(1);
+    },
     onGlobalFilterChange: setGlobalFilter,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
 
@@ -158,12 +175,10 @@ export default function UserAccountsPage() {
     <RbacGuard allowedRoles={["ADMIN", "HR"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">Contas de Usuário</h1>
-          <p className="text-muted-foreground text-sm">
-            Visualize e gerencie os níveis de acesso das credenciais ativas no sistema.
-          </p>
-        </div>
+        <PageHeader
+          title="Contas de Usuário"
+          subTitle="Visualize e gerencie os níveis de acesso das credenciais ativas no sistema."
+        />
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3">
@@ -200,9 +215,25 @@ export default function UserAccountsPage() {
                     {headerGroup.headers.map((header, index) => (
                       <th
                         key={header.id}
-                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
+                        onClick={
+                          header.column.getCanSort()
+                            ? header.column.getToggleSortingHandler()
+                            : undefined
+                        }
+                        className={`h-10 px-4 align-middle font-medium text-muted-foreground border-0 ${
+                          header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                        } ${index === 0 ? "w-full" : "w-auto shrink-0 whitespace-nowrap"}`}
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        <div className="flex items-center gap-1">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() &&
+                            ({
+                              asc: <CaretUp className="h-4 w-4" />,
+                              desc: <CaretDown className="h-4 w-4" />,
+                            }[header.column.getIsSorted() as string] ?? (
+                              <CaretUpDown className="h-4 w-4 opacity-50" />
+                            ))}
+                        </div>
                       </th>
                     ))}
                   </tr>

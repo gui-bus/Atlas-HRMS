@@ -47,6 +47,8 @@ export const recruitmentService = {
   async getRecruitments(params?: {
     page?: number;
     limit?: number;
+    sortBy?: string;
+    sortOrder?: string;
   }): Promise<{ data: Recruitment[]; totalPages?: number }> {
     const response = await api.get<{ data: Recruitment[]; totalPages?: number }>("/recruitments", {
       params,

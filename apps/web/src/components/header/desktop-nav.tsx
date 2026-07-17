@@ -60,7 +60,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
     }
     timeoutRef.current = setTimeout(() => {
       setOpenCategory(null);
-    }, 150); // Grace period to bridge any gap between trigger and content portal
+    }, 150);
   };
 
   const allCategories: MenuCategory[] = [
@@ -186,7 +186,6 @@ export function DesktopNav({ locale }: DesktopNavProps) {
     },
   ];
 
-  // Filter categories to only keep allowed items
   const menuCategories = allCategories
     .map((category) => ({
       ...category,
@@ -217,8 +216,6 @@ export function DesktopNav({ locale }: DesktopNavProps) {
   return (
     <nav className="hidden lg:flex items-center space-x-1">
       {menuCategories.map((category) => {
-        // If only 1 item inside the category is available for this role,
-        // render a direct link instead of a dropdown/mega-menu
         if (category.items.length === 1) {
           const singleItem = category.items[0];
           return (
@@ -258,7 +255,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
                 }
               />
               <DropdownMenuContent
-                className="p-5 w-[650px] grid grid-cols-2 gap-5 border-0 shadow-2xl bg-background/95 backdrop-blur-md rounded-2xl"
+                className="p-5 w-162 grid grid-cols-2 gap-5 border-0 shadow-2xl bg-background/95 backdrop-blur-md rounded-2xl"
                 align="start"
                 side="bottom"
                 onMouseEnter={() => handleMouseEnter(category.label)}
@@ -271,7 +268,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
                       render={<a href={item.href} />}
                       className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-accent/60 hover:text-accent-foreground transition-all duration-200 cursor-pointer border-0"
                     >
-                      <div className="p-3 rounded-2xl bg-primary/10 text-primary shrink-0 flex items-center justify-center">
+                      <div className="p-5 rounded-2xl bg-primary/10 text-primary shrink-0 flex items-center justify-center">
                         {item.icon}
                       </div>
                       <div className="space-y-1.5">
