@@ -1,8 +1,27 @@
 # 🗺️ Atlas HRMS — Sistema de Gestão de Pessoas e ATS Corporativo
 
-O **Atlas HRMS** é um ecossistema completo de gerenciamento de recursos humanos e rastreamento de candidatos (ATS - Applicant Tracking System). Projetado sobre uma arquitetura de monorepo moderna e escalável, o sistema integra de ponta a ponta as rotinas operacionais de departamento pessoal, ponto eletrônico digital com banco de horas, gerenciamento de ausências por conformidade CLT, controle de cargos/departamentos estruturados e um portal público de vagas integrado.
+O **Atlas HRMS** é um ecossistema corporativo completo de gerenciamento de recursos humanos e rastreamento de candidatos (ATS - Applicant Tracking System). Projetado sobre uma arquitetura de monorepo moderna e escalável, o sistema integra de ponta a ponta as rotinas operacionais de departamento pessoal, ponto eletrônico digital com banco de horas, gerenciamento de ausências por conformidade CLT, controle de cargos/departamentos estruturados e um portal público de vagas integrado.
 
-Este repositório serve como uma referência técnica de código limpo, aplicação estrita de segurança corporativa, testes automatizados e design system premium.
+Este repositório foi construído para servir como uma referência técnica de código limpo, aplicação estrita de segurança corporativa, testes automatizados e design system premium.
+
+---
+
+## 🛠️ Stack Tecnológica (Tecnologias Utilizadas)
+
+<div align="center">
+  <img alt="Next.js" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NextJS.svg">
+  <img alt="React" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/React.svg">
+  <img alt="NestJS" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NestJS.svg">
+  <img alt="TypeScript" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Typescript.svg">
+  <img alt="Prisma" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/PrismaORM.svg">
+  <img alt="PostgreSQL" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Postgresql.svg">
+  <img alt="TailwindCSS" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/TailwindCSS.svg">
+  <img alt="JWT" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/JWT.svg">
+  <img alt="Jest" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Jest.svg">
+  <img alt="ESLint" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/ESLint.svg">
+  <img alt="Prettier" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Prettier.svg">
+  <img alt="Husky" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Husky.svg">
+</div>
 
 ---
 
@@ -79,26 +98,9 @@ sequenceDiagram
 
 ---
 
-## 🛠️ Stack Tecnológica
-
-### Frontend (Portal & Painel)
-- **Core**: Next.js 16 (App Router, Turbopack) & React 19
-- **Design System**: TailwindCSS & Componentes customizados baseados no **Shadcn/UI**
-- **Internacionalização**: `next-intl` com suporte completo a chaves de tradução dinâmicas e localizadas em Português, Inglês e Espanhol
-- **Consumo de API**: TanStack Query (React Query v5) com mutações de cache
-- **Gestão de Estado**: Zustand
-
-### Backend (API Server)
-- **Framework**: NestJS (TypeScript) estruturado com injeção de dependência nativa
-- **Banco de Dados**: PostgreSQL & Prisma ORM
-- **Cloud Storage**: UploadThing SDK
-- **Segurança**: Passport.js, JWT, Cookies assinados e Bcrypt
-
----
-
 ## 🧪 Qualidade de Código e CI/CD
 
-- **Testes Abrangentes**: Cobertura obrigatória de testes unitários (`.spec.ts`) e testes de integração com banco de dados em memória (`supertest`).
+- **Testes Automáticos**: Cobertura obrigatória de testes unitários (`.spec.ts`) e testes de integração com banco de dados em memória (`supertest`).
 - **Garantia de Estilo e Padronização**: Linter (ESLint) e formatador de código (Prettier) integrados.
 - **Git Hooks (Husky)**: Bloqueio local automático que impede commits se houver lints pendentes ou falhas em testes de integração executados em pre-commit.
 - **GitHub Actions**: Workflow de CI integrado rodando build, lint e testes a cada Pull Request.
