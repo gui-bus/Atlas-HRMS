@@ -119,9 +119,8 @@ export default function MyTimeHistoryPage() {
         </div>
 
         <Button
-          variant="outline"
           onClick={() => router.push(`/${locale}/time-attendance/corrections/new`)}
-          className="rounded-2xl text-xs font-bold border-0 bg-primary/10 text-primary hover:bg-primary/20"
+          className="rounded-2xl text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/95 transition-all"
         >
           Solicitar Ajuste
         </Button>

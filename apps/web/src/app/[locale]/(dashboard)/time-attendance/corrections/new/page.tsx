@@ -155,21 +155,21 @@ export default function NewCorrectionRequestPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex justify-end gap-3 pt-6 border-t border-transparent">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.push(`/${locale}/time-attendance/my-history`)}
+            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-foreground transition-colors text-xs font-bold h-10 px-6"
+          >
+            Cancelar
+          </Button>
           <Button
             type="submit"
             disabled={requestMutation.isPending}
             className="rounded-2xl text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/95 border-0 h-10 px-6"
           >
             {requestMutation.isPending ? "Enviando..." : "Enviar Solicitação"}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => router.push("/time-attendance/my-history")}
-            className="rounded-2xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/30 border-0 h-10 px-6"
-          >
-            Cancelar
           </Button>
         </div>
       </form>

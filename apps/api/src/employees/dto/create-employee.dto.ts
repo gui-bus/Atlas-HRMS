@@ -52,65 +52,65 @@ export class CreatePersonalDataDto {
 }
 
 export class CreateAddressDto {
-  @ApiProperty({ description: "CEP do endereço", example: "30130-010" })
+  @ApiProperty({ description: "CEP do endereço", example: "30130-010", required: false })
   @Matches(/^\d{5}-?\d{3}$/, {
     message: "CEP inválido. Use o formato 00000-000 ou 8 dígitos numéricos",
   })
-  @IsNotEmpty()
-  cep!: string;
+  @IsOptional()
+  cep?: string;
 
-  @ApiProperty({ description: "Logradouro/Rua", example: "Avenida Afonso Pena" })
+  @ApiProperty({ description: "Logradouro/Rua", example: "Avenida Afonso Pena", required: false })
   @IsString()
-  @IsNotEmpty()
-  street!: string;
+  @IsOptional()
+  street?: string;
 
-  @ApiProperty({ description: "Número", example: "1500" })
+  @ApiProperty({ description: "Número", example: "1500", required: false })
   @IsString()
-  @IsNotEmpty()
-  number!: string;
+  @IsOptional()
+  number?: string;
 
   @ApiProperty({ description: "Complemento do endereço", example: "Apto 302", required: false })
   @IsString()
   @IsOptional()
   complement?: string;
 
-  @ApiProperty({ description: "Bairro", example: "Centro" })
+  @ApiProperty({ description: "Bairro", example: "Centro", required: false })
   @IsString()
-  @IsNotEmpty()
-  neighborhood!: string;
+  @IsOptional()
+  neighborhood?: string;
 
-  @ApiProperty({ description: "Cidade", example: "Belo Horizonte" })
+  @ApiProperty({ description: "Cidade", example: "Belo Horizonte", required: false })
   @IsString()
-  @IsNotEmpty()
-  city!: string;
+  @IsOptional()
+  city?: string;
 
-  @ApiProperty({ description: "Estado (UF)", example: "MG" })
+  @ApiProperty({ description: "Estado (UF)", example: "MG", required: false })
   @IsString()
   @Length(2, 2, { message: "Estado deve conter exatamente 2 letras" })
-  @IsNotEmpty()
-  state!: string;
+  @IsOptional()
+  state?: string;
 }
 
 export class CreateBankAccountDto {
-  @ApiProperty({ description: "Código de compensação do Banco", example: "341" })
+  @ApiProperty({ description: "Código de compensação do Banco", example: "341", required: false })
   @IsString()
-  @IsNotEmpty()
-  bankCode!: string;
+  @IsOptional()
+  bankCode?: string;
 
-  @ApiProperty({ description: "Código da Agência Bancária", example: "0001" })
+  @ApiProperty({ description: "Código da Agência Bancária", example: "0001", required: false })
   @IsString()
-  @IsNotEmpty()
-  bankAgency!: string;
+  @IsOptional()
+  bankAgency?: string;
 
-  @ApiProperty({ description: "Número da Conta Bancária", example: "12345-6" })
+  @ApiProperty({ description: "Número da Conta Bancária", example: "12345-6", required: false })
   @IsString()
-  @IsNotEmpty()
-  bankAccount!: string;
+  @IsOptional()
+  bankAccount?: string;
 
-  @ApiProperty({ description: "Tipo de Conta Bancária", example: "CORRENTE" })
+  @ApiProperty({ description: "Tipo de Conta Bancária", example: "CORRENTE", required: false })
   @IsString()
-  @IsNotEmpty()
-  accountType!: string;
+  @IsOptional()
+  accountType?: string;
 }
 
 export class CreateEmergencyContactDto {
@@ -213,17 +213,17 @@ export class CreateEmployeeDto {
   @IsNotEmpty()
   personalData!: CreatePersonalDataDto;
 
-  @ApiProperty({ type: CreateAddressDto, description: "Endereço residencial" })
+  @ApiProperty({ type: CreateAddressDto, description: "Endereço residencial", required: false })
   @ValidateNested()
   @Type(() => CreateAddressDto)
-  @IsNotEmpty()
-  address!: CreateAddressDto;
+  @IsOptional()
+  address?: CreateAddressDto;
 
-  @ApiProperty({ type: CreateBankAccountDto, description: "Dados para pagamento" })
+  @ApiProperty({ type: CreateBankAccountDto, description: "Dados para pagamento", required: false })
   @ValidateNested()
   @Type(() => CreateBankAccountDto)
-  @IsNotEmpty()
-  bankAccount!: CreateBankAccountDto;
+  @IsOptional()
+  bankAccount?: CreateBankAccountDto;
 
   @ApiProperty({
     type: [CreateEmergencyContactDto],

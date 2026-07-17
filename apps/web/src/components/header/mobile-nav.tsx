@@ -74,7 +74,7 @@ export function MobileNav({ locale }: MobileNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Minhas Férias",
+          label: "Férias",
           href: `/${locale}/absences/vacations/my-requests`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
@@ -86,7 +86,7 @@ export function MobileNav({ locale }: MobileNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Meus Atestados",
+          label: "Atestados",
           href: `/${locale}/absences/leaves/my-requests`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
@@ -98,7 +98,7 @@ export function MobileNav({ locale }: MobileNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER", "EMPLOYEE"],
         },
         {
-          label: "Meu Ponto",
+          label: "Ponto",
           href: `/${locale}/time-attendance/my-history`,
           icon: <Clock className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],

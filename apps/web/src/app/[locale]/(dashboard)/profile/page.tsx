@@ -16,11 +16,27 @@ import { FormSectionHeader } from "@/components/form-section-header";
 
 export default function ProfilePage() {
   const t = useTranslations("Profile");
+  const tDashboard = useTranslations("Dashboard");
   const { user, setAuth } = useAuthStore();
   const { toast } = useToast();
   const router = useRouter();
   const params = useParams();
   const locale = params?.locale || "pt";
+
+  const getRoleLabel = (role: string) => {
+    switch (role) {
+      case "ADMIN":
+        return tDashboard("roleAdmin");
+      case "HR":
+        return tDashboard("roleHr");
+      case "MANAGER":
+        return tDashboard("roleManager");
+      case "EMPLOYEE":
+        return tDashboard("roleEmployee");
+      default:
+        return role;
+    }
+  };
 
   const refreshUser = async () => {
     try {
@@ -210,7 +226,7 @@ export default function ProfilePage() {
               </h2>
               <p className="text-xs text-muted-foreground font-semibold">{user?.email}</p>
               <span className="inline-block text-[10px] font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full uppercase tracking-wider mt-2">
-                {user?.role}
+                {getRoleLabel(user?.role || "")}
               </span>
             </div>
 

@@ -39,28 +39,34 @@ export const personalDataSchema = z.object({
   birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
   gender: z.string().optional(),
   maritalStatus: z.string().optional(),
-  avatarUrl: z.string().url("URL do avatar inválida").optional().or(z.literal("")),
 });
 
-export const addressSchema = z.object({
-  cep: z
-    .string()
-    .min(1, "CEP é obrigatório")
-    .regex(/^\d{5}-?\d{3}$/, "CEP inválido. Ex: 00000-000"),
-  street: z.string().min(1, "Rua é obrigatória"),
-  number: z.string().min(1, "Número é obrigatório"),
-  complement: z.string().optional(),
-  neighborhood: z.string().min(1, "Bairro é obrigatório"),
-  city: z.string().min(1, "Cidade é obrigatória"),
-  state: z.string().length(2, "Estado deve conter exatamente 2 letras"),
-});
+export const addressSchema = z
+  .object({
+    cep: z
+      .string()
+      .regex(/^\d{5}-?\d{3}$/, "CEP inválido. Ex: 00000-000")
+      .optional()
+      .or(z.literal("")),
+    street: z.string().optional().or(z.literal("")),
+    number: z.string().optional().or(z.literal("")),
+    complement: z.string().optional().or(z.literal("")),
+    neighborhood: z.string().optional().or(z.literal("")),
+    city: z.string().optional().or(z.literal("")),
+    state: z.string().optional().or(z.literal("")),
+  })
+  .optional()
+  .nullable();
 
-export const bankAccountSchema = z.object({
-  bankCode: z.string().min(1, "Código do banco é obrigatório"),
-  bankAgency: z.string().min(1, "Agência é obrigatória"),
-  bankAccount: z.string().min(1, "Conta é obrigatória"),
-  accountType: z.string().min(1, "Tipo de conta é obrigatório"),
-});
+export const bankAccountSchema = z
+  .object({
+    bankCode: z.string().optional().or(z.literal("")),
+    bankAgency: z.string().optional().or(z.literal("")),
+    bankAccount: z.string().optional().or(z.literal("")),
+    accountType: z.string().optional().or(z.literal("")),
+  })
+  .optional()
+  .nullable();
 
 export const emergencyContactSchema = z.object({
   id: z.string().optional(),

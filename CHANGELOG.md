@@ -4,6 +4,25 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.5.0] - 2026-07-17
+
+### Adicionado
+
+- **Integração com ViaCEP**: Busca automática de endereço (rua, bairro, cidade, estado) no formulário de cadastro de funcionário ao digitar um CEP válido de 8 dígitos.
+- **Upload de Anexos em Solicitações de Afastamento**: Nova área de Dropzone interativa para upload de atestados médicos ou comprovantes de licença diretamente para o UploadThing através da nova rota `/upload` da API.
+- **Campo de Tipo Customizado de Afastamento**: Quando selecionado "Outros Afastamentos", um novo campo "Nome do Tipo de Afastamento" é exibido no formulário e enviado para a coluna `customType` criada no modelo de banco de dados `Leave`.
+- **Nova Rota de Upload na API**: Endpoint genérico `POST /upload` implementado no `UploadController` para upload de arquivos em geral.
+
+### Alterado
+
+- **Cadastro de Funcionário Sem Obrigatoriedade de Endereço/Dados Bancários**: O formulário e a API foram flexibilizados. Os blocos de Endereço e Dados Bancários não são mais obrigatórios no momento do cadastro inicial do colaborador.
+- **Remoção do Campo URL do Avatar**: O campo de texto para URL do avatar foi removido do formulário de novo colaborador, deixando a responsabilidade de upload da foto de perfil para o próprio usuário na tela de Meu Perfil.
+- **Tradução de Cargos no Perfil**: A label de Role (como ADMIN, EMPLOYEE, etc.) na página `/profile` agora é traduzida dinamicamente usando as chaves de internacionalização existentes.
+- **Ajuste de Menus do Colaborador (EMPLOYEE)**: Renomeação dos itens de menu para remover pronomes possessivos de primeira pessoa ("Minhas Férias" -> "Férias", "Meus Atestados" -> "Atestados", "Meu Ponto" -> "Ponto").
+- **Estilização de Botões e Alinhamentos**: O botão "Solicitar Ajuste" no histórico de ponto foi alterado para o estilo sólido primário padrão (fundo azul e texto branco). Na tela de solicitação de correção de ponto, os botões de ação foram alinhados à direita e o fluxo de cancelamento recebeu suporte correto à internacionalização da rota.
+
+---
+
 ## [1.4.0] - 2026-07-17
 
 ### Adicionado

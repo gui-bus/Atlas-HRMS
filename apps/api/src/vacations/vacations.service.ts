@@ -201,6 +201,7 @@ export class VacationsService {
         startDate: start,
         endDate: end,
         type: dto.type,
+        customType: dto.customType || null,
         description: dto.description || null,
         attachmentUrl: dto.attachmentUrl || null,
         employeeId: dto.employeeId,

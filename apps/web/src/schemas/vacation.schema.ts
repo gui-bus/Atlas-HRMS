@@ -27,6 +27,7 @@ export const leaveRequestSchema = z
     endDate: z.string().min(1, "Data de término é obrigatória"),
     reason: z.string().min(1, "Motivo é obrigatório"),
     attachmentUrl: z.string().optional().or(z.literal("")),
+    customType: z.string().optional().or(z.literal("")),
   })
   .refine(
     (data) => {

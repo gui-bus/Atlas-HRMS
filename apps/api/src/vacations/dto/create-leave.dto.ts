@@ -47,6 +47,15 @@ export class CreateLeaveDto {
   attachmentUrl?: string;
 
   @ApiProperty({
+    description: "Nome customizado do tipo do afastamento (necessário quando tipo for OTHER)",
+    example: "Licença Capacitação",
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  customType?: string;
+
+  @ApiProperty({
     description: "ID do funcionário solicitante da licença",
     example: "c7b6a4a6-7a13-43ef-b209-efdb17eddfb1",
   })

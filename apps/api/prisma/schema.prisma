@@ -233,6 +233,7 @@ model Leave {
   startDate       DateTime
   endDate         DateTime
   type            LeaveType
+  customType      String?
   description     String?
   status          LeaveStatus @default(PENDING)
   rejectionReason String?

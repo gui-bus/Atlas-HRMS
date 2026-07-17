@@ -1,13 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, CircleNotch, FileText } from "@phosphor-icons/react";
+import {
+  ArrowLeft,
+  CircleNotch,
+  FileText,
+  UploadSimple,
+  Trash,
+  CheckCircle,
+} from "@phosphor-icons/react";
 
+import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { employeeService } from "@/services/employee.service";
 import { vacationService } from "@/services/vacation.service";
@@ -26,6 +34,10 @@ export default function NewLeaveRequestPage() {
   const { user } = useAuthStore();
   const locale = params?.locale || "pt";
 
+  // State for upload management
+  const [uploading, setUploading] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+
   // Fetch the Employee matching the logged-in user email
   const { data: employeesData } = useQuery({
     queryKey: ["employees", { search: user?.email }],
@@ -39,10 +51,31 @@ export default function NewLeaveRequestPage() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<LeaveRequestValues>({
     resolver: zodResolver(leaveRequestSchema),
+    defaultValues: {
+      employeeId: "",
+      type: "MEDICAL",
+      startDate: "",
+      endDate: "",
+      reason: "",
+      attachmentUrl: "",
+      customType: "",
+    },
   });
+
+  // Watch type changes to conditionally display customType input
+  const selectedType = watch("type");
+
+  // Keep employeeId updated in form state
+  useEffect(() => {
+    if (employeeId) {
+      setValue("employeeId", employeeId);
+    }
+  }, [employeeId, setValue]);
 
   const mutation = useMutation({
     mutationFn: (data: LeaveRequestValues) => {
@@ -50,19 +83,50 @@ export default function NewLeaveRequestPage() {
       return vacationService.createLeave({
         employeeId,
         type: data.type,
+        customType: data.type === "OTHER" ? data.customType : undefined,
         startDate: new Date(data.startDate).toISOString(),
         endDate: new Date(data.endDate).toISOString(),
         reason: data.reason,
+        attachmentUrl: data.attachmentUrl || undefined,
       });
     },
     onSuccess: () => {
-      router.push(`/${locale}/absences/my-requests`);
+      router.push(`/${locale}/absences/leaves/my-requests`);
     },
   });
 
   const onSubmit = (data: LeaveRequestValues) => {
     mutation.mutate(data);
   };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await api.post("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const url = response.data.url;
+      setValue("attachmentUrl", url);
+      setUploadedFileName(file.name);
+    } catch (err) {
+      console.error("Upload error:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setValue("attachmentUrl", "");
+    setUploadedFileName("");
+  };
+
+  const attachmentUrl = watch("attachmentUrl");
 
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER", "EMPLOYEE"]}>
@@ -121,7 +185,7 @@ export default function NewLeaveRequestPage() {
                 <Select
                   id="type"
                   {...register("type")}
-                  className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
+                  className="flex h-10 w-full rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
                 >
                   <Option value="MEDICAL">Médica (Atestado)</Option>
                   <Option value="PARENTAL">Parental (Maternidade/Paternidade)</Option>
@@ -131,6 +195,22 @@ export default function NewLeaveRequestPage() {
                 </Select>
                 {errors.type && <p className="text-xs text-destructive">{errors.type.message}</p>}
               </div>
+
+              {selectedType === "OTHER" && (
+                <div className="space-y-2">
+                  <Label htmlFor="customType">
+                    Nome do Tipo de Afastamento <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="customType"
+                    placeholder="Ex: Licença nojo, casamento, etc."
+                    {...register("customType")}
+                  />
+                  {errors.customType && (
+                    <p className="text-xs text-destructive">{errors.customType.message}</p>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-2 col-span-2">
                 <Label htmlFor="reason">
@@ -145,6 +225,56 @@ export default function NewLeaveRequestPage() {
                   <p className="text-xs text-destructive">{errors.reason.message}</p>
                 )}
               </div>
+
+              {/* Upload Dropzone */}
+              <div className="space-y-2 col-span-2">
+                <Label>{t("attachment")}</Label>
+                {attachmentUrl ? (
+                  <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/20 border border-muted/30">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="w-5 h-5 text-emerald-500" />
+                      <span className="text-sm font-medium">
+                        {uploadedFileName || "Documento anexado"}
+                      </span>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={handleRemoveFile}
+                      className="rounded-xl text-xs font-semibold text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash className="w-4 h-4 mr-1" />
+                      Remover
+                    </Button>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center w-full h-36 rounded-2xl border border-dashed border-muted/40 bg-muted/10 hover:bg-muted/20 cursor-pointer transition-all">
+                    {uploading ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <CircleNotch className="w-8 h-8 animate-spin text-primary" />
+                        <span className="text-xs text-muted-foreground">
+                          Fazendo upload do arquivo...
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-2 text-center p-4">
+                        <UploadSimple className="w-8 h-8 text-muted-foreground/80" />
+                        <span className="text-sm font-semibold">Anexar atestado / comprovante</span>
+                        <span className="text-xs text-muted-foreground">
+                          Clique ou arraste e solte o arquivo aqui
+                        </span>
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*,application/pdf"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                )}
+              </div>
             </div>
           </div>
 
@@ -157,7 +287,11 @@ export default function NewLeaveRequestPage() {
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={mutation.isPending} className="rounded-2xl">
+            <Button
+              type="submit"
+              disabled={mutation.isPending || uploading}
+              className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/95 transition-all"
+            >
               {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
               Solicitar Licença
             </Button>

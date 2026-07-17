@@ -55,6 +55,9 @@ export class LeaveResponseDto {
   @ApiProperty({ example: "https://utfs.io/f/atestado.pdf", required: false })
   attachmentUrl?: string;
 
+  @ApiProperty({ example: "Curso de capacitação", required: false })
+  customType?: string;
+
   @ApiProperty({ example: "c7b6a4a6-7a13-43ef-b209-efdb17eddfb1" })
   employeeId!: string;
 

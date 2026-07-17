@@ -89,7 +89,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Minhas Férias",
+          label: "Férias",
           desc: "Solicitar férias e consultar períodos.",
           href: `/${locale}/absences/vacations/my-requests`,
           icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
@@ -103,7 +103,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Meus Atestados",
+          label: "Atestados",
           desc: "Registrar atestados e licenças médicas.",
           href: `/${locale}/absences/leaves/my-requests`,
           icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
@@ -117,7 +117,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
           allowedRoles: ["ADMIN", "HR", "MANAGER", "EMPLOYEE"],
         },
         {
-          label: "Meu Ponto",
+          label: "Ponto",
           desc: "Histórico de marcações e banco de horas.",
           href: `/${locale}/time-attendance/my-history`,
           icon: <Clock className="w-8 h-8 text-primary shrink-0" />,

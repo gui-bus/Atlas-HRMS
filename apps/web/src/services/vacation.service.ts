@@ -25,6 +25,7 @@ export interface Leave {
   id: string;
   employeeId: string;
   type: "MEDICAL" | "PARENTAL" | "LEGAL" | "UNPAID" | "OTHER";
+  customType?: string;
   startDate: string;
   endDate: string;
   reason: string;
@@ -96,6 +97,7 @@ export const vacationService = {
   async createLeave(data: {
     employeeId: string;
     type: "MEDICAL" | "PARENTAL" | "LEGAL" | "UNPAID" | "OTHER";
+    customType?: string;
     startDate: string;
     endDate: string;
     reason: string;

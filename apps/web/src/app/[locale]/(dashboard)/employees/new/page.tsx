@@ -28,6 +28,8 @@ export default function NewEmployeePage() {
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<EmployeeFormValues>({
     resolver: zodResolver(employeeSchema),
@@ -53,8 +55,29 @@ export default function NewEmployeePage() {
     name: "emergencyContacts",
   });
 
+  const cep = watch("address.cep");
+  React.useEffect(() => {
+    const cleanCep = (cep || "").replace(/[^\d]/g, "");
+    if (cleanCep.length === 8) {
+      fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.erro) {
+            setValue("address.street", data.logradouro || "");
+            setValue("address.neighborhood", data.bairro || "");
+            setValue("address.city", data.localidade || "");
+            setValue("address.state", data.uf || "");
+          }
+        })
+        .catch((err) => console.error("Error fetching CEP:", err));
+    }
+  }, [cep, setValue]);
+
   const mutation = useMutation({
     mutationFn: (data: EmployeeFormValues) => {
+      const sanitizedAddress = data.address?.cep ? data.address : undefined;
+      const sanitizedBankAccount = data.bankAccount?.bankCode ? data.bankAccount : undefined;
+
       return employeeService.createEmployee({
         ...data,
         salary: String(data.salary),
@@ -62,6 +85,8 @@ export default function NewEmployeePage() {
           ...data.personalData,
           birthDate: new Date(data.personalData.birthDate).toISOString(),
         },
+        address: sanitizedAddress,
+        bankAccount: sanitizedBankAccount,
         hireDate: new Date(data.hireDate).toISOString(),
       });
     },
@@ -139,6 +164,25 @@ export default function NewEmployeePage() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="status">
+                  {t("form.status")} <span className="text-destructive">*</span>
+                </Label>
+                <Select
+                  id="status"
+                  {...register("status")}
+                  className="flex h-10 w-full rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
+                >
+                  <Option value="ACTIVE">{t("statusActive")}</Option>
+                  <Option value="INACTIVE">{t("statusInactive")}</Option>
+                  <Option value="ON_LEAVE">{t("statusOnLeave")}</Option>
+                  <Option value="SUSPENDED">{t("statusSuspended")}</Option>
+                </Select>
+                {errors.status && (
+                  <p className="text-xs text-destructive">{errors.status.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="hireDate">
                   {t("form.hireDate")} <span className="text-destructive">*</span>
                 </Label>
@@ -152,26 +196,15 @@ export default function NewEmployeePage() {
                 <Label htmlFor="salary">
                   {t("form.salary")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="salary" placeholder="5500.00" {...register("salary")} />
+                <Input id="salary" type="number" step="0.01" {...register("salary")} />
                 {errors.salary && (
                   <p className="text-xs text-destructive">{errors.salary.message}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="status">
-                  {t("form.status")} <span className="text-destructive">*</span>
-                </Label>
-                <Select
-                  id="status"
-                  {...register("status")}
-                  className="flex h-8 w-full rounded-2xl border border-transparent bg-input/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
-                >
-                  <Option value="ACTIVE">{t("statusActive")}</Option>
-                  <Option value="INACTIVE">{t("statusInactive")}</Option>
-                  <Option value="ON_LEAVE">{t("statusOnLeave")}</Option>
-                  <Option value="SUSPENDED">{t("statusSuspended")}</Option>
-                </Select>
+                <Label htmlFor="terminationDate">{t("form.terminationDate")}</Label>
+                <Input id="terminationDate" type="date" {...register("terminationDate")} />
               </div>
             </div>
           </div>
@@ -180,7 +213,7 @@ export default function NewEmployeePage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.personal")}
-              description="Documentos de identificação e informações de nascimento."
+              description="Documentos de identificação e informações demográficas."
               icon={User}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 w-full">
@@ -201,9 +234,6 @@ export default function NewEmployeePage() {
               <div className="space-y-2">
                 <Label htmlFor="personalData.rg">{t("form.rg")}</Label>
                 <Input id="personalData.rg" {...register("personalData.rg")} />
-                {errors.personalData?.rg && (
-                  <p className="text-xs text-destructive">{errors.personalData.rg.message}</p>
-                )}
               </div>
 
               <div className="space-y-2">
@@ -233,20 +263,6 @@ export default function NewEmployeePage() {
                   id="personalData.maritalStatus"
                   {...register("personalData.maritalStatus")}
                 />
-              </div>
-
-              <div className="space-y-2 col-span-1 md:col-span-2">
-                <Label htmlFor="personalData.avatarUrl">{t("form.avatarUrl")}</Label>
-                <Input
-                  id="personalData.avatarUrl"
-                  placeholder="https://example.com/avatar.png"
-                  {...register("personalData.avatarUrl")}
-                />
-                {errors.personalData?.avatarUrl && (
-                  <p className="text-xs text-destructive">
-                    {errors.personalData.avatarUrl.message}
-                  </p>
-                )}
               </div>
             </div>
           </div>

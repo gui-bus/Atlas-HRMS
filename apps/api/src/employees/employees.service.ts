@@ -156,25 +156,33 @@ export class EmployeesService {
               avatarUrl: dto.personalData.avatarUrl || null,
             },
           },
-          address: {
-            create: {
-              cep: dto.address.cep.replace(/[^\d]/g, ""),
-              street: dto.address.street,
-              number: dto.address.number,
-              complement: dto.address.complement || null,
-              neighborhood: dto.address.neighborhood,
-              city: dto.address.city,
-              state: dto.address.state.toUpperCase(),
-            },
-          },
-          bankAccount: {
-            create: {
-              bankCode: dto.bankAccount.bankCode,
-              bankAgency: dto.bankAccount.bankAgency,
-              bankAccount: dto.bankAccount.bankAccount,
-              accountType: dto.bankAccount.accountType,
-            },
-          },
+          ...(dto.address && dto.address.cep
+            ? {
+                address: {
+                  create: {
+                    cep: dto.address.cep.replace(/[^\d]/g, ""),
+                    street: dto.address.street || "",
+                    number: dto.address.number || "",
+                    complement: dto.address.complement || null,
+                    neighborhood: dto.address.neighborhood || "",
+                    city: dto.address.city || "",
+                    state: (dto.address.state || "").toUpperCase(),
+                  },
+                },
+              }
+            : {}),
+          ...(dto.bankAccount && dto.bankAccount.bankCode
+            ? {
+                bankAccount: {
+                  create: {
+                    bankCode: dto.bankAccount.bankCode,
+                    bankAgency: dto.bankAccount.bankAgency || "",
+                    bankAccount: dto.bankAccount.bankAccount || "",
+                    accountType: dto.bankAccount.accountType || "CORRENTE",
+                  },
+                },
+              }
+            : {}),
           emergencyContacts: {
             createMany: {
               data: (dto.emergencyContacts || []).map((contact) => ({
