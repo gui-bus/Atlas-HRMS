@@ -36,6 +36,9 @@ import {
   PaginationItem,
   PaginationPrevious,
   PaginationNext,
+  PaginationLink,
+  PaginationEllipsis,
+  getPageNumbers,
 } from "@/components/ui/pagination";
 
 export default function VacationsAdminPage() {
@@ -273,18 +276,24 @@ export default function VacationsAdminPage() {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                  onClick={() => setPage(Math.max(page - 1, 1))}
                   disabled={page === 1}
                 />
               </PaginationItem>
-              <PaginationItem>
-                <span className="text-sm font-medium px-2 text-muted-foreground">
-                  {page} / {totalPages}
-                </span>
-              </PaginationItem>
+              {getPageNumbers(page, totalPages).map((p, idx) => (
+                <PaginationItem key={idx}>
+                  {p === "ellipsis" ? (
+                    <PaginationEllipsis />
+                  ) : (
+                    <PaginationLink isActive={page === p} onClick={() => setPage(p)}>
+                      {p}
+                    </PaginationLink>
+                  )}
+                </PaginationItem>
+              ))}
               <PaginationItem>
                 <PaginationNext
-                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                  onClick={() => setPage(Math.min(page + 1, totalPages))}
                   disabled={page === totalPages}
                 />
               </PaginationItem>
