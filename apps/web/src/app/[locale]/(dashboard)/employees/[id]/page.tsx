@@ -17,6 +17,8 @@ import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
+import { FormHeader } from "@/components/form-header";
+import { FormActions } from "@/components/form-actions";
 
 const formatDateForInput = (dateString?: string | Date) => {
   if (!dateString) return "";
@@ -174,32 +176,18 @@ export default function EmployeeDetailsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => router.back()}
-            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">
-              {employee.firstName} {employee.lastName}
-            </h1>
-            <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
-            <p className="text-xs text-destructive/80 mt-1.5">
-              * Os campos marcados com * são obrigatórios
-            </p>
-          </div>
-        </div>
+        <FormHeader
+          title={`${employee.firstName} ${employee.lastName}`}
+          subTitle={t("subTitle")}
+          requiredNotice={t("requiredFieldsNotice")}
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
           {/* Section 1: Professional Info */}
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.professional")}
-              description="Informações contratuais, cargo e situação ativa do colaborador."
+              description={t("tabsDescriptions.professional")}
               icon={Briefcase}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 w-full">
@@ -281,7 +269,7 @@ export default function EmployeeDetailsPage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.personal")}
-              description="Documentos de identificação e informações de nascimento."
+              description={t("tabsDescriptions.personal")}
               icon={User}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 w-full">
@@ -356,7 +344,7 @@ export default function EmployeeDetailsPage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.address")}
-              description="Endereço de residência atual do colaborador."
+              description={t("tabsDescriptions.address")}
               icon={MapPin}
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 w-full">
@@ -436,7 +424,7 @@ export default function EmployeeDetailsPage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.bank")}
-              description="Informações bancárias de faturamento para depósito."
+              description={t("tabsDescriptions.bank")}
               icon={CreditCard}
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 w-full">
@@ -507,7 +495,7 @@ export default function EmployeeDetailsPage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.emergency")}
-              description="Contatos prioritários a serem acionados em caso de acidentes."
+              description={t("tabsDescriptions.emergency")}
               icon={PhoneCall}
             />
             <div className="space-y-4 w-full">
@@ -591,20 +579,11 @@ export default function EmployeeDetailsPage() {
           )}
 
           {/* Action Controls */}
-          <div className="flex justify-end gap-3 pt-6 border-t border-transparent">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-            >
-              {t("table.cancel")}
-            </Button>
-            <Button type="submit" disabled={updateMutation.isPending} className="rounded-2xl">
-              {updateMutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-              {t("form.save")}
-            </Button>
-          </div>
+          <FormActions
+            cancelText={t("table.cancel")}
+            submitText={t("form.save")}
+            isSubmitting={updateMutation.isPending}
+          />
         </form>
       </div>
     </RbacGuard>

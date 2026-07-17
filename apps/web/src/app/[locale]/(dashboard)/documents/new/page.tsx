@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, Option } from "@/components/ui/select";
 import { FormSectionHeader } from "@/components/form-section-header";
+import { FormHeader } from "@/components/form-header";
+import { FormActions } from "@/components/form-actions";
 import { useToast } from "@/components/ui/toast";
 
 export default function NewDocumentPage() {
@@ -98,21 +100,11 @@ export default function NewDocumentPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => router.back()}
-            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t("addDocument")}</h1>
-            <p className="text-muted-foreground text-sm">{t("addDocumentDesc")}</p>
-            <p className="text-xs text-destructive/80 mt-1.5">* {t("requiredFieldsNotice")}</p>
-          </div>
-        </div>
+        <FormHeader
+          title={t("addDocument")}
+          subTitle={t("addDocumentDesc")}
+          requiredNotice={t("requiredFieldsNotice")}
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
           <div className="space-y-4">
@@ -157,11 +149,11 @@ export default function NewDocumentPage() {
                   {t("form.type")} <span className="text-destructive">*</span>
                 </Label>
                 <Select id="type" {...register("type")}>
-                  <Option value="CONTRACT">Contrato</Option>
-                  <Option value="IDENTIFICATION">Documento de Identidade</Option>
-                  <Option value="EDUCATION">Certificado / Educação</Option>
-                  <Option value="ADDRESS_PROOF">Comprovante de Residência</Option>
-                  <Option value="OTHER">Outros</Option>
+                  <Option value="CONTRACT">{t("types.contract")}</Option>
+                  <Option value="IDENTIFICATION">{t("types.identification")}</Option>
+                  <Option value="EDUCATION">{t("types.education")}</Option>
+                  <Option value="ADDRESS_PROOF">{t("types.address_proof")}</Option>
+                  <Option value="OTHER">{t("types.other")}</Option>
                 </Select>
                 {errors.type && <p className="text-xs text-destructive">{errors.type.message}</p>}
               </div>
@@ -169,7 +161,7 @@ export default function NewDocumentPage() {
               {/* Native Drag and Drop upload area */}
               <div className="space-y-2 col-span-2">
                 <Label>
-                  Arquivo do Documento <span className="text-destructive">*</span>
+                  {t("form.file")} <span className="text-destructive">*</span>
                 </Label>
                 <div
                   onDragEnter={handleDrag}
@@ -198,24 +190,11 @@ export default function NewDocumentPage() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-6 border-t border-muted/20">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-            >
-              {t("form.cancel")}
-            </Button>
-            <Button
-              type="submit"
-              disabled={mutation.isPending}
-              className="rounded-2xl border-0 bg-primary hover:bg-primary/95 text-primary-foreground font-semibold px-6"
-            >
-              {mutation.isPending && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
-              {t("form.create")}
-            </Button>
-          </div>
+          <FormActions
+            cancelText={t("form.cancel")}
+            submitText={t("form.create")}
+            isSubmitting={mutation.isPending}
+          />
         </form>
       </div>
     </RbacGuard>

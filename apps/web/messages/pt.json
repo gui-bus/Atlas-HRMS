@@ -10,7 +10,14 @@
     "logout": "Sair",
     "lang_pt": "Português",
     "lang_en": "Inglês",
-    "lang_es": "Espanhol"
+    "lang_es": "Espanhol",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Próxima",
+      "more": "Mais páginas",
+      "previousLabel": "Ir para a página anterior",
+      "nextLabel": "Ir para a próxima página"
+    }
   },
   "Dashboard": {
     "welcome": "Bem-vindo ao Atlas HRMS",
@@ -123,6 +130,13 @@
       "bank": "Dados Bancários",
       "emergency": "Contatos de Emergência"
     },
+    "tabsDescriptions": {
+      "professional": "Informações contratuais, cargo e situação ativa do colaborador.",
+      "personal": "Documentos de identificação e informações demográficas.",
+      "address": "Endereço residencial e informações de contato adicionais.",
+      "bank": "Dados bancários para pagamento de salários e benefícios.",
+      "emergency": "Contatos de emergência para casos de necessidade."
+    },
     "table": {
       "name": "Nome",
       "email": "E-mail",
@@ -146,7 +160,7 @@
       "status": "Status do Colaborador",
       "hireDate": "Data de Admissão",
       "terminationDate": "Data de Rescisão (Opcional)",
-      "salary": "Salário Mensal (R$)",
+      "salary": "Salário Mensal (BRL - R$)",
       "department": "Departamento",
       "position": "Cargo",
       "cpf": "CPF",
@@ -197,8 +211,8 @@
       "description": "Descrição (Opcional)",
       "manager": "Gerente Responsável",
       "title": "Título do Cargo",
-      "salaryMin": "Salário Mínimo (R$)",
-      "salaryMax": "Salário Máximo (R$)",
+      "salaryMin": "Salário Mínimo (BRL - R$)",
+      "salaryMax": "Salário Máximo (BRL - R$)",
       "department": "Departamento Associado",
       "status": "Situação do Registro",
       "cancel": "Cancelar",
@@ -256,7 +270,14 @@
     "parental": "Maternidade / Paternidade",
     "legal": "Legal / Casamento",
     "unpaid": "Não remunerada",
-    "other": "Outros Motivos"
+    "other": "Outros Motivos",
+    "vacationsTitle": "Controle de Férias",
+    "vacationsSubTitle": "Visualize, aprove ou rejeite solicitações de férias anuais.",
+    "leavesTitle": "Atestados & Licenças",
+    "leavesSubTitle": "Visualize, aprove ou rejeite solicitações de afastamentos e licenças médicas.",
+    "searchPlaceholder": "Pesquisar colaborador...",
+    "allStatus": "Todos os status",
+    "employee": "Colaborador"
   },
   "Documents": {
     "title": "Repositório de Documentos",
@@ -274,6 +295,7 @@
       "type": "Tipo de Documento",
       "url": "URL do arquivo",
       "employee": "Colaborador Relacionado",
+      "file": "Arquivo do Documento",
       "cancel": "Cancelar",
       "create": "Salvar Documento"
     },
@@ -287,12 +309,18 @@
       "deleteConfirmTitle": "Excluir Documento",
       "deleteConfirmDesc": "Tem certeza que deseja remover este documento permanentemente?"
     },
+    "searchPlaceholder": "Pesquisar documento...",
+    "allTypes": "Todos os tipos",
     "types": {
       "contract": "Contrato",
       "identification": "Identificação (RG/CNH)",
       "education": "Diploma/Educação",
       "address_proof": "Comprovante de Residência",
-      "other": "Outros"
+      "other": "Outros",
+      "CONTRACT": "Contrato",
+      "ID_CARD": "Identidade",
+      "CERTIFICATE": "Certificado",
+      "OTHER": "Outros"
     }
   },
   "Recruitment": {
@@ -305,8 +333,8 @@
       "description": "Descrição detalhada",
       "requirements": "Requisitos Técnicos",
       "vacancies": "Quantidade de Vagas",
-      "salaryMin": "Salário Mínimo",
-      "salaryMax": "Salário Máximo",
+      "salaryMin": "Salário Mínimo (BRL - R$)",
+      "salaryMax": "Salário Máximo (BRL - R$)",
       "workModel": "Modelo de Trabalho",
       "employmentType": "Tipo de Contratação",
       "seniority": "Nível de Senioridade",

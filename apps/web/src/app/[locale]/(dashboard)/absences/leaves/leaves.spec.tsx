@@ -74,7 +74,7 @@ describe("Leaves Page Tests", () => {
 
   test("renders leaves control panel page correctly", async () => {
     renderWithProviders(<LeavesAdminPage />);
-    expect(screen.getByText("Atestados & Licenças")).toBeInTheDocument();
+    expect(screen.getByText("leavesTitle")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText("Gabriel Silva")).toBeInTheDocument();
     });

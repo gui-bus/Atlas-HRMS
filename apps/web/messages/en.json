@@ -10,7 +10,14 @@
     "logout": "Logout",
     "lang_pt": "Portuguese",
     "lang_en": "English",
-    "lang_es": "Spanish"
+    "lang_es": "Spanish",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "more": "More pages",
+      "previousLabel": "Go to previous page",
+      "nextLabel": "Go to next page"
+    }
   },
   "Dashboard": {
     "welcome": "Welcome to Atlas HRMS",
@@ -123,6 +130,13 @@
       "bank": "Bank Details",
       "emergency": "Emergency Contacts"
     },
+    "tabsDescriptions": {
+      "professional": "Contractual details, job role, and active employment status.",
+      "personal": "Identification documents and demographic information.",
+      "address": "Residential address and additional contact information.",
+      "bank": "Bank details for salary and benefits payments.",
+      "emergency": "Emergency contacts for use when needed."
+    },
     "table": {
       "name": "Name",
       "email": "Email",
@@ -146,7 +160,7 @@
       "status": "Employee Status",
       "hireDate": "Hire Date",
       "terminationDate": "Termination Date (Optional)",
-      "salary": "Monthly Salary",
+      "salary": "Monthly Salary (BRL - R$)",
       "department": "Department",
       "position": "Position",
       "cpf": "CPF",
@@ -197,8 +211,8 @@
       "description": "Description (Optional)",
       "manager": "Responsible Manager",
       "title": "Position Title",
-      "salaryMin": "Minimum Salary ($)",
-      "salaryMax": "Maximum Salary ($)",
+      "salaryMin": "Minimum Salary (BRL - R$)",
+      "salaryMax": "Maximum Salary (BRL - R$)",
       "department": "Associated Department",
       "status": "Status",
       "cancel": "Cancel",
@@ -256,7 +270,14 @@
     "parental": "Maternity / Paternity",
     "legal": "Legal / Marriage",
     "unpaid": "Unpaid Leave",
-    "other": "Other Reasons"
+    "other": "Other Reasons",
+    "vacationsTitle": "Vacation Control",
+    "vacationsSubTitle": "View, approve, or reject annual vacation requests.",
+    "leavesTitle": "Certificates & Leaves",
+    "leavesSubTitle": "View, approve, or reject medical leaves and absence requests.",
+    "searchPlaceholder": "Search employee...",
+    "allStatus": "All statuses",
+    "employee": "Employee"
   },
   "Documents": {
     "title": "Document Repository",
@@ -274,6 +295,7 @@
       "type": "Document Type",
       "url": "File URL",
       "employee": "Related Employee",
+      "file": "Document File",
       "cancel": "Cancel",
       "create": "Save Document"
     },
@@ -287,12 +309,18 @@
       "deleteConfirmTitle": "Delete Document",
       "deleteConfirmDesc": "Are you sure you want to permanently delete this document?"
     },
+    "searchPlaceholder": "Search document...",
+    "allTypes": "All types",
     "types": {
       "contract": "Contract",
       "identification": "Identification (ID/DL)",
       "education": "Diploma/Education",
       "address_proof": "Proof of Address",
-      "other": "Others"
+      "other": "Others",
+      "CONTRACT": "Contract",
+      "ID_CARD": "Identity Card",
+      "CERTIFICATE": "Certificate",
+      "OTHER": "Others"
     }
   },
   "Recruitment": {
@@ -305,8 +333,8 @@
       "description": "Detailed Description",
       "requirements": "Technical Requirements",
       "vacancies": "Number of Vacancies",
-      "salaryMin": "Min Salary",
-      "salaryMax": "Max Salary",
+      "salaryMin": "Min Salary (BRL - R$)",
+      "salaryMax": "Max Salary (BRL - R$)",
       "workModel": "Work Model",
       "employmentType": "Employment Type",
       "seniority": "Seniority Level",

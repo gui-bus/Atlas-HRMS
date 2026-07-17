@@ -101,11 +101,11 @@ export default function LeavesAdminPage() {
   const columns = [
     columnHelper.accessor((row) => `${row.employee?.firstName} ${row.employee?.lastName}`, {
       id: "employee",
-      header: "Colaborador",
+      header: t("employee"),
       cell: (info) => <span className="font-semibold text-foreground">{info.getValue()}</span>,
     }),
     columnHelper.accessor("type", {
-      header: "Tipo",
+      header: t("type"),
       cell: (info) => {
         const typeMap = {
           MEDICAL: t("medical"),
@@ -118,21 +118,21 @@ export default function LeavesAdminPage() {
       },
     }),
     columnHelper.accessor("startDate", {
-      header: "Data de Início",
+      header: t("startDate"),
       cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
     }),
     columnHelper.accessor("endDate", {
-      header: "Data de Fim",
+      header: t("endDate"),
       cell: (info) => <span className="text-muted-foreground">{formatDate(info.getValue())}</span>,
     }),
     columnHelper.accessor("reason", {
-      header: "Motivo",
+      header: t("reason"),
       cell: (info) => (
         <span className="text-muted-foreground text-xs">{info.getValue() || "—"}</span>
       ),
     }),
     columnHelper.accessor("status", {
-      header: "Status",
+      header: t("status"),
       cell: (info) => {
         const val = info.getValue();
         const colors = {
@@ -152,7 +152,7 @@ export default function LeavesAdminPage() {
     }),
     columnHelper.display({
       id: "actions",
-      header: "Ações",
+      header: t("actions"),
       cell: (info) => {
         const row = info.row.original;
         if (row.status !== "PENDING")
@@ -213,17 +213,14 @@ export default function LeavesAdminPage() {
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
         {/* Title Header */}
-        <PageHeader
-          title="Atestados & Licenças"
-          subTitle="Visualize, aprove ou rejeite solicitações de afastamentos e licenças médicas."
-        />
+        <PageHeader title={t("leavesTitle")} subTitle={t("leavesSubTitle")} />
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Pesquisar colaborador..."
+              placeholder={t("searchPlaceholder")}
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="pl-10 h-10 rounded-2xl bg-muted/40 border-0 focus-visible:ring-1"
@@ -235,10 +232,10 @@ export default function LeavesAdminPage() {
             onChange={(e) => setStatusFilter(e.target.value as any)}
             className="flex h-10 w-full md:w-[180px] rounded-2xl border border-transparent bg-muted/45 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring outline-none cursor-pointer transition-colors"
           >
-            <Option value="ALL">Todos os status</Option>
-            <Option value="PENDING">Pendentes</Option>
-            <Option value="APPROVED">Aprovados</Option>
-            <Option value="REJECTED">Rejeitados</Option>
+            <Option value="ALL">{t("allStatus")}</Option>
+            <Option value="PENDING">{t("statusPending")}</Option>
+            <Option value="APPROVED">{t("statusApproved")}</Option>
+            <Option value="REJECTED">{t("statusRejected")}</Option>
           </Select>
         </div>
 

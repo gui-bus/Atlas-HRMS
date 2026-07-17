@@ -114,7 +114,7 @@ export default function NewEmployeePage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.professional")}
-              description="Informações contratuais, cargo e situação ativa do colaborador."
+              description={t("tabsDescriptions.professional")}
               icon={Briefcase}
             />
 
@@ -123,7 +123,11 @@ export default function NewEmployeePage() {
                 <Label htmlFor="firstName">
                   {t("form.firstName")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="firstName" {...register("firstName")} />
+                <Input
+                  id="firstName"
+                  placeholder={t("form.firstName")}
+                  {...register("firstName")}
+                />
                 {errors.firstName && (
                   <p className="text-xs text-destructive">{errors.firstName.message}</p>
                 )}
@@ -133,7 +137,7 @@ export default function NewEmployeePage() {
                 <Label htmlFor="lastName">
                   {t("form.lastName")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="lastName" {...register("lastName")} />
+                <Input id="lastName" placeholder={t("form.lastName")} {...register("lastName")} />
                 {errors.lastName && (
                   <p className="text-xs text-destructive">{errors.lastName.message}</p>
                 )}
@@ -143,7 +147,12 @@ export default function NewEmployeePage() {
                 <Label htmlFor="email">
                   {t("form.email")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="email" type="email" {...register("email")} />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder={t("form.email")}
+                  {...register("email")}
+                />
                 {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
               </div>
 
@@ -151,7 +160,7 @@ export default function NewEmployeePage() {
                 <Label htmlFor="phone">
                   {t("form.phone")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="phone" {...register("phone")} />
+                <Input id="phone" placeholder={t("form.phone")} {...register("phone")} />
                 {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
               </div>
 
@@ -188,7 +197,13 @@ export default function NewEmployeePage() {
                 <Label htmlFor="salary">
                   {t("form.salary")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="salary" type="number" step="0.01" {...register("salary")} />
+                <Input
+                  id="salary"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  {...register("salary")}
+                />
                 {errors.salary && (
                   <p className="text-xs text-destructive">{errors.salary.message}</p>
                 )}
@@ -204,7 +219,7 @@ export default function NewEmployeePage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.personal")}
-              description="Documentos de identificação e informações demográficas."
+              description={t("tabsDescriptions.personal")}
               icon={User}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 w-full">
@@ -224,7 +239,11 @@ export default function NewEmployeePage() {
 
               <div className="space-y-2">
                 <Label htmlFor="personalData.rg">{t("form.rg")}</Label>
-                <Input id="personalData.rg" {...register("personalData.rg")} />
+                <Input
+                  id="personalData.rg"
+                  placeholder={t("form.rg")}
+                  {...register("personalData.rg")}
+                />
               </div>
 
               <div className="space-y-2">
@@ -245,13 +264,18 @@ export default function NewEmployeePage() {
 
               <div className="space-y-2">
                 <Label htmlFor="personalData.gender">{t("form.gender")}</Label>
-                <Input id="personalData.gender" {...register("personalData.gender")} />
+                <Input
+                  id="personalData.gender"
+                  placeholder={t("form.gender")}
+                  {...register("personalData.gender")}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="personalData.maritalStatus">{t("form.maritalStatus")}</Label>
                 <Input
                   id="personalData.maritalStatus"
+                  placeholder={t("form.maritalStatus")}
                   {...register("personalData.maritalStatus")}
                 />
               </div>
@@ -261,7 +285,7 @@ export default function NewEmployeePage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.address")}
-              description="Endereço de residência atual do colaborador."
+              description={t("tabsDescriptions.address")}
               icon={MapPin}
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 w-full">
@@ -279,7 +303,11 @@ export default function NewEmployeePage() {
                 <Label htmlFor="address.street">
                   {t("form.street")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="address.street" {...register("address.street")} />
+                <Input
+                  id="address.street"
+                  placeholder={t("form.street")}
+                  {...register("address.street")}
+                />
                 {errors.address?.street && (
                   <p className="text-xs text-destructive">{errors.address.street.message}</p>
                 )}
@@ -289,7 +317,11 @@ export default function NewEmployeePage() {
                 <Label htmlFor="address.number">
                   {t("form.number")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="address.number" {...register("address.number")} />
+                <Input
+                  id="address.number"
+                  placeholder={t("form.number")}
+                  {...register("address.number")}
+                />
                 {errors.address?.number && (
                   <p className="text-xs text-destructive">{errors.address.number.message}</p>
                 )}
@@ -297,14 +329,22 @@ export default function NewEmployeePage() {
 
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="address.complement">{t("form.complement")}</Label>
-                <Input id="address.complement" {...register("address.complement")} />
+                <Input
+                  id="address.complement"
+                  placeholder={t("form.complement")}
+                  {...register("address.complement")}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="address.neighborhood">
                   {t("form.neighborhood")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="address.neighborhood" {...register("address.neighborhood")} />
+                <Input
+                  id="address.neighborhood"
+                  placeholder={t("form.neighborhood")}
+                  {...register("address.neighborhood")}
+                />
                 {errors.address?.neighborhood && (
                   <p className="text-xs text-destructive">{errors.address.neighborhood.message}</p>
                 )}
@@ -314,7 +354,11 @@ export default function NewEmployeePage() {
                 <Label htmlFor="address.city">
                   {t("form.city")} <span className="text-destructive">*</span>
                 </Label>
-                <Input id="address.city" {...register("address.city")} />
+                <Input
+                  id="address.city"
+                  placeholder={t("form.city")}
+                  {...register("address.city")}
+                />
                 {errors.address?.city && (
                   <p className="text-xs text-destructive">{errors.address.city.message}</p>
                 )}
@@ -340,7 +384,7 @@ export default function NewEmployeePage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.bank")}
-              description="Informações bancárias de faturamento para depósito."
+              description={t("tabsDescriptions.bank")}
               icon={CreditCard}
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 w-full">
@@ -410,7 +454,7 @@ export default function NewEmployeePage() {
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.emergency")}
-              description="Contatos prioritários a serem acionados em caso de acidentes."
+              description={t("tabsDescriptions.emergency")}
               icon={PhoneCall}
             />
             <div className="space-y-4 w-full">
@@ -439,7 +483,10 @@ export default function NewEmployeePage() {
                       <Label>
                         {t("form.emergencyName")} <span className="text-destructive">*</span>
                       </Label>
-                      <Input {...register(`emergencyContacts.${index}.name` as const)} />
+                      <Input
+                        placeholder={t("form.emergencyName")}
+                        {...register(`emergencyContacts.${index}.name` as const)}
+                      />
                       {errors.emergencyContacts?.[index]?.name && (
                         <p className="text-xs text-destructive">
                           {errors.emergencyContacts[index]?.name?.message}
@@ -451,7 +498,10 @@ export default function NewEmployeePage() {
                       <Label>
                         {t("form.emergencyPhone")} <span className="text-destructive">*</span>
                       </Label>
-                      <Input {...register(`emergencyContacts.${index}.phone` as const)} />
+                      <Input
+                        placeholder={t("form.emergencyPhone")}
+                        {...register(`emergencyContacts.${index}.phone` as const)}
+                      />
                       {errors.emergencyContacts?.[index]?.phone && (
                         <p className="text-xs text-destructive">
                           {errors.emergencyContacts[index]?.phone?.message}
@@ -464,7 +514,10 @@ export default function NewEmployeePage() {
                         {t("form.emergencyRelationship")}{" "}
                         <span className="text-destructive">*</span>
                       </Label>
-                      <Input {...register(`emergencyContacts.${index}.relationship` as const)} />
+                      <Input
+                        placeholder={t("form.emergencyRelationship")}
+                        {...register(`emergencyContacts.${index}.relationship` as const)}
+                      />
                       {errors.emergencyContacts?.[index]?.relationship && (
                         <p className="text-xs text-destructive">
                           {errors.emergencyContacts[index]?.relationship?.message}

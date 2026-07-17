@@ -4,6 +4,8 @@ import { CaretLeft, CaretRight, DotsThree } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
 
+import { useTranslations } from "next-intl";
+
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
     role="navigation"
@@ -49,42 +51,51 @@ PaginationLink.displayName = "PaginationLink";
 const PaginationPrevious = ({
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Ir para a página anterior"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
-    {...props}
-  >
-    <CaretLeft className="h-4 w-4" />
-    <span>Anterior</span>
-  </PaginationLink>
-);
+}: React.ComponentProps<typeof PaginationLink>) => {
+  const t = useTranslations("Common");
+  return (
+    <PaginationLink
+      aria-label={t("pagination.previousLabel")}
+      size="default"
+      className={cn("gap-1 pl-2.5", className)}
+      {...props}
+    >
+      <CaretLeft className="h-4 w-4" />
+      <span>{t("pagination.previous")}</span>
+    </PaginationLink>
+  );
+};
 PaginationPrevious.displayName = "PaginationPrevious";
 
-const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Ir para a próxima página"
-    size="default"
-    className={cn("gap-1 pr-2.5", className)}
-    {...props}
-  >
-    <span>Próxima</span>
-    <CaretRight className="h-4 w-4" />
-  </PaginationLink>
-);
+const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => {
+  const t = useTranslations("Common");
+  return (
+    <PaginationLink
+      aria-label={t("pagination.nextLabel")}
+      size="default"
+      className={cn("gap-1 pr-2.5", className)}
+      {...props}
+    >
+      <span>{t("pagination.next")}</span>
+      <CaretRight className="h-4 w-4" />
+    </PaginationLink>
+  );
+};
 PaginationNext.displayName = "PaginationNext";
 
-const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-  <span
-    aria-hidden
-    className={cn("flex h-9 w-9 items-center justify-center", className)}
-    {...props}
-  >
-    <DotsThree className="h-4 w-4" />
-    <span className="sr-only">Mais páginas</span>
-  </span>
-);
+const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => {
+  const t = useTranslations("Common");
+  return (
+    <span
+      aria-hidden
+      className={cn("flex h-9 w-9 items-center justify-center", className)}
+      {...props}
+    >
+      <DotsThree className="h-4 w-4" />
+      <span className="sr-only">{t("pagination.more")}</span>
+    </span>
+  );
+};
 PaginationEllipsis.displayName = "PaginationEllipsis";
 
 export {

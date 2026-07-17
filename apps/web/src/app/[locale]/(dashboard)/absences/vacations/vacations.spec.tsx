@@ -73,7 +73,7 @@ describe("Vacations Page Tests", () => {
 
   test("renders vacations control panel page correctly", async () => {
     renderWithProviders(<VacationsAdminPage />);
-    expect(screen.getByText("Controle de Férias")).toBeInTheDocument();
+    expect(screen.getByText("vacationsTitle")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText("Gabriel Silva")).toBeInTheDocument();
     });
