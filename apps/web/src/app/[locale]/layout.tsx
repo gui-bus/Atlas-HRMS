@@ -8,6 +8,7 @@ import AuthProvider from "@/providers/AuthProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -38,13 +39,15 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <QueryProvider>
-              <AuthProvider>
-                <TooltipProvider>
-                  <ToastProvider>
-                    <main className="w-full max-w-[110rem] mx-auto">{children}</main>
-                  </ToastProvider>
-                </TooltipProvider>
-              </AuthProvider>
+              <NuqsAdapter>
+                <AuthProvider>
+                  <TooltipProvider>
+                    <ToastProvider>
+                      <main className="w-full max-w-[110rem] mx-auto">{children}</main>
+                    </ToastProvider>
+                  </TooltipProvider>
+                </AuthProvider>
+              </NuqsAdapter>
             </QueryProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

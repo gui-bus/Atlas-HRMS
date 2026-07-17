@@ -24,10 +24,13 @@ export default function NewPositionPage() {
   const router = useRouter();
   const locale = params?.locale || "pt";
 
-  const { data: departments = [] } = useQuery({
+  const { data: departmentsData } = useQuery({
     queryKey: ["departments"],
     queryFn: () => departmentService.getDepartments(),
   });
+  const departments = Array.isArray(departmentsData)
+    ? departmentsData
+    : departmentsData?.data || [];
 
   const {
     register,

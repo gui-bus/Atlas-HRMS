@@ -35,15 +35,19 @@ export default function EditVacancyPage() {
     enabled: !!id,
   });
 
-  const { data: departments = [] } = useQuery({
+  const { data: departmentsData } = useQuery({
     queryKey: ["departments"],
     queryFn: () => departmentService.getDepartments(),
   });
+  const departments = Array.isArray(departmentsData)
+    ? departmentsData
+    : departmentsData?.data || [];
 
-  const { data: positions = [] } = useQuery({
+  const { data: positionsData } = useQuery({
     queryKey: ["positions"],
     queryFn: () => positionService.getPositions(),
   });
+  const positions = Array.isArray(positionsData) ? positionsData : positionsData?.data || [];
 
   const {
     register,

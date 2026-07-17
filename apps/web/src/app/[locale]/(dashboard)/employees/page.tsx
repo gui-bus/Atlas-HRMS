@@ -19,6 +19,7 @@ import {
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
+import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 import { employeeService, EmployeeWithDetails } from "@/services/employee.service";
 import { RbacGuard } from "@/components/rbac-guard";
@@ -26,6 +27,13 @@ import { Button } from "@/components/ui/button";
 import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 import {
   Dialog,
   DialogContent,
@@ -43,9 +51,9 @@ export default function EmployeesListPage() {
   const locale = params?.locale || "pt";
 
   // Filter States
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [page, setPage] = useState(1);
+  const [search, setSearch] = useQueryState("search", parseAsString.withDefault(""));
+  const [status, setStatus] = useQueryState("status", parseAsString.withDefault(""));
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const limit = 10;
 
   // Delete State
@@ -309,29 +317,27 @@ export default function EmployeesListPage() {
 
         {/* Pagination controls */}
         {!isLoading && !isError && totalPages > 1 && (
-          <div className="flex items-center justify-end gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1}
-            >
-              <CaretLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm font-medium">
-              {page} / {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={page === totalPages}
-            >
-              <CaretRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <Pagination className="justify-end pt-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={page === 1}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <span className="text-sm font-medium px-2 text-muted-foreground">
+                  {page} / {totalPages}
+                </span>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={page === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
 
         {/* Delete confirmation dialog */}

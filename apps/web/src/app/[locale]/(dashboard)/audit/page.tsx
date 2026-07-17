@@ -4,18 +4,26 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { Info, CircleNotch, MagnifyingGlass, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
+import { Info, CircleNotch, MagnifyingGlass } from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
+import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 import { auditService, AuditLog } from "@/services/audit.service";
 import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 import {
   Dialog,
   DialogContent,
@@ -37,8 +45,8 @@ export default function AuditLogsPage() {
   const params = useParams();
   const locale = params?.locale || "pt";
 
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [search, setSearch] = useQueryState("search", parseAsString.withDefault(""));
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
 
   // --- Fetch List ---
@@ -189,29 +197,27 @@ export default function AuditLogsPage() {
 
         {/* Paginação */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-end gap-2 pt-4">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-xs text-muted-foreground font-medium px-2">
-              Página {page} de {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            >
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <Pagination className="justify-end pt-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <span className="text-sm font-medium px-2 text-muted-foreground">
+                  Página {page} de {totalPages}
+                </span>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page >= totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
 
         {/* --- Details Dialog --- */}

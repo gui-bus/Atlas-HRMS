@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LeavesAdminPage from "./page";
 import NewLeaveRequestPage from "./new/page";
 
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 // Mock Services
 vi.mock("@/services/vacation.service", () => ({
   vacationService: {
@@ -63,7 +65,11 @@ describe("Leaves Page Tests", () => {
   });
 
   const renderWithProviders = (ui: React.ReactElement) => {
-    return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <NuqsAdapter>{ui}</NuqsAdapter>
+      </QueryClientProvider>,
+    );
   };
 
   test("renders leaves control panel page correctly", async () => {

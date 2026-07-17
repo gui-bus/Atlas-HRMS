@@ -79,8 +79,8 @@ export class UsersController {
     description: "Lista de contas retornada com sucesso",
     type: [UserResponseDto],
   })
-  async findAll() {
-    return this.usersService.findAll();
+  async findAll(@Query() query: QueryPaginationDto) {
+    return this.usersService.findAll(query);
   }
 
   @Get(":id")

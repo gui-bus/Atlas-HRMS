@@ -37,10 +37,13 @@ export default function EditPositionPage() {
     enabled: !!id,
   });
 
-  const { data: departments = [] } = useQuery({
+  const { data: departmentsData } = useQuery({
     queryKey: ["departments"],
     queryFn: () => departmentService.getDepartments(),
   });
+  const departments = Array.isArray(departmentsData)
+    ? departmentsData
+    : departmentsData?.data || [];
 
   const {
     register,

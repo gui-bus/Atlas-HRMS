@@ -14,6 +14,8 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Nova Rota de Upload na API**: Endpoint genérico `POST /upload` implementado no `UploadController` para upload de arquivos em geral.
 - **Script de População do Banco (Seed)**: Implementação de um script de seed completo (`prisma/seed.ts`) que gera dados realistas em português para popular todo o sistema (departamentos, cargos, administradores, gestores, funcionários, solicitações de férias, atestados com anexos, vagas de recrutamento abertas, candidatos reais com currículos e marcações de ponto históricas com saldo no banco de horas).
 - **Paginação de Tabelas Orientada por API**: Paginação de 10 itens por página adicionada às tabelas de Colaboradores, Histórico de Férias, Atestados/Afastamentos, Vagas de Emprego, Usuários, Departamentos, Cargos e Logs de Auditoria, consumindo parâmetros nativos da API.
+- **Sincronização de Estado com a URL (nuqs)**: Integração da biblioteca `nuqs` para manter filtros e número de página atual sincronizados diretamente na barra de endereço da URL.
+- **Componente de Paginação do Shadcn**: Desenvolvimento e integração do componente oficial de paginação do Shadcn UI (`apps/web/src/components/ui/pagination.tsx`) adaptado para utilizar ícones Phosphor.
 
 ### Alterado
 
@@ -24,6 +26,8 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Estilização de Botões e Alinhamentos**: O botão "Solicitar Ajuste" no histórico de ponto foi alterado para o estilo sólido primário padrão (fundo azul e texto branco). Na tela de solicitação de correção de ponto, os botões de ação foram alinhados à direita e o fluxo de cancelamento recebeu suporte correto à internacionalização da rota.
 - **Busca Flexível de Vagas por ID ou Slug**: O endpoint de detalhes da vaga agora aceita tanto slugs tradicionais quanto UUIDs (`id`), permitindo visualizar vagas de qualquer status no painel de administração.
 - **Correção da Tradução da Data de Rescisão**: Mapeamento da tradução da chave `terminationDate` nos arquivos JSON de tradução (`pt.json`, `en.json` e `es.json`).
+- **Tratamento Seguro de Listas de Departamentos e Cargos**: Adicionada segurança nas requisições que alimentam comboboxes e filtros de cargos e departamentos, evitando exceções do tipo `departments.map is not a function` caso a API retorne a estrutura envelopada de paginação.
+- **Correção de Erros de Variáveis Não Utilizadas na Compilação da API**: Corrigido o endpoint `findAll` em `users.controller.ts` para receber e passar adequadamente os argumentos de paginação, sanando o problema de compilação da API no CI.
 
 ---
 

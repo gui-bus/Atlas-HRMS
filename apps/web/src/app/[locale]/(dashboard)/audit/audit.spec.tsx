@@ -4,6 +4,8 @@ import { expect, test, describe, vi, beforeEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuditLogsPage from "./page";
 
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 // Mock Services
 vi.mock("@/services/audit.service", () => ({
   auditService: {
@@ -48,7 +50,11 @@ describe("AuditLogsPage integration tests", () => {
   });
 
   const renderWithProviders = (ui: React.ReactElement) => {
-    return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <NuqsAdapter>{ui}</NuqsAdapter>
+      </QueryClientProvider>,
+    );
   };
 
   test("renders audit logs table", async () => {

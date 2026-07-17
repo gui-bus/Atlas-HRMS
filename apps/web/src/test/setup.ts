@@ -34,3 +34,24 @@ vi.mock("@/providers/ThemeProvider", () => ({
     toggleTheme: vi.fn(),
   }),
 }));
+
+vi.mock("nuqs", () => {
+  const { useState } = require("react");
+  return {
+    useQueryState: vi.fn((key, options) => {
+      const defaultValue = options?.defaultValue !== undefined ? options.defaultValue : "";
+      const [val, setVal] = useState(defaultValue);
+      return [val, setVal];
+    }),
+    parseAsInteger: {
+      withDefault: (val: number) => ({ defaultValue: val }),
+    },
+    parseAsString: {
+      withDefault: (val: string) => ({ defaultValue: val }),
+    },
+  };
+});
+
+vi.mock("nuqs/adapters/next/app", () => ({
+  NuqsAdapter: ({ children }: { children: React.ReactNode }) => children,
+}));

@@ -5,6 +5,23 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PositionsPage from "./page";
 import NewPositionPage from "./new/page";
 
+vi.mock("nuqs", () => {
+  const { useState } = require("react");
+  return {
+    useQueryState: vi.fn((key, options) => {
+      const defaultValue = options?.defaultValue !== undefined ? options.defaultValue : "";
+      const [val, setVal] = useState(defaultValue);
+      return [val, setVal];
+    }),
+    parseAsInteger: {
+      withDefault: (val: number) => ({ defaultValue: val }),
+    },
+    parseAsString: {
+      withDefault: (val: string) => ({ defaultValue: val }),
+    },
+  };
+});
+
 // Mock Services
 vi.mock("@/services/position.service", () => ({
   positionService: {

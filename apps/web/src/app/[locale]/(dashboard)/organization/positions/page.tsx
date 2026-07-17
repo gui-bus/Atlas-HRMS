@@ -23,6 +23,7 @@ import {
   createColumnHelper,
   SortingState,
 } from "@tanstack/react-table";
+import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { positionService, Position } from "@/services/position.service";
@@ -31,6 +32,13 @@ import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
 import { Select, Option } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 import {
   Dialog,
   DialogContent,
@@ -52,10 +60,10 @@ export default function PositionsPage() {
   // State
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [deptFilter, setDeptFilter] = useState("ALL");
+  const [deptFilter, setDeptFilter] = useQueryState("department", parseAsString.withDefault("ALL"));
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   // Fetch lists
   const { data: positionsData, isLoading } = useQuery({
@@ -65,10 +73,13 @@ export default function PositionsPage() {
   const positions = positionsData?.data || [];
   const totalPages = positionsData?.totalPages || 1;
 
-  const { data: departments = [] } = useQuery({
+  const { data: departmentsData } = useQuery({
     queryKey: ["departments"],
     queryFn: () => departmentService.getDepartments(),
   });
+  const departments = Array.isArray(departmentsData)
+    ? departmentsData
+    : departmentsData?.data || [];
 
   // Mutation
   const deleteMutation = useMutation({
@@ -300,29 +311,27 @@ export default function PositionsPage() {
 
         {/* Pagination controls */}
         {!isLoading && totalPages > 1 && (
-          <div className="flex items-center justify-end gap-2 pt-4">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1}
-            >
-              <CaretLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm font-medium px-2 text-muted-foreground">
-              {page} / {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={page === totalPages}
-            >
-              <CaretRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <Pagination className="justify-end pt-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={page === 1}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <span className="text-sm font-medium px-2 text-muted-foreground">
+                  {page} / {totalPages}
+                </span>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={page === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
 
         {/* --- Delete Confirmation Dialog --- */}
