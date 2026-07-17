@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignOut, User, Gear, Shield } from "@phosphor-icons/react";
+import { SignOut, User } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
@@ -14,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -83,11 +82,6 @@ export function UserDropdown({ locale }: UserDropdownProps) {
                   {user?.email?.charAt(0).toUpperCase()}
                 </span>
               )}
-              {/* Active dot indicator */}
-              <span
-                className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"
-                z-index={10}
-              />
             </div>
           }
         />
@@ -135,14 +129,6 @@ export function UserDropdown({ locale }: UserDropdownProps) {
             >
               <User className="w-4 h-4 text-muted-foreground shrink-0" />
               <span className="text-sm font-medium">Meu Perfil</span>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              render={<a href={`/${locale}/settings`} />}
-              className="flex items-center space-x-2.5 p-2.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer border-0"
-            >
-              <Gear className="w-4 h-4 text-muted-foreground shrink-0" />
-              <span className="text-sm font-medium">Configurações</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
 
