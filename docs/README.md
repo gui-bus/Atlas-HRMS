@@ -9,18 +9,42 @@ Este repositório foi construído para servir como uma referência técnica de c
 ## 🛠️ Stack Tecnológica (Tecnologias Utilizadas)
 
 <div align="center">
-  <img alt="Next.js" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NextJS.svg">
-  <img alt="React" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/React.svg">
-  <img alt="NestJS" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NestJS.svg">
-  <img alt="TypeScript" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Typescript.svg">
-  <img alt="Prisma" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/PrismaORM.svg">
-  <img alt="PostgreSQL" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Postgresql.svg">
-  <img alt="TailwindCSS" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/TailwindCSS.svg">
-  <img alt="JWT" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/JWT.svg">
-  <img alt="Jest" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Jest.svg">
-  <img alt="ESLint" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/ESLint.svg">
-  <img alt="Prettier" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Prettier.svg">
-  <img alt="Husky" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Husky.svg">
+  <!-- Core Dev & Languages -->
+  <img alt="TypeScript" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Typescript.svg" title="TypeScript">
+  <img alt="Javascript" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Javascript.svg" title="JavaScript">
+  <img alt="NodeJS" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NodeJS.svg" title="Node.js">
+  <img alt="HTML5" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/HTML.svg" title="HTML5">
+  <img alt="CSS3" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/CSS.svg" title="CSS3">
+  
+  <!-- Frontend Stack -->
+  <img alt="Next.js" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NextJS.svg" title="Next.js">
+  <img alt="React" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/React.svg" title="React">
+  <img alt="TailwindCSS" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/TailwindCSS.svg" title="TailwindCSS">
+  <img alt="Shadcn/UI" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/ShadcnUI.svg" title="Shadcn/UI">
+  <img alt="React Query" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/ReactQuery.svg" title="React Query / TanStack Query">
+  <img alt="Zustand" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Zustand.svg" title="Zustand">
+  <img alt="Phosphor Icons" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Phosphor%20Icons.svg" title="Phosphor Icons">
+  
+  <!-- Backend Stack -->
+  <img alt="NestJS" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NestJS.svg" title="NestJS">
+  <img alt="Prisma" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/PrismaORM.svg" title="Prisma ORM">
+  <img alt="PostgreSQL" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Postgresql.svg" title="PostgreSQL">
+  <img alt="JWT" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/JWT.svg" title="JSON Web Tokens (JWT)">
+  <img alt="Axios" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Axios.svg" title="Axios">
+  
+  <!-- Build, Config & Tooling -->
+  <img alt="Turborepo" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Turborepo.svg" title="Turborepo">
+  <img alt="npm" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/npm.svg" title="npm">
+  <img alt="pnpm" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/pnpm.svg" title="pnpm">
+  <img alt="GIT" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/GIT.svg" title="Git">
+  <img alt="Github" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Github.svg" title="GitHub">
+  
+  <!-- Testing & Quality -->
+  <img alt="Jest" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Jest.svg" title="Jest">
+  <img alt="ESLint" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/ESLint.svg" title="ESLint">
+  <img alt="Prettier" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Prettier.svg" title="Prettier">
+  <img alt="Husky" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Husky.svg" title="Husky">
+  <img alt="Github Actions" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/GithubActions.svg" title="GitHub Actions">
 </div>
 
 ---
