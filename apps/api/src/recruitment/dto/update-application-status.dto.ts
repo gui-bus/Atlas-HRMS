@@ -6,7 +6,7 @@ export class UpdateApplicationStatusDto {
   @ApiProperty({
     description: "Novo status da candidatura no pipeline de recrutamento",
     enum: ApplicationStatus,
-    example: ApplicationStatus.HR_INTERVIEW,
+    example: ApplicationStatus.SCREENING,
   })
   @IsEnum(ApplicationStatus, {
     message: `Status inválido. Valores aceitos: ${Object.values(ApplicationStatus).join(", ")}`,

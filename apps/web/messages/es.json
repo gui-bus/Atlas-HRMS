@@ -59,13 +59,9 @@
     "viewJobsPortal": "Ver Portal de Empleo",
     "noActiveApplications": "Ninguna candidatura activa en este momento.",
     "stageLabels": {
-      "SUBMITTED": "Inscrito",
       "SCREENING": "Criba",
       "HR_INTERVIEW": "Entrevista RRHH",
       "TECHNICAL_TEST": "Prueba Técnica",
-      "TECHNICAL_INTERVIEW": "Entrevista Técnica",
-      "FINAL_INTERVIEW": "Entrevista Final",
-      "MANAGER_INTERVIEW": "Entrevista Gestor",
       "OFFER": "Oferta",
       "HIRED": "Contratado",
       "REJECTED": "Rechazado"
@@ -405,11 +401,9 @@
       "TEMPORARY": "Temporal"
     },
     "stages": {
-      "SUBMITTED": "Inscrito",
       "SCREENING": "Criba",
       "HR_INTERVIEW": "Entrevista RRHH",
       "TECHNICAL_TEST": "Prueba Técnica",
-      "MANAGER_INTERVIEW": "Entrevista Gestor",
       "OFFER": "Oferta",
       "HIRED": "Contratado",
       "REJECTED": "Rechazado"

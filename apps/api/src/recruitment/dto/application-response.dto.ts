@@ -43,7 +43,7 @@ export class ApplicationResponseDto {
   @ApiProperty({
     description: "Status da candidatura",
     enum: ApplicationStatus,
-    example: ApplicationStatus.SUBMITTED,
+    example: ApplicationStatus.SCREENING,
   })
   status!: ApplicationStatus;
 

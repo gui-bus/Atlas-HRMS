@@ -1,16 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
   useSensor,
   useSensors,
-  closestCorners,
+  rectIntersection,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -25,7 +24,6 @@ import {
   ArrowLeft,
   CircleNotch,
   XCircle,
-  CheckCircle,
   ArrowSquareOut,
   Copy,
   Check,
@@ -39,11 +37,9 @@ import { RbacGuard } from "@/components/rbac-guard";
 import { Button } from "@/components/ui/button";
 
 const STAGES = [
-  "SUBMITTED",
   "SCREENING",
   "HR_INTERVIEW",
   "TECHNICAL_TEST",
-  "MANAGER_INTERVIEW",
   "OFFER",
   "HIRED",
   "REJECTED",
@@ -78,20 +74,19 @@ function KanbanCard({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.35 : 1,
+    opacity: isDragging ? 0.3 : 1,
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="group relative p-3 bg-card/60 backdrop-blur-sm rounded-xl space-y-2 select-none cursor-default hover:bg-card/90 transition-all duration-150"
+      className="relative p-3 bg-muted/30 rounded-xl space-y-2 select-none hover:bg-muted/50 transition-colors duration-150"
     >
-      {/* Drag Handle */}
       <div
         {...attributes}
         {...listeners}
-        className="absolute top-2.5 right-2.5 cursor-grab active:cursor-grabbing p-0.5 rounded text-muted-foreground/40 hover:text-muted-foreground/80 transition-colors"
+        className="absolute top-2.5 right-2.5 cursor-grab active:cursor-grabbing p-0.5 rounded text-muted-foreground/30 hover:text-muted-foreground/70 transition-colors"
       >
         <DotsSixVertical className="h-4 w-4" />
       </div>
@@ -126,22 +121,8 @@ function KanbanCard({
                 e.stopPropagation();
                 onReject(app.id);
               }}
-              title="Reject"
             >
               <XCircle className="h-3.5 w-3.5" />
-            </button>
-          )}
-
-          {app.status === "OFFER" && (
-            <button
-              className="h-6 w-6 flex items-center justify-center rounded-md text-emerald-500 hover:bg-emerald-500/10 transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                onReject(app.id);
-              }}
-              title="Hire"
-            >
-              <CheckCircle className="h-3.5 w-3.5" />
             </button>
           )}
 
@@ -188,41 +169,20 @@ function KanbanColumn({
   admitLabel,
   admittingLabel,
 }: KanbanColumnProps) {
-  const isRejected = stage === "REJECTED";
-  const isHired = stage === "HIRED";
-
-  const columnBg = isRejected
-    ? "bg-destructive/5"
-    : isHired
-      ? "bg-emerald-500/5"
-      : "bg-muted/20";
-
-  const countBg = isRejected
-    ? "bg-destructive/10 text-destructive"
-    : isHired
-      ? "bg-emerald-500/10 text-emerald-500"
-      : "bg-muted/40 text-muted-foreground";
-
-  const headerColor = isRejected
-    ? "text-destructive/70"
-    : isHired
-      ? "text-emerald-500"
-      : "text-foreground";
-
   return (
-    <div className={`flex-1 flex flex-col rounded-2xl ${columnBg} p-3 min-w-[200px] max-w-[260px]`}>
+    <div
+      data-stage={stage}
+      className="flex flex-col rounded-2xl bg-muted/20 p-3 w-[220px] flex-shrink-0"
+    >
       <div className="flex justify-between items-center mb-3 px-1">
-        <h3 className={`font-bold text-xs uppercase tracking-wider ${headerColor}`}>{label}</h3>
-        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${countBg}`}>
+        <h3 className="font-bold text-xs uppercase tracking-wider text-foreground">{label}</h3>
+        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-muted/40 text-muted-foreground">
           {apps.length}
         </span>
       </div>
 
-      <SortableContext
-        items={apps.map((a) => a.id)}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="flex-1 space-y-2 overflow-y-auto min-h-[60px]">
+      <SortableContext items={apps.map((a) => a.id)} strategy={verticalListSortingStrategy}>
+        <div className="flex flex-col gap-2 flex-1 min-h-[80px]">
           {apps.map((app) => (
             <KanbanCard
               key={app.id}
@@ -251,10 +211,11 @@ export default function RecruitmentDetailsPage() {
 
   const [hiringId, setHiringId] = useState<string | null>(null);
   const [activeCard, setActiveCard] = useState<Application | null>(null);
+  const [localApps, setLocalApps] = useState<Application[] | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
 
   const { data: vacancy, isLoading: loadingVacancy } = useQuery({
@@ -267,33 +228,20 @@ export default function RecruitmentDetailsPage() {
     queryKey: ["applications", id],
     queryFn: () => recruitmentService.getApplications(id),
     enabled: !!id,
+    select: (data) => data.data,
   });
 
-  const applications = applicationsResponse?.data || [];
+  const applications: Application[] = localApps ?? applicationsResponse ?? [];
 
   const updateStatusMutation = useMutation({
     mutationFn: (args: { applicationId: string; status: string }) =>
       recruitmentService.updateApplicationStatus(args.applicationId, { status: args.status }),
-    onMutate: async ({ applicationId, status }) => {
-      await queryClient.cancelQueries({ queryKey: ["applications", id] });
-      const previous = queryClient.getQueryData<{ data: Application[] }>(["applications", id]);
-      queryClient.setQueryData<{ data: Application[] }>(["applications", id], (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          data: old.data.map((app) =>
-            app.id === applicationId ? { ...app, status: status as Application["status"] } : app,
-          ),
-        };
-      });
-      return { previous };
+    onSuccess: () => {
+      setLocalApps(null);
+      queryClient.invalidateQueries({ queryKey: ["applications", id] });
     },
-    onError: (_err, _vars, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(["applications", id], context.previous);
-      }
-    },
-    onSettled: () => {
+    onError: () => {
+      setLocalApps(null);
       queryClient.invalidateQueries({ queryKey: ["applications", id] });
     },
   });
@@ -311,49 +259,71 @@ export default function RecruitmentDetailsPage() {
     onError: () => setHiringId(null),
   });
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const draggedApp = applications.find((a) => a.id === event.active.id);
-    setActiveCard(draggedApp ?? null);
-  };
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const dragged = applications.find((a) => a.id === event.active.id);
+      setActiveCard(dragged ?? null);
+      setLocalApps([...applications]);
+    },
+    [applications],
+  );
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    setActiveCard(null);
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      setActiveCard(null);
 
-    const activeApp = applications.find((a) => a.id === active.id);
-    if (!activeApp) return;
+      if (!over) {
+        setLocalApps(null);
+        return;
+      }
 
-    const overStage = STAGES.find((s) => s === over.id);
-    const overCardApp = applications.find((a) => a.id === over.id);
-    const targetStage = overStage ?? overCardApp?.status;
+      const draggedApp = (localApps ?? applications).find((a) => a.id === active.id);
+      if (!draggedApp) {
+        setLocalApps(null);
+        return;
+      }
 
-    if (targetStage && targetStage !== activeApp.status) {
-      updateStatusMutation.mutate({ applicationId: activeApp.id, status: targetStage });
-    }
-  };
+      const overStage = STAGES.find((s) => s === over.id);
+      const overCard = (localApps ?? applications).find((a) => a.id === over.id);
+      const targetStage = overStage ?? overCard?.status;
 
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
+      if (!targetStage || targetStage === draggedApp.status) {
+        setLocalApps(null);
+        return;
+      }
 
-    const activeApp = applications.find((a) => a.id === active.id);
-    const overStage = STAGES.find((s) => s === over.id);
-    const overCardApp = applications.find((a) => a.id === over.id);
-    const targetStage = overStage ?? overCardApp?.status;
+      const optimistic = (localApps ?? applications).map((a) =>
+        a.id === draggedApp.id ? { ...a, status: targetStage as Application["status"] } : a,
+      );
+      setLocalApps(optimistic);
+      updateStatusMutation.mutate({ applicationId: draggedApp.id, status: targetStage });
+    },
+    [applications, localApps, updateStatusMutation],
+  );
 
-    if (targetStage && activeApp && targetStage !== activeApp.status) {
-      queryClient.setQueryData<{ data: Application[] }>(["applications", id], (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          data: old.data.map((app) =>
-            app.id === activeApp.id ? { ...app, status: targetStage as Application["status"] } : app,
-          ),
-        };
-      });
-    }
-  };
+  const handleDragMove = useCallback(
+    (event: any) => {
+      const { active, over } = event;
+      if (!over || !localApps) return;
+
+      const draggedApp = localApps.find((a) => a.id === active.id);
+      if (!draggedApp) return;
+
+      const overStage = STAGES.find((s) => s === over.id);
+      const overCard = localApps.find((a) => a.id === over.id);
+      const targetStage = overStage ?? overCard?.status;
+
+      if (!targetStage || targetStage === draggedApp.status) return;
+
+      setLocalApps((prev) =>
+        (prev ?? []).map((a) =>
+          a.id === draggedApp.id ? { ...a, status: targetStage as Application["status"] } : a,
+        ),
+      );
+    },
+    [localApps],
+  );
 
   const handleReject = (applicationId: string) => {
     updateStatusMutation.mutate({ applicationId, status: "REJECTED" });
@@ -377,9 +347,7 @@ export default function RecruitmentDetailsPage() {
 
   if (!vacancy) {
     return (
-      <div className="p-8 text-center text-destructive font-medium">
-        {t("kanban.notFound")}
-      </div>
+      <div className="p-8 text-center text-destructive font-medium">{t("kanban.notFound")}</div>
     );
   }
 
@@ -393,9 +361,9 @@ export default function RecruitmentDetailsPage() {
 
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
-      <div className="p-6 md:p-8 flex flex-col gap-5 w-full h-[calc(100vh-56px)]">
+      <div className="flex flex-col overflow-hidden" style={{ height: "calc(100vh - 4rem)" }}>
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 flex-shrink-0">
+        <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 flex-shrink-0">
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
@@ -445,16 +413,16 @@ export default function RecruitmentDetailsPage() {
           </div>
         </div>
 
-        {/* Kanban Board */}
-        <div className="flex-1 overflow-x-auto overflow-y-hidden pb-2">
+        {/* Kanban Board — scrolls horizontally only */}
+        <div className="flex-1 overflow-x-auto overflow-y-hidden px-6 pb-6">
           <DndContext
             sensors={sensors}
-            collisionDetection={closestCorners}
+            collisionDetection={rectIntersection}
             onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
+            onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex gap-3 h-full min-w-max">
+            <div className="flex gap-3 h-full">
               {STAGES.map((stage) => (
                 <KanbanColumn
                   key={stage}
@@ -471,9 +439,9 @@ export default function RecruitmentDetailsPage() {
               ))}
             </div>
 
-            <DragOverlay>
+            <DragOverlay dropAnimation={null}>
               {activeCard ? (
-                <div className="p-3 bg-card rounded-xl shadow-2xl shadow-black/30 border border-muted/30 space-y-2 w-[220px] rotate-2 opacity-95">
+                <div className="p-3 bg-card/90 backdrop-blur-sm rounded-xl space-y-1 w-[220px] rotate-1 ring-1 ring-muted/30">
                   <p className="font-semibold text-sm">{activeCard.candidateName}</p>
                   <p className="text-xs text-muted-foreground truncate">{activeCard.candidateEmail}</p>
                 </div>

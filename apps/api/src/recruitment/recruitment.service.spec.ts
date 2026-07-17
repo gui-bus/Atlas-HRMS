@@ -403,7 +403,7 @@ describe("RecruitmentService (Unit)", () => {
     it("should update the application status", async () => {
       mockPrisma.application.findFirst.mockResolvedValue({
         id: "app-1",
-        status: ApplicationStatus.SUBMITTED,
+        status: ApplicationStatus.SCREENING,
         candidate: { firstName: "Maria", lastName: "O" },
         recruitment: { title: "Dev" },
       });

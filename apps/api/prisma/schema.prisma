@@ -362,23 +362,19 @@ model Candidate {
 }
 
 enum ApplicationStatus {
-  SUBMITTED
   SCREENING
   HR_INTERVIEW
   TECHNICAL_TEST
-  TECHNICAL_INTERVIEW
-  FINAL_INTERVIEW
   OFFER
   HIRED
   REJECTED
-  WITHDRAWN
 }
 
 model Application {
   id            String            @id @default(uuid())
   resumeUrl     String
   coverLetter   String?
-  status        ApplicationStatus @default(SUBMITTED)
+  status        ApplicationStatus @default(SCREENING)
   feedback      String?
   hiredAt       DateTime?
   createdAt     DateTime          @default(now())

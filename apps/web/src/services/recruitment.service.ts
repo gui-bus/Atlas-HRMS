@@ -31,11 +31,9 @@ export interface Application {
   candidateEmail: string;
   resumeUrl: string;
   status:
-    | "SUBMITTED"
     | "SCREENING"
     | "HR_INTERVIEW"
     | "TECHNICAL_TEST"
-    | "MANAGER_INTERVIEW"
     | "OFFER"
     | "HIRED"
     | "REJECTED";

@@ -315,7 +315,7 @@ describe("Recruitment Integration Tests (Supertest)", () => {
     it("should allow ADMIN to update application status", async () => {
       mockPrisma.application.findFirst.mockResolvedValue({
         id: APP_ID,
-        status: ApplicationStatus.SUBMITTED,
+        status: ApplicationStatus.SCREENING,
         candidate: { firstName: "M", lastName: "O" },
         recruitment: { title: "Dev" },
       });

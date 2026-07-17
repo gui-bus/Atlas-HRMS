@@ -26,12 +26,9 @@ import { Button } from "@/components/ui/button";
 import { ClockWidget } from "@/components/time-attendance/clock-widget";
 
 const APPLICATION_STAGES = [
-  "SUBMITTED",
   "SCREENING",
   "HR_INTERVIEW",
   "TECHNICAL_TEST",
-  "TECHNICAL_INTERVIEW",
-  "FINAL_INTERVIEW",
   "OFFER",
   "HIRED",
   "REJECTED",

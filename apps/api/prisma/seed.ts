@@ -660,11 +660,9 @@ async function main() {
   ];
 
   const appStatuses = [
-    ApplicationStatus.SUBMITTED,
     ApplicationStatus.SCREENING,
+    ApplicationStatus.HR_INTERVIEW,
     ApplicationStatus.TECHNICAL_TEST,
-    ApplicationStatus.TECHNICAL_INTERVIEW,
-    ApplicationStatus.FINAL_INTERVIEW,
     ApplicationStatus.OFFER,
     ApplicationStatus.HIRED,
     ApplicationStatus.REJECTED,
