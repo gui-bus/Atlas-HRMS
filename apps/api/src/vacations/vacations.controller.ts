@@ -9,7 +9,9 @@ import {
   UseGuards,
   Req,
   ForbiddenException,
+  Query,
 } from "@nestjs/common";
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
 import { AuthGuard } from "../auth/auth.guard";
@@ -46,8 +48,8 @@ export class VacationsController {
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
   @ApiOperation({ summary: "Listar todas as solicitações de férias (Apenas Admin, RH e Gestores)" })
   @ApiResponse({ status: 200, type: [VacationResponseDto] })
-  async findAllVacations() {
-    return this.vacationsService.findAllVacations();
+  async findAllVacations(@Query() query: QueryPaginationDto) {
+    return this.vacationsService.findAllVacations(query);
   }
 
   @Get("employee/:employeeId")

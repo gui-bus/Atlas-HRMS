@@ -8,28 +8,71 @@ import { PrismaService } from "../common/prisma.service";
 import { CreatePositionDto } from "./dto/create-position.dto";
 import { UpdatePositionDto } from "./dto/update-position.dto";
 
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
+
 @Injectable()
 export class PositionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.position.findMany({
-      where: { deletedAt: null },
-      include: {
-        department: {
-          select: {
-            id: true,
-            name: true,
-            code: true,
+  async findAll(query?: QueryPaginationDto) {
+    const page = query?.page;
+    const limit = query?.limit;
+
+    if (!page && !limit) {
+      return this.prisma.position.findMany({
+        where: { deletedAt: null },
+        include: {
+          department: {
+            select: {
+              id: true,
+              name: true,
+              code: true,
+            },
+          },
+          _count: {
+            select: {
+              employees: true,
+            },
           },
         },
-        _count: {
-          select: {
-            employees: true,
+      });
+    }
+
+    const currentPage = page ?? 1;
+    const currentLimit = limit ?? 10;
+    const skip = (currentPage - 1) * currentLimit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.position.findMany({
+        where: { deletedAt: null },
+        include: {
+          department: {
+            select: {
+              id: true,
+              name: true,
+              code: true,
+            },
+          },
+          _count: {
+            select: {
+              employees: true,
+            },
           },
         },
-      },
-    });
+        skip,
+        take: currentLimit,
+        orderBy: { createdAt: "desc" },
+      }),
+      this.prisma.position.count({ where: { deletedAt: null } }),
+    ]);
+
+    return {
+      data,
+      total,
+      page: currentPage,
+      limit: currentLimit,
+      totalPages: Math.ceil(total / currentLimit),
+    };
   }
 
   async findOne(id: string) {

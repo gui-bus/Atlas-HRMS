@@ -8,8 +8,8 @@ export interface UserAccount {
 }
 
 export const userAccountService = {
-  async getUserAccounts(): Promise<UserAccount[]> {
-    const response = await api.get<UserAccount[]>("/users");
+  async getUserAccounts(params?: { page?: number; limit?: number }): Promise<any> {
+    const response = await api.get<any>("/users", { params });
     return response.data;
   },
 

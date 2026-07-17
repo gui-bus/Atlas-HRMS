@@ -8,30 +8,75 @@ import { PrismaService } from "../common/prisma.service";
 import { CreateDepartmentDto } from "./dto/create-department.dto";
 import { UpdateDepartmentDto } from "./dto/update-department.dto";
 
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
+
 @Injectable()
 export class DepartmentsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.department.findMany({
-      where: { deletedAt: null },
-      include: {
-        manager: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
+  async findAll(query?: QueryPaginationDto) {
+    const page = query?.page;
+    const limit = query?.limit;
+
+    if (!page && !limit) {
+      return this.prisma.department.findMany({
+        where: { deletedAt: null },
+        include: {
+          manager: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          _count: {
+            select: {
+              employees: true,
+              positions: true,
+            },
           },
         },
-        _count: {
-          select: {
-            employees: true,
-            positions: true,
+      });
+    }
+
+    const currentPage = page ?? 1;
+    const currentLimit = limit ?? 10;
+    const skip = (currentPage - 1) * currentLimit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.department.findMany({
+        where: { deletedAt: null },
+        include: {
+          manager: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          _count: {
+            select: {
+              employees: true,
+              positions: true,
+            },
           },
         },
-      },
-    });
+        skip,
+        take: currentLimit,
+        orderBy: { createdAt: "desc" },
+      }),
+      this.prisma.department.count({ where: { deletedAt: null } }),
+    ]);
+
+    return {
+      data,
+      total,
+      page: currentPage,
+      limit: currentLimit,
+      totalPages: Math.ceil(total / currentLimit),
+    };
   }
 
   async findOne(id: string) {

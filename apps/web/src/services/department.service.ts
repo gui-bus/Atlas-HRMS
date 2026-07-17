@@ -18,8 +18,8 @@ export interface Department {
 }
 
 export const departmentService = {
-  async getDepartments(): Promise<Department[]> {
-    const response = await api.get<Department[]>("/departments");
+  async getDepartments(params?: { page?: number; limit?: number }): Promise<any> {
+    const response = await api.get<any>("/departments", { params });
     return response.data;
   },
 

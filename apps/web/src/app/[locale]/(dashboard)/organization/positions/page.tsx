@@ -11,6 +11,8 @@ import {
   Trash,
   ArrowsDownUp,
   CircleNotch,
+  CaretLeft,
+  CaretRight,
 } from "@phosphor-icons/react";
 import {
   useReactTable,
@@ -53,12 +55,15 @@ export default function PositionsPage() {
   const [deptFilter, setDeptFilter] = useState("ALL");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   // Fetch lists
-  const { data: positions = [], isLoading } = useQuery({
-    queryKey: ["positions"],
-    queryFn: () => positionService.getPositions(),
+  const { data: positionsData, isLoading } = useQuery({
+    queryKey: ["positions", page],
+    queryFn: () => positionService.getPositions({ page, limit: 10 }),
   });
+  const positions = positionsData?.data || [];
+  const totalPages = positionsData?.totalPages || 1;
 
   const { data: departments = [] } = useQuery({
     queryKey: ["departments"],
@@ -292,6 +297,33 @@ export default function PositionsPage() {
             </table>
           </div>
         </div>
+
+        {/* Pagination controls */}
+        {!isLoading && totalPages > 1 && (
+          <div className="flex items-center justify-end gap-2 pt-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+            >
+              <CaretLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium px-2 text-muted-foreground">
+              {page} / {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
+            >
+              <CaretRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
 
         {/* --- Delete Confirmation Dialog --- */}
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>

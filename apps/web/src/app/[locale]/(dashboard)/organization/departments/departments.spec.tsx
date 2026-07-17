@@ -8,10 +8,13 @@ import NewDepartmentPage from "./new/page";
 // Mock Services
 vi.mock("@/services/department.service", () => ({
   departmentService: {
-    getDepartments: vi.fn().mockResolvedValue([
-      { id: "dept-1", name: "Tecnologia", code: "TI", active: true, employeesCount: 5 },
-      { id: "dept-2", name: "Recursos Humanos", code: "RH", active: false, employeesCount: 2 },
-    ]),
+    getDepartments: vi.fn().mockResolvedValue({
+      data: [
+        { id: "dept-1", name: "Tecnologia", code: "TI", active: true, employeesCount: 5 },
+        { id: "dept-2", name: "Recursos Humanos", code: "RH", active: false, employeesCount: 2 },
+      ],
+      totalPages: 1,
+    }),
     createDepartment: vi
       .fn()
       .mockResolvedValue({ id: "dept-3", name: "Vendas", code: "VD", active: true }),

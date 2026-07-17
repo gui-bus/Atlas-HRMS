@@ -8,9 +8,8 @@ import NewPositionPage from "./new/page";
 // Mock Services
 vi.mock("@/services/position.service", () => ({
   positionService: {
-    getPositions: vi
-      .fn()
-      .mockResolvedValue([
+    getPositions: vi.fn().mockResolvedValue({
+      data: [
         {
           id: "pos-1",
           title: "Desenvolvedor Frontend",
@@ -19,7 +18,9 @@ vi.mock("@/services/position.service", () => ({
           active: true,
           departmentId: "dept-1",
         },
-      ]),
+      ],
+      totalPages: 1,
+    }),
     createPosition: vi.fn().mockResolvedValue({ id: "pos-3" }),
     updatePosition: vi.fn().mockResolvedValue({ id: "pos-1" }),
     deletePosition: vi.fn().mockResolvedValue(undefined),

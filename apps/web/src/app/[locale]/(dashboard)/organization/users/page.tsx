@@ -4,7 +4,14 @@ import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { MagnifyingGlass, ArrowsDownUp, CircleNotch, Eye } from "@phosphor-icons/react";
+import {
+  MagnifyingGlass,
+  ArrowsDownUp,
+  CircleNotch,
+  Eye,
+  CaretLeft,
+  CaretRight,
+} from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -29,12 +36,15 @@ export default function UserAccountsPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
+  const [page, setPage] = useState(1);
 
   // --- Fetch List ---
-  const { data: accounts = [], isLoading } = useQuery({
-    queryKey: ["user-accounts"],
-    queryFn: () => userAccountService.getUserAccounts(),
+  const { data: accountsData, isLoading } = useQuery({
+    queryKey: ["user-accounts", page],
+    queryFn: () => userAccountService.getUserAccounts({ page, limit: 10 }),
   });
+  const accounts = accountsData?.data || [];
+  const totalPages = accountsData?.totalPages || 1;
 
   const getRoleLabel = (role: string) => {
     const rolesMap = {
@@ -223,6 +233,33 @@ export default function UserAccountsPage() {
             </table>
           </div>
         </div>
+
+        {/* Pagination controls */}
+        {!isLoading && totalPages > 1 && (
+          <div className="flex items-center justify-end gap-2 pt-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+            >
+              <CaretLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium px-2 text-muted-foreground">
+              {page} / {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
+            >
+              <CaretRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </RbacGuard>
   );

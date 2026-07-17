@@ -49,7 +49,7 @@ export default function AuditLogsPage() {
   });
 
   const logs = auditResponse?.data || [];
-  const meta = auditResponse?.meta || { total: 0, page: 1, lastPage: 1, limit: 15 };
+  const totalPages = (auditResponse as any)?.totalPages || 1;
 
   const getPrettyDetails = (details?: string) => {
     if (!details) return "Sem detalhes adicionais.";
@@ -188,7 +188,7 @@ export default function AuditLogsPage() {
         </div>
 
         {/* Paginação */}
-        {meta.lastPage > 1 && (
+        {totalPages > 1 && (
           <div className="flex items-center justify-end gap-2 pt-4">
             <Button
               variant="outline"
@@ -200,14 +200,14 @@ export default function AuditLogsPage() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <span className="text-xs text-muted-foreground font-medium px-2">
-              Página {page} de {meta.lastPage}
+              Página {page} de {totalPages}
             </span>
             <Button
               variant="outline"
               size="icon"
               className="h-8 w-8 rounded-xl border-0 bg-muted/40"
-              disabled={page >= meta.lastPage}
-              onClick={() => setPage((p) => Math.min(meta.lastPage, p + 1))}
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             >
               <ArrowRight className="h-4 w-4" />
             </Button>

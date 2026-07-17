@@ -13,6 +13,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Campo de Tipo Customizado de Afastamento**: Quando selecionado "Outros Afastamentos", um novo campo "Nome do Tipo de Afastamento" é exibido no formulário e enviado para a coluna `customType` criada no modelo de banco de dados `Leave`.
 - **Nova Rota de Upload na API**: Endpoint genérico `POST /upload` implementado no `UploadController` para upload de arquivos em geral.
 - **Script de População do Banco (Seed)**: Implementação de um script de seed completo (`prisma/seed.ts`) que gera dados realistas em português para popular todo o sistema (departamentos, cargos, administradores, gestores, funcionários, solicitações de férias, atestados com anexos, vagas de recrutamento abertas, candidatos reais com currículos e marcações de ponto históricas com saldo no banco de horas).
+- **Paginação de Tabelas Orientada por API**: Paginação de 10 itens por página adicionada às tabelas de Colaboradores, Histórico de Férias, Atestados/Afastamentos, Vagas de Emprego, Usuários, Departamentos, Cargos e Logs de Auditoria, consumindo parâmetros nativos da API.
 
 ### Alterado
 
@@ -21,6 +22,8 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Tradução de Cargos no Perfil**: A label de Role (como ADMIN, EMPLOYEE, etc.) na página `/profile` agora é traduzida dinamicamente usando as chaves de internacionalização existentes.
 - **Ajuste de Menus do Colaborador (EMPLOYEE)**: Renomeação dos itens de menu para remover pronomes possessivos de primeira pessoa ("Minhas Férias" -> "Férias", "Meus Atestados" -> "Atestados", "Meu Ponto" -> "Ponto").
 - **Estilização de Botões e Alinhamentos**: O botão "Solicitar Ajuste" no histórico de ponto foi alterado para o estilo sólido primário padrão (fundo azul e texto branco). Na tela de solicitação de correção de ponto, os botões de ação foram alinhados à direita e o fluxo de cancelamento recebeu suporte correto à internacionalização da rota.
+- **Busca Flexível de Vagas por ID ou Slug**: O endpoint de detalhes da vaga agora aceita tanto slugs tradicionais quanto UUIDs (`id`), permitindo visualizar vagas de qualquer status no painel de administração.
+- **Correção da Tradução da Data de Rescisão**: Mapeamento da tradução da chave `terminationDate` nos arquivos JSON de tradução (`pt.json`, `en.json` e `es.json`).
 
 ---
 

@@ -12,6 +12,7 @@ import { UpdateLeaveStatusDto } from "./dto/update-leave-status.dto";
 import { VacationStatus, LeaveStatus } from "@prisma/client";
 import { NotificationsService } from "../notifications/notifications.service";
 import { UploadthingService } from "../common/uploadthing/uploadthing.service";
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
 
 @Injectable()
 export class VacationsService {
@@ -25,11 +26,29 @@ export class VacationsService {
   // VACATIONS LOR / BUSINESS LOGIC
   // ==========================================
 
-  async findAllVacations() {
-    return this.prisma.vacation.findMany({
-      where: { deletedAt: null },
-      include: { employee: true },
-    });
+  async findAllVacations(query: QueryPaginationDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.vacation.findMany({
+        where: { deletedAt: null },
+        include: { employee: true },
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+      }),
+      this.prisma.vacation.count({ where: { deletedAt: null } }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findVacationsByEmployee(employeeId: string) {
@@ -154,11 +173,29 @@ export class VacationsService {
   // LEAVES LOR / BUSINESS LOGIC (ATTESTED / REASONS)
   // ==========================================
 
-  async findAllLeaves() {
-    return this.prisma.leave.findMany({
-      where: { deletedAt: null },
-      include: { employee: true },
-    });
+  async findAllLeaves(query: QueryPaginationDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.leave.findMany({
+        where: { deletedAt: null },
+        include: { employee: true },
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+      }),
+      this.prisma.leave.count({ where: { deletedAt: null } }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findLeavesByEmployee(employeeId: string) {

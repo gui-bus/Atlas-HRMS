@@ -8,17 +8,20 @@ import NewVacationRequestPage from "./new/page";
 // Mock Services
 vi.mock("@/services/vacation.service", () => ({
   vacationService: {
-    getVacations: vi.fn().mockResolvedValue([
-      {
-        id: "vac-1",
-        employeeId: "emp-1",
-        startDate: "2026-07-20T00:00:00.000Z",
-        endDate: "2026-08-03T00:00:00.000Z",
-        comments: "Férias anuais planejadas",
-        status: "PENDING",
-        employee: { firstName: "Gabriel", lastName: "Silva" },
-      },
-    ]),
+    getVacations: vi.fn().mockResolvedValue({
+      data: [
+        {
+          id: "vac-1",
+          employeeId: "emp-1",
+          startDate: "2026-07-20T00:00:00.000Z",
+          endDate: "2026-08-03T00:00:00.000Z",
+          comments: "Férias anuais planejadas",
+          status: "PENDING",
+          employee: { firstName: "Gabriel", lastName: "Silva" },
+        },
+      ],
+      totalPages: 1,
+    }),
     createVacation: vi.fn().mockResolvedValue({ id: "vac-2" }),
     updateVacationStatus: vi.fn().mockResolvedValue({}),
   },

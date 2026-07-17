@@ -6,6 +6,8 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { UploadthingService } from "../common/uploadthing/uploadthing.service";
 import * as bcrypt from "bcrypt";
 
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -13,18 +15,53 @@ export class UsersService {
     private readonly uploadthingService: UploadthingService,
   ) {}
 
-  async findAll() {
-    return this.prisma.user.findMany({
-      where: { deletedAt: null },
-      select: {
-        id: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+  async findAll(query?: QueryPaginationDto) {
+    const page = query?.page;
+    const limit = query?.limit;
+
+    if (!page && !limit) {
+      return this.prisma.user.findMany({
+        where: { deletedAt: null },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    }
+
+    const currentPage = page ?? 1;
+    const currentLimit = limit ?? 10;
+    const skip = (currentPage - 1) * currentLimit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where: { deletedAt: null },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        skip,
+        take: currentLimit,
+        orderBy: { createdAt: "desc" },
+      }),
+      this.prisma.user.count({ where: { deletedAt: null } }),
+    ]);
+
+    return {
+      data,
+      total,
+      page: currentPage,
+      limit: currentLimit,
+      totalPages: Math.ceil(total / currentLimit),
+    };
   }
 
   async findOne(id: string) {

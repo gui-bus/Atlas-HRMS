@@ -9,7 +9,9 @@ import {
   UseGuards,
   Req,
   ForbiddenException,
+  Query,
 } from "@nestjs/common";
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
 import { AuthGuard } from "../auth/auth.guard";
@@ -46,8 +48,8 @@ export class LeavesController {
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
   @ApiOperation({ summary: "Listar todas as licenças e atestados pendentes/ativos" })
   @ApiResponse({ status: 200, type: [LeaveResponseDto] })
-  async findAllLeaves() {
-    return this.vacationsService.findAllLeaves();
+  async findAllLeaves(@Query() query: QueryPaginationDto) {
+    return this.vacationsService.findAllLeaves(query);
   }
 
   @Get("employee/:employeeId")

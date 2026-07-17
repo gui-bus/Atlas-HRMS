@@ -4,7 +4,15 @@ import React, { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { Check, X, MagnifyingGlass, ArrowsDownUp, CircleNotch } from "@phosphor-icons/react";
+import {
+  Check,
+  X,
+  MagnifyingGlass,
+  ArrowsDownUp,
+  CircleNotch,
+  CaretLeft,
+  CaretRight,
+} from "@phosphor-icons/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -35,16 +43,19 @@ export default function LeavesAdminPage() {
   const [statusFilter, setStatusFilter] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">(
     "ALL",
   );
+  const [page, setPage] = useState(1);
 
   // Fetch
-  const { data: leaves = [], isLoading } = useQuery({
-    queryKey: ["leaves"],
-    queryFn: () => vacationService.getLeaves(),
+  const { data: leavesData, isLoading } = useQuery({
+    queryKey: ["leaves", page],
+    queryFn: () => vacationService.getLeaves({ page, limit: 10 }),
   });
+  const leaves = leavesData?.data || [];
+  const totalPages = leavesData?.totalPages || 1;
 
   // Approve Mutation
   const approveMutation = useMutation({
-    mutationFn: (id: string) => vacationService.updateLeaveStatus(id, "APPROVED"),
+    mutationFn: (id: string) => vacationService.updateLeaveStatus(id, { status: "APPROVED" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leaves"] });
     },
@@ -262,6 +273,33 @@ export default function LeavesAdminPage() {
             </table>
           </div>
         </div>
+
+        {/* Pagination controls */}
+        {!isLoading && totalPages > 1 && (
+          <div className="flex items-center justify-end gap-2 pt-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+            >
+              <CaretLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium px-2 text-muted-foreground">
+              {page} / {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-xl border-0 bg-muted/40"
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
+            >
+              <CaretRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </RbacGuard>
   );

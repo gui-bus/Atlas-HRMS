@@ -28,9 +28,7 @@ describe("VacationsController (Unit)", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [VacationsController],
-      providers: [
-        { provide: VacationsService, useValue: mockVacationsService },
-      ],
+      providers: [{ provide: VacationsService, useValue: mockVacationsService }],
     })
       .overrideGuard(AuthGuard)
       .useValue(mockAuthGuard)
@@ -48,11 +46,17 @@ describe("VacationsController (Unit)", () => {
 
   describe("findAllVacations", () => {
     it("should call vacationsService.findAllVacations", async () => {
-      mockVacationsService.findAllVacations.mockResolvedValue([]);
-      const result = await controller.findAllVacations();
-      expect(result).toEqual([]);
+      const mockResult = {
+        data: [],
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 0,
+      };
+      mockVacationsService.findAllVacations.mockResolvedValue(mockResult);
+      const result = await controller.findAllVacations({});
+      expect(result).toEqual(mockResult);
       expect(service.findAllVacations).toHaveBeenCalled();
     });
   });
-
 });

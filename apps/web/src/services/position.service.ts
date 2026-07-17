@@ -17,8 +17,8 @@ export interface Position {
 }
 
 export const positionService = {
-  async getPositions(): Promise<Position[]> {
-    const response = await api.get<Position[]>("/positions");
+  async getPositions(params?: { page?: number; limit?: number }): Promise<any> {
+    const response = await api.get<any>("/positions", { params });
     return response.data;
   },
 

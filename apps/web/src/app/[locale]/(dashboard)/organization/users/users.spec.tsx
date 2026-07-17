@@ -7,20 +7,23 @@ import UserAccountsPage from "./page";
 // Mock Services
 vi.mock("@/services/user-account.service", () => ({
   userAccountService: {
-    getUserAccounts: vi.fn().mockResolvedValue([
-      {
-        id: "usr-1",
-        email: "admin@atlas.com",
-        role: "ADMIN",
-        createdAt: "2026-07-16T12:00:00.000Z",
-      },
-      {
-        id: "usr-2",
-        email: "employee@atlas.com",
-        role: "EMPLOYEE",
-        createdAt: "2026-07-16T12:00:00.000Z",
-      },
-    ]),
+    getUserAccounts: vi.fn().mockResolvedValue({
+      data: [
+        {
+          id: "usr-1",
+          email: "admin@atlas.com",
+          role: "ADMIN",
+          createdAt: "2026-07-16T12:00:00.000Z",
+        },
+        {
+          id: "usr-2",
+          email: "employee@atlas.com",
+          role: "EMPLOYEE",
+          createdAt: "2026-07-16T12:00:00.000Z",
+        },
+      ],
+      totalPages: 1,
+    }),
   },
 }));
 

@@ -189,7 +189,7 @@ export default function EmployeesListPage() {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const totalPages = data?.meta?.lastPage || 1;
+  const totalPages = (data as any)?.totalPages || 1;
 
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>

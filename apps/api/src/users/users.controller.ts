@@ -7,6 +7,7 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
@@ -20,6 +21,7 @@ import { CurrentUser } from "../auth/current-user.decorator";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
 import {
   UnauthorizedErrorResponseDto,
   ForbiddenErrorResponseDto,

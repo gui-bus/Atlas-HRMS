@@ -44,8 +44,13 @@ export interface Application {
 }
 
 export const recruitmentService = {
-  async getRecruitments(): Promise<{ data: Recruitment[] }> {
-    const response = await api.get<{ data: Recruitment[] }>("/recruitments");
+  async getRecruitments(params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<{ data: Recruitment[]; totalPages?: number }> {
+    const response = await api.get<{ data: Recruitment[]; totalPages?: number }>("/recruitments", {
+      params,
+    });
     return response.data;
   },
 

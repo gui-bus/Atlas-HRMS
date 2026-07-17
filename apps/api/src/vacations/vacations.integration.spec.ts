@@ -23,6 +23,7 @@ describe("Vacations Integration Tests (Supertest)", () => {
       findFirst: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
+      count: jest.fn(),
     },
     leave: {
       findMany: jest.fn(),
@@ -30,6 +31,7 @@ describe("Vacations Integration Tests (Supertest)", () => {
       findFirst: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
+      count: jest.fn(),
     },
   };
 
@@ -68,13 +70,20 @@ describe("Vacations Integration Tests (Supertest)", () => {
   describe("GET /vacations", () => {
     it("should allow HR access and return vacations", async () => {
       mockPrisma.vacation.findMany.mockResolvedValue([]);
+      mockPrisma.vacation.count.mockResolvedValue(0);
 
       const response = await request(app.getHttpServer())
         .get("/vacations")
         .set("Authorization", `Bearer ${hrToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual([]);
+      expect(response.body).toEqual({
+        data: [],
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 0,
+      });
     });
 
     it("should forbid Employee access", async () => {

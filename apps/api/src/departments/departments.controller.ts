@@ -9,7 +9,9 @@ import {
   UseGuards,
   HttpStatus,
   HttpCode,
+  Query,
 } from "@nestjs/common";
+import { QueryPaginationDto } from "../common/dto/pagination.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
 import { AuthGuard } from "../auth/auth.guard";
@@ -51,10 +53,9 @@ export class DepartmentsController {
   @ApiResponse({
     status: 200,
     description: "Lista de departamentos recuperada com sucesso",
-    type: [DepartmentResponseDto],
   })
-  async findAll() {
-    return this.departmentsService.findAll();
+  async findAll(@Query() query: QueryPaginationDto) {
+    return this.departmentsService.findAll(query);
   }
 
   @Get(":id")

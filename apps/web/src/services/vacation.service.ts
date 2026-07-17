@@ -45,10 +45,29 @@ export interface Leave {
   };
 }
 
+export interface PaginatedVacationsResponse {
+  data: Vacation[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface PaginatedLeavesResponse {
+  data: Leave[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export const vacationService = {
   // --- Vacations endpoints ---
-  async getVacations(): Promise<Vacation[]> {
-    const response = await api.get<Vacation[]>("/vacations");
+  async getVacations(params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedVacationsResponse> {
+    const response = await api.get<PaginatedVacationsResponse>("/vacations", { params });
     return response.data;
   },
 
@@ -84,8 +103,8 @@ export const vacationService = {
   },
 
   // --- Leaves endpoints ---
-  async getLeaves(): Promise<Leave[]> {
-    const response = await api.get<Leave[]>("/vacations/leaves");
+  async getLeaves(params?: { page?: number; limit?: number }): Promise<PaginatedLeavesResponse> {
+    const response = await api.get<PaginatedLeavesResponse>("/vacations/leaves", { params });
     return response.data;
   },
 

@@ -8,18 +8,21 @@ import NewLeaveRequestPage from "./new/page";
 // Mock Services
 vi.mock("@/services/vacation.service", () => ({
   vacationService: {
-    getLeaves: vi.fn().mockResolvedValue([
-      {
-        id: "leave-1",
-        employeeId: "emp-1",
-        type: "MEDICAL",
-        startDate: "2026-07-20T00:00:00.000Z",
-        endDate: "2026-07-22T00:00:00.000Z",
-        reason: "Extração dentária",
-        status: "PENDING",
-        employee: { firstName: "Gabriel", lastName: "Silva" },
-      },
-    ]),
+    getLeaves: vi.fn().mockResolvedValue({
+      data: [
+        {
+          id: "leave-1",
+          employeeId: "emp-1",
+          type: "MEDICAL",
+          startDate: "2026-07-20T00:00:00.000Z",
+          endDate: "2026-07-22T00:00:00.000Z",
+          reason: "Extração dentária",
+          status: "PENDING",
+          employee: { firstName: "Gabriel", lastName: "Silva" },
+        },
+      ],
+      totalPages: 1,
+    }),
     createLeave: vi.fn().mockResolvedValue({ id: "leave-2" }),
     updateLeaveStatus: vi.fn().mockResolvedValue({}),
   },
