@@ -386,5 +386,89 @@
     "saving": "Guardando...",
     "changePassword": "Cambiar Contraseña",
     "changing": "Cambiando..."
+  },
+  "Navigation": {
+    "categories": {
+      "peopleManagement": "Gestión de Personal",
+      "recruitment": "Reclutamiento",
+      "organization": "Organización"
+    },
+    "items": {
+      "employees": {
+        "label": "Empleados",
+        "desc": "Base de datos de empleados y perfiles."
+      },
+      "newEmployee": {
+        "label": "Nuevo Registro",
+        "desc": "Agregar nuevos empleados al sistema."
+      },
+      "vacationsAdmin": {
+        "label": "Vacaciones",
+        "desc": "Control y aprobación de vacaciones."
+      },
+      "vacationsEmployee": {
+        "label": "Vacaciones",
+        "desc": "Solicitar vacaciones y ver períodos."
+      },
+      "leavesAdmin": {
+        "label": "Certificados y Licencias",
+        "desc": "Control de licencias y ausencias."
+      },
+      "leavesEmployee": {
+        "label": "Certificados",
+        "desc": "Registrar certificados y licencias médicas."
+      },
+      "documents": {
+        "label": "Documentos",
+        "desc": "Acuerdos, contratos y comprobantes."
+      },
+      "timeClock": {
+        "label": "Control de Horas",
+        "desc": "Historial de marcas y banco de horas."
+      },
+      "jobs": {
+        "label": "Bolsa de Trabajo",
+        "desc": "Procesos de selección y candidatos."
+      },
+      "newJob": {
+        "label": "Nueva Vacante",
+        "desc": "Crear y publicar procesos de selección."
+      },
+      "departments": {
+        "label": "Departamentos",
+        "desc": "Ver y gestionar departamentos de la empresa."
+      },
+      "positions": {
+        "label": "Cargos",
+        "desc": "Definir puestos y rangos salariales."
+      },
+      "auditLogs": {
+        "label": "Logs de Auditoría",
+        "desc": "Monitorear el historial de acciones críticas."
+      },
+      "userAccounts": {
+        "label": "Cuentas de Usuario",
+        "desc": "Credenciales y roles de acceso al sistema."
+      },
+      "timeCorrections": {
+        "label": "Ajustes de Jornada",
+        "desc": "Aprobar correcciones de jornada de los empleados."
+      }
+    }
+  },
+  "UserDropdown": {
+    "myProfile": "Mi Perfil",
+    "logout": "Cerrar Sesión",
+    "roles": {
+      "ADMIN": "Administrador",
+      "HR": "Recursos Humanos",
+      "MANAGER": "Gestor",
+      "EMPLOYEE": "Colaborador"
+    }
+  },
+  "Notifications": {
+    "title": "Notificaciones",
+    "unread": "no leídas",
+    "empty": "No se encontraron notificaciones."
   }
 }

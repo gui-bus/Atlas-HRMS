@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { SignOut, User } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/useAuthStore";
@@ -26,6 +27,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
   const { user, clearAuth } = useAuthStore();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
+  const t = useTranslations("UserDropdown");
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -43,14 +45,14 @@ export function UserDropdown({ locale }: UserDropdownProps) {
   const getRoleLabel = (role?: string) => {
     switch (role) {
       case "ADMIN":
-        return "Administrador";
+        return t("roles.ADMIN");
       case "HR":
-        return "Recursos Humanos";
+        return t("roles.HR");
       case "MANAGER":
-        return "Gestor";
+        return t("roles.MANAGER");
       case "EMPLOYEE":
       default:
-        return "Colaborador";
+        return t("roles.EMPLOYEE");
     }
   };
 
@@ -128,7 +130,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
               className="flex items-center space-x-2.5 p-2.5 rounded-xl hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer border-0"
             >
               <User className="w-4 h-4 text-muted-foreground shrink-0" />
-              <span className="text-sm font-medium">Meu Perfil</span>
+              <span className="text-sm font-medium">{t("myProfile")}</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
 
@@ -141,7 +143,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
             className="flex items-center space-x-2.5 p-2.5 rounded-xl hover:bg-destructive/10 text-destructive focus:bg-destructive/15 focus:text-destructive transition-colors cursor-pointer border-0"
           >
             <SignOut className="w-4 h-4 shrink-0" />
-            <span className="text-sm font-semibold">Sair da Conta</span>
+            <span className="text-sm font-semibold">{t("logout")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

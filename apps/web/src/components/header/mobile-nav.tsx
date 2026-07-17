@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   List,
   SignOut,
@@ -51,54 +52,56 @@ export function MobileNav({ locale }: MobileNavProps) {
 
   const userRole = user?.role || "EMPLOYEE";
 
+  const t = useTranslations("Navigation");
+
   const allCategories = [
     {
-      label: "Gestão de Pessoas",
+      label: t("categories.peopleManagement"),
       items: [
         {
-          label: "Colaboradores",
+          label: t("items.employees.label"),
           href: `/${locale}/employees`,
           icon: <Users className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Novo Cadastro",
+          label: t("items.newEmployee.label"),
           href: `/${locale}/employees/new`,
           icon: <UserPlus className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Férias",
+          label: t("items.vacationsAdmin.label"),
           href: `/${locale}/absences/vacations`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Férias",
+          label: t("items.vacationsEmployee.label"),
           href: `/${locale}/absences/vacations/my-requests`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
         },
         {
-          label: "Atestados & Licenças",
+          label: t("items.leavesAdmin.label"),
           href: `/${locale}/absences/leaves`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Atestados",
+          label: t("items.leavesEmployee.label"),
           href: `/${locale}/absences/leaves/my-requests`,
           icon: <Calendar className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
         },
         {
-          label: "Documentos",
+          label: t("items.documents.label"),
           href: `/${locale}/documents`,
           icon: <FileText className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER", "EMPLOYEE"],
         },
         {
-          label: "Ponto",
+          label: t("items.timeClock.label"),
           href: `/${locale}/time-attendance/my-history`,
           icon: <Clock className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
@@ -106,16 +109,16 @@ export function MobileNav({ locale }: MobileNavProps) {
       ],
     },
     {
-      label: "Recrutamento",
+      label: t("categories.recruitment"),
       items: [
         {
-          label: "Quadro de Vagas",
+          label: t("items.jobs.label"),
           href: `/${locale}/recruitment`,
           icon: <Briefcase className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Nova Vaga",
+          label: t("items.newJob.label"),
           href: `/${locale}/recruitment/new`,
           icon: <FilePlus className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
@@ -123,34 +126,34 @@ export function MobileNav({ locale }: MobileNavProps) {
       ],
     },
     {
-      label: "Organização",
+      label: t("categories.organization"),
       items: [
         {
-          label: "Departamentos",
+          label: t("items.departments.label"),
           href: `/${locale}/organization/departments`,
           icon: <Buildings className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Cargos",
+          label: t("items.positions.label"),
           href: `/${locale}/organization/positions`,
           icon: <Buildings className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Logs de Auditoria",
+          label: t("items.auditLogs.label"),
           href: `/${locale}/audit`,
           icon: <ClipboardText className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Contas de Usuário",
+          label: t("items.userAccounts.label"),
           href: `/${locale}/organization/users`,
           icon: <Users className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Ajustes de Ponto",
+          label: t("items.timeCorrections.label"),
           href: `/${locale}/time-attendance/admin/corrections`,
           icon: <Clock className="w-5 h-5 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],

@@ -386,5 +386,89 @@
     "saving": "Saving...",
     "changePassword": "Change Password",
     "changing": "Changing..."
+  },
+  "Navigation": {
+    "categories": {
+      "peopleManagement": "People Management",
+      "recruitment": "Recruitment",
+      "organization": "Organization"
+    },
+    "items": {
+      "employees": {
+        "label": "Employees",
+        "desc": "Employee database and profiles."
+      },
+      "newEmployee": {
+        "label": "New Registration",
+        "desc": "Add new employees to the system."
+      },
+      "vacationsAdmin": {
+        "label": "Vacations",
+        "desc": "Vacation control and approval."
+      },
+      "vacationsEmployee": {
+        "label": "Vacations",
+        "desc": "Request vacation and view periods."
+      },
+      "leavesAdmin": {
+        "label": "Certificates & Leaves",
+        "desc": "Leave and absence control."
+      },
+      "leavesEmployee": {
+        "label": "Certificates",
+        "desc": "Submit certificates and medical leaves."
+      },
+      "documents": {
+        "label": "Documents",
+        "desc": "Agreements, contracts, and receipts."
+      },
+      "timeClock": {
+        "label": "Time Clock",
+        "desc": "Check-in logs and hours bank."
+      },
+      "jobs": {
+        "label": "Job Openings",
+        "desc": "Job postings and active candidates."
+      },
+      "newJob": {
+        "label": "New Job Posting",
+        "desc": "Create and publish job postings."
+      },
+      "departments": {
+        "label": "Departments",
+        "desc": "View and manage company departments."
+      },
+      "positions": {
+        "label": "Job Titles",
+        "desc": "Define positions and salary ranges."
+      },
+      "auditLogs": {
+        "label": "Audit Logs",
+        "desc": "Monitor the history of critical actions."
+      },
+      "userAccounts": {
+        "label": "User Accounts",
+        "desc": "System credentials and access roles."
+      },
+      "timeCorrections": {
+        "label": "Time Adjustments",
+        "desc": "Approve employee work shift adjustments."
+      }
+    }
+  },
+  "UserDropdown": {
+    "myProfile": "My Profile",
+    "logout": "Log Out",
+    "roles": {
+      "ADMIN": "Administrator",
+      "HR": "Human Resources",
+      "MANAGER": "Manager",
+      "EMPLOYEE": "Employee"
+    }
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "unread": "unread",
+    "empty": "No notifications found."
   }
 }

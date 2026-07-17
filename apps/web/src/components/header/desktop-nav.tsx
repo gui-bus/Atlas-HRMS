@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import {
   CaretDown,
   Users,
@@ -63,62 +64,64 @@ export function DesktopNav({ locale }: DesktopNavProps) {
     }, 150);
   };
 
+  const t = useTranslations("Navigation");
+
   const allCategories: MenuCategory[] = [
     {
-      label: "Gestão de Pessoas",
+      label: t("categories.peopleManagement"),
       items: [
         {
-          label: "Colaboradores",
-          desc: "Base cadastral de funcionários e perfis.",
+          label: t("items.employees.label"),
+          desc: t("items.employees.desc"),
           href: `/${locale}/employees`,
           icon: <Users className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Novo Cadastro",
-          desc: "Adicionar novos colaboradores ao sistema.",
+          label: t("items.newEmployee.label"),
+          desc: t("items.newEmployee.desc"),
           href: `/${locale}/employees/new`,
           icon: <UserPlus className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Férias",
-          desc: "Controle e aprovação de ausências de férias.",
+          label: t("items.vacationsAdmin.label"),
+          desc: t("items.vacationsAdmin.desc"),
           href: `/${locale}/absences/vacations`,
           icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Férias",
-          desc: "Solicitar férias e consultar períodos.",
+          label: t("items.vacationsEmployee.label"),
+          desc: t("items.vacationsEmployee.desc"),
           href: `/${locale}/absences/vacations/my-requests`,
           icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
         },
         {
-          label: "Atestados & Licenças",
-          desc: "Controle de licenças e afastamentos.",
+          label: t("items.leavesAdmin.label"),
+          desc: t("items.leavesAdmin.desc"),
           href: `/${locale}/absences/leaves`,
           icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Atestados",
-          desc: "Registrar atestados e licenças médicas.",
+          label: t("items.leavesEmployee.label"),
+          desc: t("items.leavesEmployee.desc"),
           href: `/${locale}/absences/leaves/my-requests`,
           icon: <Calendar className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
         },
         {
-          label: "Documentos",
-          desc: "Termos, contratos e comprovantes.",
+          label: t("items.documents.label"),
+          desc: t("items.documents.desc"),
           href: `/${locale}/documents`,
           icon: <FileText className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER", "EMPLOYEE"],
         },
         {
-          label: "Ponto",
-          desc: "Histórico de marcações e banco de horas.",
+          label: t("items.timeClock.label"),
+          desc: t("items.timeClock.desc"),
           href: `/${locale}/time-attendance/my-history`,
           icon: <Clock className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["EMPLOYEE"],
@@ -126,18 +129,18 @@ export function DesktopNav({ locale }: DesktopNavProps) {
       ],
     },
     {
-      label: "Recrutamento",
+      label: t("categories.recruitment"),
       items: [
         {
-          label: "Quadro de Vagas",
-          desc: "Processos seletivos e candidatos ativos.",
+          label: t("items.jobs.label"),
+          desc: t("items.jobs.desc"),
           href: `/${locale}/recruitment`,
           icon: <Briefcase className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Nova Vaga",
-          desc: "Criar e publicar processos seletivos públicos.",
+          label: t("items.newJob.label"),
+          desc: t("items.newJob.desc"),
           href: `/${locale}/recruitment/new`,
           icon: <FilePlus className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
@@ -145,39 +148,39 @@ export function DesktopNav({ locale }: DesktopNavProps) {
       ],
     },
     {
-      label: "Organização",
+      label: t("categories.organization"),
       items: [
         {
-          label: "Departamentos",
-          desc: "Listar e gerenciar departamentos da empresa.",
+          label: t("items.departments.label"),
+          desc: t("items.departments.desc"),
           href: `/${locale}/organization/departments`,
           icon: <Buildings className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Cargos",
-          desc: "Definir cargos e faixas salariais.",
+          label: t("items.positions.label"),
+          desc: t("items.positions.desc"),
           href: `/${locale}/organization/positions`,
           icon: <Buildings className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],
         },
         {
-          label: "Logs de Auditoria",
-          desc: "Monitore o histórico de operações críticas.",
+          label: t("items.auditLogs.label"),
+          desc: t("items.auditLogs.desc"),
           href: `/${locale}/audit`,
           icon: <ClipboardText className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Contas de Usuário",
-          desc: "Níveis de acesso e credenciais do sistema.",
+          label: t("items.userAccounts.label"),
+          desc: t("items.userAccounts.desc"),
           href: `/${locale}/organization/users`,
           icon: <Users className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR"],
         },
         {
-          label: "Ajustes de Ponto",
-          desc: "Aprovar correções de jornada dos colaboradores.",
+          label: t("items.timeCorrections.label"),
+          desc: t("items.timeCorrections.desc"),
           href: `/${locale}/time-attendance/admin/corrections`,
           icon: <Clock className="w-8 h-8 text-primary shrink-0" />,
           allowedRoles: ["ADMIN", "HR", "MANAGER"],

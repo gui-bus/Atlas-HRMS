@@ -25,6 +25,7 @@ interface NotificationDropdownProps {
 export function NotificationDropdown({ locale }: NotificationDropdownProps) {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
+  const t = useTranslations("Notifications");
 
   // --- Fetch notifications ---
   const { data: notifications = [], isLoading } = useQuery({
@@ -80,10 +81,10 @@ export function NotificationDropdown({ locale }: NotificationDropdownProps) {
         side="bottom"
       >
         <div className="px-3 py-2 flex items-center justify-between text-foreground">
-          <span className="text-sm font-bold tracking-tight">Notificações</span>
+          <span className="text-sm font-bold tracking-tight">{t("title")}</span>
           {unreadCount > 0 && (
             <span className="text-xs text-muted-foreground font-normal">
-              {unreadCount} não lidas
+              {unreadCount} {t("unread")}
             </span>
           )}
         </div>
@@ -95,9 +96,7 @@ export function NotificationDropdown({ locale }: NotificationDropdownProps) {
               <CircleNotch className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           ) : notifications.length === 0 ? (
-            <div className="py-8 text-center text-xs text-muted-foreground">
-              Nenhuma notificação encontrada.
-            </div>
+            <div className="py-8 text-center text-xs text-muted-foreground">{t("empty")}</div>
           ) : (
             notifications.map((item) => (
               <div
