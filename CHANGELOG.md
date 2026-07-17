@@ -4,6 +4,30 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.4.0] - 2026-07-17
+
+### Adicionado
+
+- **Dashboard Administrativo Enriquecido**: A visão do painel para ADMIN, HR e MANAGER foi expandida com 3 novos cards operacionais — "Admissões do Mês" (colaboradores admitidos no mês corrente), "Correções de Ponto Pendentes" (aprovações de `TimeCorrectionRequest` em aberto) e "Ausências Ativas" (que já era retornado pela API mas não exibido no frontend).
+- **Funil de Recrutamento no Dashboard**: Nova seção visual com barras proporcionais exibindo a distribuição de candidaturas por estágio do pipeline ATS (`applicationsByStage`), com destaque para contratados (verde) e recusados (cinza).
+- **Endpoint `GET /dashboard/employee-summary`**: Novo endpoint disponível para todos os roles autenticados que retorna dados pessoais do colaborador logado — saldo do banco de horas, contagem de férias e licenças pendentes de aprovação, número de registros de ponto realizados hoje e lista das próximas férias aprovadas (até 3 registros).
+- **Dashboard do Colaborador (EMPLOYEE)**: A visão do colaborador foi ampliada com 3 cards informativos abaixo do `ClockWidget` — "Banco de Horas" (saldo com cor dinâmica), "Próximas Férias" (data da próxima férias aprovada ou mensagem de ausência) e "Minhas Solicitações" (contagem de férias e licenças aguardando aprovação, com ícone de check quando limpo).
+- **Seção `TimeAttendance` nos arquivos de i18n**: Adicionada nova seção de tradução nos três idiomas (`pt.json`, `en.json`, `es.json`) cobrindo todos os textos do `ClockWidget`.
+- **Novas chaves de tradução em `Dashboard`**: Adicionadas ~30 novas chaves nos três idiomas para suportar o redesign do painel (saudações por período do dia, descrições dos cards, rótulos das ações rápidas, mensagens de estado vazio, etc.).
+
+### Alterado
+
+- **`DashboardStatsResponseDto`**: Adicionados 3 novos campos ao DTO de resposta — `newHiresThisMonth`, `pendingCorrections` e `applicationsByStage`.
+- **`DashboardService.getStats()`**: Extendido com 3 novas queries paralelas no `Promise.all` — count de admissões do mês, count de correções de ponto pendentes e `groupBy` de candidaturas por estágio.
+- **`ClockWidget`**: Todos os textos hardcoded em português foram migrados para `useTranslations("TimeAttendance")`, corrigindo violação das regras de i18n do projeto. Também foi corrigida a lógica do ícone de notificação — sucesso agora usa `CheckCircle` e erro usa `WarningCircle`.
+- **`page.tsx` (Dashboard)**: Redesign completo da página — visão administrativa agora organiza os cards em 2 linhas (4 + 3) e inclui a seção de funil; visão do colaborador adiciona 3 cards informativos ao `ClockWidget`. Todos os textos migrados para i18n.
+
+### Corrigido
+
+- **Interface `DashboardStats` no frontend**: Atualizada para incluir os 3 novos campos retornados pela API, evitando incompatibilidade de tipos TypeScript.
+
+---
+
 ## [1.3.1] - 2026-07-16
 
 ### Adicionado

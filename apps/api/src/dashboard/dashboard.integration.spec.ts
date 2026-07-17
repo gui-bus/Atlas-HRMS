@@ -14,12 +14,21 @@ describe("Dashboard Integration Tests (Supertest)", () => {
   let jwtService: JwtService;
 
   const mockPrisma = {
-    employee: { count: jest.fn().mockResolvedValue(50) },
+    employee: {
+      count: jest.fn().mockResolvedValue(50),
+      findUnique: jest.fn().mockResolvedValue(null),
+    },
     department: { count: jest.fn().mockResolvedValue(5) },
-    vacation: { count: jest.fn().mockResolvedValue(3) },
+    vacation: { count: jest.fn().mockResolvedValue(3), findMany: jest.fn().mockResolvedValue([]) },
     leave: { count: jest.fn().mockResolvedValue(2) },
     recruitment: { count: jest.fn().mockResolvedValue(4) },
-    application: { count: jest.fn().mockResolvedValue(20) },
+    application: {
+      count: jest.fn().mockResolvedValue(20),
+      groupBy: jest.fn().mockResolvedValue([]),
+    },
+    timeCorrectionRequest: { count: jest.fn().mockResolvedValue(0) },
+    hourBankLedger: { findFirst: jest.fn().mockResolvedValue(null) },
+    timeRecord: { count: jest.fn().mockResolvedValue(0) },
   };
 
   let adminToken: string;
@@ -56,11 +65,17 @@ describe("Dashboard Integration Tests (Supertest)", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockPrisma.employee.count.mockResolvedValue(50);
+    mockPrisma.employee.findUnique.mockResolvedValue(null);
     mockPrisma.department.count.mockResolvedValue(5);
     mockPrisma.vacation.count.mockResolvedValue(3);
+    mockPrisma.vacation.findMany.mockResolvedValue([]);
     mockPrisma.leave.count.mockResolvedValue(2);
     mockPrisma.recruitment.count.mockResolvedValue(4);
     mockPrisma.application.count.mockResolvedValue(20);
+    mockPrisma.application.groupBy.mockResolvedValue([]);
+    mockPrisma.timeCorrectionRequest.count.mockResolvedValue(0);
+    mockPrisma.hourBankLedger.findFirst.mockResolvedValue(null);
+    mockPrisma.timeRecord.count.mockResolvedValue(0);
   });
 
   describe("GET /dashboard", () => {
@@ -80,6 +95,25 @@ describe("Dashboard Integration Tests (Supertest)", () => {
       expect(response.body).toHaveProperty("hiredCount");
     });
 
+    it("should return the 3 new fields: newHiresThisMonth, pendingCorrections, applicationsByStage", async () => {
+      mockPrisma.application.groupBy.mockResolvedValue([
+        { status: "SUBMITTED", _count: { status: 10 } },
+        { status: "HIRED", _count: { status: 5 } },
+      ]);
+
+      const response = await request(app.getHttpServer())
+        .get("/dashboard")
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("newHiresThisMonth");
+      expect(response.body).toHaveProperty("pendingCorrections");
+      expect(response.body).toHaveProperty("applicationsByStage");
+      expect(typeof response.body.newHiresThisMonth).toBe("number");
+      expect(typeof response.body.pendingCorrections).toBe("number");
+      expect(typeof response.body.applicationsByStage).toBe("object");
+    });
+
     it("should allow HR to access dashboard stats", async () => {
       const response = await request(app.getHttpServer())
         .get("/dashboard")
@@ -97,7 +131,7 @@ describe("Dashboard Integration Tests (Supertest)", () => {
       expect(response.status).toBe(200);
     });
 
-    it("should forbid EMPLOYEE from accessing dashboard", async () => {
+    it("should forbid EMPLOYEE from accessing dashboard stats", async () => {
       const response = await request(app.getHttpServer())
         .get("/dashboard")
         .set("Authorization", `Bearer ${employeeToken}`);
@@ -120,6 +154,58 @@ describe("Dashboard Integration Tests (Supertest)", () => {
       expect(typeof response.body.totalEmployees).toBe("number");
       expect(typeof response.body.activeAbsences).toBe("number");
       expect(typeof response.body.openJobs).toBe("number");
+      expect(typeof response.body.newHiresThisMonth).toBe("number");
+      expect(typeof response.body.pendingCorrections).toBe("number");
+    });
+  });
+
+  describe("GET /dashboard/employee-summary", () => {
+    it("should return 200 for EMPLOYEE role", async () => {
+      const response = await request(app.getHttpServer())
+        .get("/dashboard/employee-summary")
+        .set("Authorization", `Bearer ${employeeToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("hourBankBalance");
+      expect(response.body).toHaveProperty("pendingVacationsCount");
+      expect(response.body).toHaveProperty("pendingLeavesCount");
+      expect(response.body).toHaveProperty("todayRecordsCount");
+      expect(response.body).toHaveProperty("upcomingVacations");
+    });
+
+    it("should return 200 for ADMIN role", async () => {
+      const response = await request(app.getHttpServer())
+        .get("/dashboard/employee-summary")
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(response.status).toBe(200);
+    });
+
+    it("should return 200 for HR role", async () => {
+      const response = await request(app.getHttpServer())
+        .get("/dashboard/employee-summary")
+        .set("Authorization", `Bearer ${hrToken}`);
+
+      expect(response.status).toBe(200);
+    });
+
+    it("should return zeros when employee record is not linked to user", async () => {
+      mockPrisma.employee.findUnique.mockResolvedValue(null);
+
+      const response = await request(app.getHttpServer())
+        .get("/dashboard/employee-summary")
+        .set("Authorization", `Bearer ${employeeToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.hourBankBalance).toBe(0);
+      expect(response.body.pendingVacationsCount).toBe(0);
+      expect(response.body.upcomingVacations).toEqual([]);
+    });
+
+    it("should return 401 without authentication", async () => {
+      const response = await request(app.getHttpServer()).get("/dashboard/employee-summary");
+
+      expect(response.status).toBe(401);
     });
   });
 });

@@ -35,11 +35,11 @@ describe("ClockWidget Unit Tests", () => {
   test("renders clock widget with digital clock and lists today records", async () => {
     renderWithProviders(<ClockWidget />);
 
-    expect(screen.getByText("Horário de Brasília")).toBeInTheDocument();
-    expect(screen.getByText("Banco de Horas:")).toBeInTheDocument();
+    expect(screen.getByText("brasiliaTime")).toBeInTheDocument();
+    expect(screen.getByText("hourBank")).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText("Entrada")).toBeInTheDocument();
+      expect(screen.getByText("entry")).toBeInTheDocument();
       expect(screen.getByText("+02h 00m")).toBeInTheDocument(); // 120 mins = +02h 00m
     });
   });

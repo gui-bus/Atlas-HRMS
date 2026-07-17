@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Clock, CheckCircle, WarningCircle, Calendar } from "@phosphor-icons/react";
+import { CheckCircle, WarningCircle } from "@phosphor-icons/react";
+import { useTranslations } from "next-intl";
 import { timeAttendanceService } from "@/services/time-attendance.service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function ClockWidget() {
+  const t = useTranslations("TimeAttendance");
   const queryClient = useQueryClient();
   const [time, setTime] = useState<string>("");
   const [dateStr, setDateStr] = useState<string>("");
@@ -23,7 +25,6 @@ export function ClockWidget() {
     }, 5000);
   };
 
-  // Update clock every second
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -42,19 +43,16 @@ export function ClockWidget() {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch today's records
-  const { data: todayRecords = [], isLoading } = useQuery({
+  const { data: todayRecords = [] } = useQuery({
     queryKey: ["today-records"],
     queryFn: () => timeAttendanceService.getTodayRecords(),
   });
 
-  // Fetch bank of hours balance
   const { data: balanceMinutes = 0 } = useQuery({
     queryKey: ["hour-bank-balance"],
     queryFn: () => timeAttendanceService.getHourBankBalance(),
   });
 
-  // Register Point mutation
   const clockInMutation = useMutation({
     mutationFn: () => {
       return new Promise<any>((resolve, reject) => {
@@ -73,7 +71,6 @@ export function ClockWidget() {
             },
             async () => {
               try {
-                // If location is denied, record anyway
                 const res = await timeAttendanceService.clockIn(comments);
                 resolve(res);
               } catch (err) {
@@ -86,35 +83,35 @@ export function ClockWidget() {
         }
       });
     },
-    onSuccess: (data) => {
-      showNotification(`Ponto registrado com sucesso!`, "success");
+    onSuccess: () => {
+      showNotification(t("clockSuccess"), "success");
       setComments("");
       setShowComments(false);
       queryClient.invalidateQueries({ queryKey: ["today-records"] });
       queryClient.invalidateQueries({ queryKey: ["hour-bank-balance"] });
     },
     onError: (error: any) => {
-      const msg = error?.response?.data?.message || "Erro ao registrar ponto";
+      const msg = error?.response?.data?.message || t("clockError");
       showNotification(msg, "error");
     },
   });
 
   const getRecordTypeLabel = (type: string) => {
-    const map = {
-      ENTRY: "Entrada",
-      INTERVAL_OUT: "Saída Almoço",
-      INTERVAL_IN: "Retorno Almoço",
-      EXIT: "Saída Expediente",
+    const map: Record<string, string> = {
+      ENTRY: t("entry"),
+      INTERVAL_OUT: t("intervalOut"),
+      INTERVAL_IN: t("intervalIn"),
+      EXIT: t("exit"),
     };
     return map[type] || type;
   };
 
   const getNextRecordLabel = () => {
-    if (todayRecords.length === 0) return "Entrada";
-    if (todayRecords.length === 1) return "Saída Almoço";
-    if (todayRecords.length === 2) return "Retorno Almoço";
-    if (todayRecords.length === 3) return "Saída Expediente";
-    return "Jornada Completa";
+    if (todayRecords.length === 0) return t("entry");
+    if (todayRecords.length === 1) return t("intervalOut");
+    if (todayRecords.length === 2) return t("intervalIn");
+    if (todayRecords.length === 3) return t("exit");
+    return t("journeyComplete");
   };
 
   const formatBalance = (mins: number) => {
@@ -127,13 +124,11 @@ export function ClockWidget() {
 
   return (
     <div className="flex flex-col items-center justify-center space-y-8 w-full text-center animate-fade-in py-4">
-      {/* Clock and Meta */}
       <div className="space-y-3">
         <div className="text-sm font-bold tracking-wider text-primary uppercase select-none">
-          Horário de Brasília
+          {t("brasiliaTime")}
         </div>
 
-        {/* Massive, crisp clock */}
         <div className="text-8xl md:text-9xl font-black tracking-tighter text-foreground font-mono tabular-nums leading-none select-none">
           {time || "00:00:00"}
         </div>
@@ -141,9 +136,8 @@ export function ClockWidget() {
         <div className="text-sm font-medium text-muted-foreground">{dateStr}</div>
       </div>
 
-      {/* Hour Bank Pill */}
       <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-muted/20 border-0 text-xs font-semibold">
-        <span className="text-muted-foreground">Banco de Horas:</span>
+        <span className="text-muted-foreground">{t("hourBank")}</span>
         <span
           className={`font-mono font-bold tabular-nums ${
             balanceMinutes >= 0 ? "text-emerald-500" : "text-destructive"
@@ -153,14 +147,12 @@ export function ClockWidget() {
         </span>
       </div>
 
-      {/* Actions and Timeline */}
       <div className="w-full max-w-sm space-y-6">
-        {/* Registration Button */}
         <div className="space-y-3">
           {showComments ? (
             <div className="space-y-2">
               <Input
-                placeholder="Observação opcional..."
+                placeholder={t("optionalNote")}
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 className="h-11 rounded-2xl text-sm bg-muted/45 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 text-center"
@@ -172,15 +164,15 @@ export function ClockWidget() {
                   className="flex-1 h-11 rounded-2xl text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 border-0"
                 >
                   {clockInMutation.isPending
-                    ? "Registrando..."
-                    : `Confirmar (${getNextRecordLabel()})`}
+                    ? t("registering")
+                    : `${t("confirm")} (${getNextRecordLabel()})`}
                 </Button>
                 <Button
                   variant="ghost"
                   onClick={() => setShowComments(false)}
                   className="h-11 rounded-2xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/30 border-0"
                 >
-                  Cancelar
+                  {t("cancel")}
                 </Button>
               </div>
             </div>
@@ -188,7 +180,7 @@ export function ClockWidget() {
             <Button
               onClick={() => {
                 if (todayRecords.length >= 4) {
-                  showNotification("Jornada de trabalho diária já concluída!", "error");
+                  showNotification(t("journeyAlreadyDone"), "error");
                   return;
                 }
                 setShowComments(true);
@@ -197,13 +189,12 @@ export function ClockWidget() {
               className="w-full h-12 rounded-2xl font-bold text-sm tracking-wide bg-primary text-primary-foreground hover:bg-primary/95 transition-all border-0"
             >
               {todayRecords.length >= 4
-                ? "Jornada Completa"
-                : `Registrar Ponto (${getNextRecordLabel()})`}
+                ? t("journeyComplete")
+                : `${t("clockIn")} (${getNextRecordLabel()})`}
             </Button>
           )}
         </div>
 
-        {/* Dynamic Journey Sequence - Clean Minimal Timeline */}
         <div className="grid grid-cols-4 gap-2 pt-2 text-center">
           {["ENTRY", "INTERVAL_OUT", "INTERVAL_IN", "EXIT"].map((type) => {
             const matched = todayRecords.find((r) => r.type === type);
@@ -230,7 +221,6 @@ export function ClockWidget() {
           })}
         </div>
 
-        {/* Local Notification Banner */}
         {notification && (
           <div
             className={`p-3 rounded-2xl text-xs font-semibold flex items-center justify-center gap-2 border-0 ${
@@ -239,7 +229,11 @@ export function ClockWidget() {
                 : "bg-destructive/10 text-destructive"
             }`}
           >
-            <WarningCircle className="w-4 h-4 shrink-0" />
+            {notification.type === "success" ? (
+              <CheckCircle className="w-4 h-4 shrink-0" />
+            ) : (
+              <WarningCircle className="w-4 h-4 shrink-0" />
+            )}
             <span>{notification.text}</span>
           </div>
         )}

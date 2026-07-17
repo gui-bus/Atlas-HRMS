@@ -9,6 +9,24 @@ export interface DashboardStats {
   openJobs: number;
   totalApplications: number;
   hiredCount: number;
+  newHiresThisMonth: number;
+  pendingCorrections: number;
+  applicationsByStage: Record<string, number>;
+}
+
+export interface UpcomingVacation {
+  id: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+}
+
+export interface EmployeeDashboardSummary {
+  hourBankBalance: number;
+  pendingVacationsCount: number;
+  pendingLeavesCount: number;
+  todayRecordsCount: number;
+  upcomingVacations: UpcomingVacation[];
 }
 
 export const dashboardService = {
@@ -18,6 +36,11 @@ export const dashboardService = {
     endDate?: string;
   }): Promise<DashboardStats> {
     const response = await api.get<DashboardStats>("/dashboard", { params });
+    return response.data;
+  },
+
+  async getEmployeeSummary(): Promise<EmployeeDashboardSummary> {
+    const response = await api.get<EmployeeDashboardSummary>("/dashboard/employee-summary");
     return response.data;
   },
 };
