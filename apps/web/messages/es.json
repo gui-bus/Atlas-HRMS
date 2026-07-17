@@ -504,7 +504,10 @@
     "saveChanges": "Guardar Cambios",
     "saving": "Guardando...",
     "changePassword": "Cambiar Contraseña",
-    "changing": "Cambiando..."
+    "changing": "Cambiando...",
+    "form": {
+      "cancel": "Cancelar"
+    }
   },
   "Users": {
     "title": "Cuentas de Usuario",

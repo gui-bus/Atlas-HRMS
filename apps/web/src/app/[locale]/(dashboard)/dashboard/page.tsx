@@ -93,7 +93,11 @@ export default function DashboardPage() {
       <div className="p-6 md:p-8 space-y-8 w-full animate-fade-in">
         <div className="space-y-1.5">
           <h1 className="text-2xl font-bold tracking-tight">
-            {getGreeting()}, {user?.email.split("@")[0]}!
+            {getGreeting()},{" "}
+            {user?.firstName || user?.employee?.firstName
+              ? `${user.firstName || user.employee?.firstName} ${user.lastName || user.employee?.lastName || ""}`.trim()
+              : user?.email.split("@")[0]}
+            !
           </h1>
           <p className="text-muted-foreground text-sm">
             {getRoleLabel(user?.role)} · {t("employeeSubtitle")}
@@ -193,7 +197,10 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="space-y-1.5">
         <h1 className="text-2xl font-bold tracking-tight">
-          {getGreeting()}, {user?.email.split("@")[0]}
+          {getGreeting()},{" "}
+          {user?.firstName || user?.employee?.firstName
+            ? `${user.firstName || user.employee?.firstName} ${user.lastName || user.employee?.lastName || ""}`.trim()
+            : user?.email.split("@")[0]}
         </h1>
         <p className="text-muted-foreground text-sm">
           {getRoleLabel(user?.role)} · {t("adminSubtitle")}

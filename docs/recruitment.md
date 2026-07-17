@@ -42,8 +42,8 @@ sequenceDiagram
 *   A restrição única garante que um mesmo candidato não pode aplicar duas vezes para a **mesma vaga** (`ConflictException 409`).
 
 ### 3. Pipeline de Candidaturas
-A vaga transiciona entre as seguintes etapas:
-`SUBMITTED` ➔ `SCREENING` ➔ `HR_INTERVIEW` ➔ `TECHNICAL_TEST` ➔ `TECHNICAL_INTERVIEW` ➔ `FINAL_INTERVIEW` ➔ `OFFER` ➔ `HIRED` (ou `REJECTED` / `WITHDRAWN`).
+A candidatura transiciona entre as seguintes etapas essenciais:
+`SCREENING` ➔ `HR_INTERVIEW` ➔ `TECHNICAL_TEST` ➔ `OFFER` ➔ `HIRED` (ou `REJECTED`).
 
 ### 4. Ação Explícita de Contratação (`/hire`)
 Quando a vaga chega na etapa final e o RH executa a chamada ao endpoint `POST /recruitments/applications/:id/hire`:

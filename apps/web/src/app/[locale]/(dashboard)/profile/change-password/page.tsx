@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormSectionHeader } from "@/components/form-section-header";
 import { useToast } from "@/components/ui/toast";
+import { FormHeader } from "@/components/form-header";
+import { FormActions } from "@/components/form-actions";
 
 interface RuleItem {
   id: string;
@@ -118,15 +120,14 @@ export default function ChangePasswordPage() {
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("changePassword")}</h1>
-          <p className="text-muted-foreground text-sm">
-            Altere a credencial de segurança da sua conta corporativa.
-          </p>
-        </div>
+        <FormHeader
+          title={t("changePassword")}
+          subTitle="Altere a credencial de segurança da sua conta corporativa."
+          requiredNotice={true}
+        />
       </div>
 
-      <form onSubmit={handlePasswordSubmit} className="space-y-8 w-full max-w-xl">
+      <form onSubmit={handlePasswordSubmit} className="space-y-8 w-full">
         <div className="space-y-4">
           <FormSectionHeader
             title="Alterar Senha"
@@ -257,25 +258,12 @@ export default function ChangePasswordPage() {
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-6 border-t border-muted/20">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 transition-colors"
-          >
-            {t("form.cancel")}
-          </Button>
-          <Button
-            type="submit"
-            disabled={changePasswordMutation.isPending}
-            className="rounded-2xl border-0 bg-primary hover:bg-primary/95 text-primary-foreground font-semibold px-6"
-          >
-            {changePasswordMutation.isPending && (
-              <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            {t("changePassword")}
-          </Button>
+        <div className="pt-6 border-t border-muted/20">
+          <FormActions
+            cancelText={t("form.cancel")}
+            submitText={t("changePassword")}
+            isSubmitting={changePasswordMutation.isPending}
+          />
         </div>
       </form>
     </div>

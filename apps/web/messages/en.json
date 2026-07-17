@@ -504,7 +504,10 @@
     "saveChanges": "Save Changes",
     "saving": "Saving...",
     "changePassword": "Change Password",
-    "changing": "Changing..."
+    "changing": "Changing...",
+    "form": {
+      "cancel": "Cancel"
+    }
   },
   "Users": {
     "title": "User Accounts",
