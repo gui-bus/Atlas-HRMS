@@ -72,6 +72,32 @@ export class RecruitmentController {
     return this.recruitmentService.findAllPublic(query);
   }
 
+  @Get("admin")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "Listar todas as vagas com todos os status (Admin, RH e Gerente)",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Lista paginada de vagas (todos os status)",
+    type: PaginatedRecruitmentResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Não autenticado",
+    type: UnauthorizedErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: "Permissão insuficiente",
+    type: ForbiddenErrorResponseDto,
+  })
+  async findAllAdmin(@Query() query: QueryRecruitmentDto) {
+    return this.recruitmentService.findAllAdmin(query);
+  }
+
   @Get(":slug")
   @ApiOperation({
     summary: "Detalhar uma vaga por slug e incrementar visualizações (Público)",
@@ -147,32 +173,6 @@ export class RecruitmentController {
   // =============================================
   //  ROTAS ADMINISTRATIVAS (autenticadas)
   // =============================================
-
-  @Get("admin")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: "Listar todas as vagas com todos os status (Admin, RH e Gerente)",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Lista paginada de vagas (todos os status)",
-    type: PaginatedRecruitmentResponseDto,
-  })
-  @ApiResponse({
-    status: 401,
-    description: "Não autenticado",
-    type: UnauthorizedErrorResponseDto,
-  })
-  @ApiResponse({
-    status: 403,
-    description: "Permissão insuficiente",
-    type: ForbiddenErrorResponseDto,
-  })
-  async findAllAdmin(@Query() query: QueryRecruitmentDto) {
-    return this.recruitmentService.findAllAdmin(query);
-  }
 
   @Post("admin")
   @UseGuards(AuthGuard, RolesGuard)
