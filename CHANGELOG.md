@@ -8,17 +8,15 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ### Adicionado
 
-- **Quadro Kanban Interativo (Recrutamento)**: A página de detalhes de uma vaga (`/recruitment/[id]`) foi completamente reescrita como um quadro Kanban drag-and-drop funcional utilizando a biblioteca `@dnd-kit/core`, `@dnd-kit/sortable` e `@dnd-kit/utilities`.
-  - **Arrastar e Soltar entre Fases**: Candidatos podem ser movidos entre as fases do funil (`SCREENING → HR_INTERVIEW → TECHNICAL_TEST → OFFER → HIRED → REJECTED`) simplesmente arrastando os cartões.
-  - **Atualizações Otimistas**: A interface atualiza imediatamente ao soltar o cartão, sem aguardar resposta do servidor. Em caso de erro, o estado é revertido automaticamente via mecanismo de rollback do TanStack Query.
-  - **DragOverlay**: Um cartão fantasma é exibido durante o arraste para dar feedback visual preciso da posição do item sendo movido.
-  - **Handle de Arraste**: Ícone `DotsSixVertical` posicionado no canto superior direito de cada cartão, evitando conflitos de clique com botões de ação.
+- **Quadro Kanban de Recrutamento**: A página de detalhes de uma vaga (`/recruitment/[id]`) foi completamente reescrita como um quadro Kanban funcional e interativo.
+  - **Mudança de Fases por Botões**: Candidatos podem ser movidos entre as fases do funil (`SCREENING → HR_INTERVIEW → TECHNICAL_TEST → OFFER → HIRED → REJECTED`) através de setas direcionais nos cards.
+  - **Atualizações Otimistas**: A interface atualiza imediatamente ao clicar nas setas, sem aguardar resposta do servidor. Em caso de erro, o estado é revertido automaticamente via mecanismo de rollback do TanStack Query.
+  - **Sinalização Visual**: Cards compactos de fácil navegação com botões dedicados de controle e admissão direta.
 - **Simplificação do Pipeline de Recrutamento (Backend & Frontend)**:
   - O enum `ApplicationStatus` do Prisma foi reduzido para incluir apenas os 6 estados essenciais: `SCREENING` (novo default), `HR_INTERVIEW`, `TECHNICAL_TEST`, `OFFER`, `HIRED` e `REJECTED`.
   - Remoção completa dos estados `SUBMITTED`, `TECHNICAL_INTERVIEW`, `FINAL_INTERVIEW`, `MANAGER_INTERVIEW` e `WITHDRAWN`.
   - Alinhamento de DTOs, mocks, testes de integração e seed do banco de dados na API.
 - **Links de Portal Público de Vagas**:
-  - Botão "Ver Portal de Vagas" adicionado no cabeçalho do Kanban (com botão de copiar link público via `navigator.clipboard`).
   - Link de redirecionamento "Ver Portal de Vagas" integrado na seção "Funil de Recrutamento" do dashboard principal para administradores e RH.
 
 ### Alterado

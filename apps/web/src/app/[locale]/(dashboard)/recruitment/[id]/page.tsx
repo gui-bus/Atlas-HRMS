@@ -1,23 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  rectIntersection,
-  useDroppable,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
@@ -26,11 +9,10 @@ import {
   CircleNotch,
   XCircle,
   ArrowSquareOut,
-  Copy,
-  Check,
-  DotsSixVertical,
   File,
   UserCheck,
+  CaretLeft,
+  CaretRight,
 } from "@phosphor-icons/react";
 
 import { recruitmentService, Application } from "@/services/recruitment.service";
@@ -52,96 +34,99 @@ interface KanbanCardProps {
   app: Application;
   onReject: (id: string) => void;
   onHire: (id: string) => void;
+  onMoveStage: (id: string, newStage: Stage) => void;
   isHiring: boolean;
   resumeLabel: string;
   admitLabel: string;
   admittingLabel: string;
+  changeStageLabel: string;
+  currentIndex: number;
 }
 
 function KanbanCard({
   app,
   onReject,
   onHire,
+  onMoveStage,
   isHiring,
   resumeLabel,
   admitLabel,
   admittingLabel,
+  changeStageLabel,
+  currentIndex,
 }: KanbanCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: app.id,
-    data: { type: "card", status: app.status },
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.3 : 1,
-  };
-
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={`relative p-3 rounded-xl space-y-2 select-none hover:bg-muted/50 transition-colors duration-150 border border-transparent cursor-grab active:cursor-grabbing ${
-        isDragging ? "bg-muted/10 border-dashed border-muted" : "bg-muted/30"
-      }`}
-    >
-      <div className="absolute top-2.5 right-2.5 p-0.5 rounded text-muted-foreground/30 hover:text-muted-foreground/70">
-        <DotsSixVertical className="h-4 w-4" />
+    <div className="relative p-3.5 rounded-xl border border-muted/20 bg-background shadow-[0_2px_6px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_6px_rgba(0,0,0,0.15)] transition-all duration-200 hover:border-muted-foreground/30 hover:shadow-md">
+      <div className="space-y-1 pr-1">
+        <p className="font-bold text-sm text-foreground tracking-tight leading-none">{app.candidateName}</p>
+        <p className="text-[11px] text-muted-foreground truncate">{app.candidateEmail}</p>
       </div>
 
-      <div className="space-y-0.5 pr-6">
-        <p className="font-semibold text-sm text-foreground leading-tight">{app.candidateName}</p>
-        <p className="text-xs text-muted-foreground truncate">{app.candidateEmail}</p>
-      </div>
-
-      <div className="flex items-center justify-between pt-0.5">
+      <div className="flex flex-col gap-2 pt-2.5 mt-2.5 border-t border-muted/10">
         {app.resumeUrl ? (
           <a
             href={app.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
-            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-1 text-[11px] font-bold text-primary/95 hover:text-primary transition-colors hover:underline w-fit"
           >
-            <File className="h-3 w-3" />
-            {resumeLabel}
-            <ArrowSquareOut className="h-2.5 w-2.5" />
+            <File className="h-3.5 w-3.5 shrink-0" />
+            <span>{resumeLabel}</span>
+            <ArrowSquareOut className="h-2.5 w-2.5 shrink-0" />
           </a>
         ) : (
           <span />
         )}
 
-        <div className="flex items-center gap-1">
-          {app.status !== "HIRED" && app.status !== "REJECTED" && (
-            <button
-              className="h-6 w-6 flex items-center justify-center rounded-md text-destructive hover:bg-destructive/10 transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                onReject(app.id);
-              }}
-            >
-              <XCircle className="h-3.5 w-3.5" />
-            </button>
-          )}
-
-          {app.status === "HIRED" && (
+        <div className="flex items-center justify-between gap-1.5 w-full">
+          {app.status === "HIRED" ? (
             <Button
               size="sm"
-              className="h-6 text-[10px] px-2 rounded-md gap-1"
+              className="h-7 text-[10px] px-3 rounded-lg gap-1.5 font-bold border-0 bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-150 w-full"
               disabled={isHiring}
-              onClick={(e) => {
-                e.stopPropagation();
-                onHire(app.id);
-              }}
+              onClick={() => onHire(app.id)}
             >
-              <UserCheck className="h-3 w-3" />
-              {isHiring ? admittingLabel : admitLabel}
+              <UserCheck className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{isHiring ? admittingLabel : admitLabel}</span>
             </Button>
+          ) : (
+            <span />
+          )}
+
+          {app.status !== "HIRED" && app.status !== "REJECTED" && (
+            <button
+              className="h-7 w-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-150 ml-auto shrink-0"
+              onClick={() => onReject(app.id)}
+            >
+              <XCircle className="h-4 w-4" />
+            </button>
           )}
         </div>
+      </div>
+
+      {/* Stage Transition Buttons */}
+      <div className="flex justify-between items-center gap-1 mt-2.5 pt-2 border-t border-dashed border-muted/10">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-6 w-6 rounded-md hover:bg-muted shrink-0"
+          disabled={currentIndex === 0}
+          onClick={() => onMoveStage(app.id, STAGES[currentIndex - 1])}
+        >
+          <CaretLeft className="h-3.5 w-3.5 text-muted-foreground" />
+        </Button>
+        <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wide truncate max-w-[130px]">
+          {changeStageLabel}
+        </span>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-6 w-6 rounded-md hover:bg-muted shrink-0"
+          disabled={currentIndex === STAGES.length - 1}
+          onClick={() => onMoveStage(app.id, STAGES[currentIndex + 1])}
+        >
+          <CaretRight className="h-3.5 w-3.5 text-muted-foreground" />
+        </Button>
       </div>
     </div>
   );
@@ -153,10 +138,13 @@ interface KanbanColumnProps {
   apps: Application[];
   onReject: (id: string) => void;
   onHire: (id: string) => void;
+  onMoveStage: (id: string, newStage: Stage) => void;
   hiringId: string | null;
   resumeLabel: string;
   admitLabel: string;
   admittingLabel: string;
+  changeStageLabel: string;
+  stageIndex: number;
 }
 
 function KanbanColumn({
@@ -165,22 +153,18 @@ function KanbanColumn({
   apps,
   onReject,
   onHire,
+  onMoveStage,
   hiringId,
   resumeLabel,
   admitLabel,
   admittingLabel,
+  changeStageLabel,
+  stageIndex,
 }: KanbanColumnProps) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: stage,
-  });
-
   return (
     <div
-      ref={setNodeRef}
       data-stage={stage}
-      className={`flex flex-col rounded-2xl p-3 w-[220px] flex-shrink-0 transition-colors duration-200 border border-transparent ${
-        isOver ? "bg-primary/5 border-dashed border-primary/20" : "bg-muted/20"
-      }`}
+      className="flex flex-col rounded-2xl p-3 w-[270px] flex-shrink-0 bg-muted/20"
     >
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="font-bold text-xs uppercase tracking-wider text-foreground">{label}</h3>
@@ -189,22 +173,23 @@ function KanbanColumn({
         </span>
       </div>
 
-      <SortableContext items={apps.map((a) => a.id)} strategy={verticalListSortingStrategy}>
-        <div className="flex flex-col gap-2 flex-1 min-h-[150px]">
-          {apps.map((app) => (
-            <KanbanCard
-              key={app.id}
-              app={app}
-              onReject={onReject}
-              onHire={onHire}
-              isHiring={hiringId === app.id}
-              resumeLabel={resumeLabel}
-              admitLabel={admitLabel}
-              admittingLabel={admittingLabel}
-            />
-          ))}
-        </div>
-      </SortableContext>
+      <div className="flex flex-col gap-2 flex-1 min-h-[150px]">
+        {apps.map((app) => (
+          <KanbanCard
+            key={app.id}
+            app={app}
+            onReject={onReject}
+            onHire={onHire}
+            onMoveStage={onMoveStage}
+            isHiring={hiringId === app.id}
+            resumeLabel={resumeLabel}
+            admitLabel={admitLabel}
+            admittingLabel={admittingLabel}
+            changeStageLabel={changeStageLabel}
+            currentIndex={stageIndex}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -215,16 +200,8 @@ export default function RecruitmentDetailsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const id = params?.id as string;
-  const locale = params?.locale || "pt";
 
   const [hiringId, setHiringId] = useState<string | null>(null);
-  const [activeCard, setActiveCard] = useState<Application | null>(null);
-  const [localApps, setLocalApps] = useState<Application[] | null>(null);
-  const [copiedLink, setCopiedLink] = useState(false);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-  );
 
   const { data: vacancy, isLoading: loadingVacancy } = useQuery({
     queryKey: ["recruitment", id],
@@ -239,17 +216,12 @@ export default function RecruitmentDetailsPage() {
     select: (data) => data.data,
   });
 
-  const applications: Application[] = localApps ?? applicationsResponse ?? [];
+  const applications: Application[] = applicationsResponse ?? [];
 
   const updateStatusMutation = useMutation({
     mutationFn: (args: { applicationId: string; status: string }) =>
       recruitmentService.updateApplicationStatus(args.applicationId, { status: args.status }),
     onSuccess: () => {
-      setLocalApps(null);
-      queryClient.invalidateQueries({ queryKey: ["applications", id] });
-    },
-    onError: () => {
-      setLocalApps(null);
       queryClient.invalidateQueries({ queryKey: ["applications", id] });
     },
   });
@@ -267,82 +239,12 @@ export default function RecruitmentDetailsPage() {
     onError: () => setHiringId(null),
   });
 
-  const handleDragStart = useCallback(
-    (event: DragStartEvent) => {
-      const dragged = applications.find((a) => a.id === event.active.id);
-      setActiveCard(dragged ?? null);
-      setLocalApps([...applications]);
-    },
-    [applications],
-  );
-
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-      setActiveCard(null);
-
-      if (!over) {
-        setLocalApps(null);
-        return;
-      }
-
-      const draggedApp = (localApps ?? applications).find((a) => a.id === active.id);
-      if (!draggedApp) {
-        setLocalApps(null);
-        return;
-      }
-
-      const overStage = STAGES.find((s) => s === over.id);
-      const overCard = (localApps ?? applications).find((a) => a.id === over.id);
-      const targetStage = overStage ?? overCard?.status;
-
-      if (!targetStage || targetStage === draggedApp.status) {
-        setLocalApps(null);
-        return;
-      }
-
-      const optimistic = (localApps ?? applications).map((a) =>
-        a.id === draggedApp.id ? { ...a, status: targetStage as Application["status"] } : a,
-      );
-      setLocalApps(optimistic);
-      updateStatusMutation.mutate({ applicationId: draggedApp.id, status: targetStage });
-    },
-    [applications, localApps, updateStatusMutation],
-  );
-
-  const handleDragMove = useCallback(
-    (event: any) => {
-      const { active, over } = event;
-      if (!over || !localApps) return;
-
-      const draggedApp = localApps.find((a) => a.id === active.id);
-      if (!draggedApp) return;
-
-      const overStage = STAGES.find((s) => s === over.id);
-      const overCard = localApps.find((a) => a.id === over.id);
-      const targetStage = overStage ?? overCard?.status;
-
-      if (!targetStage || targetStage === draggedApp.status) return;
-
-      setLocalApps((prev) =>
-        (prev ?? []).map((a) =>
-          a.id === draggedApp.id ? { ...a, status: targetStage as Application["status"] } : a,
-        ),
-      );
-    },
-    [localApps],
-  );
+  const handleMoveStage = (applicationId: string, newStage: Stage) => {
+    updateStatusMutation.mutate({ applicationId, status: newStage });
+  };
 
   const handleReject = (applicationId: string) => {
     updateStatusMutation.mutate({ applicationId, status: "REJECTED" });
-  };
-
-  const handleCopyPortalLink = async () => {
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/${locale}/jobs`);
-      setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2000);
-    } catch {}
   };
 
   if (loadingVacancy || loadingApps) {
@@ -389,73 +291,29 @@ export default function RecruitmentDetailsPage() {
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 gap-2 text-xs h-9"
-              onClick={handleCopyPortalLink}
-            >
-              {copiedLink ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-emerald-500" />
-                  <span className="text-emerald-500">{t("kanban.portalLinkCopied")}</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5" />
-                  {t("kanban.copyPortalLink")}
-                </>
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 gap-2 text-xs h-9"
-              onClick={() => router.push(`/${locale}/jobs`)}
-            >
-              <ArrowSquareOut className="h-3.5 w-3.5" />
-              {t("kanban.viewJobsPortal")}
-            </Button>
-          </div>
         </div>
 
         {/* Kanban Board — scrolls horizontally only */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden px-6 pb-6">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={rectIntersection}
-            onDragStart={handleDragStart}
-            onDragMove={handleDragMove}
-            onDragEnd={handleDragEnd}
-          >
-            <div className="flex gap-3 h-full">
-              {STAGES.map((stage) => (
-                <KanbanColumn
-                  key={stage}
-                  stage={stage}
-                  label={t(`stages.${stage}` as any)}
-                  apps={appsByStage[stage]}
-                  onReject={handleReject}
-                  onHire={(appId) => hireMutation.mutate(appId)}
-                  hiringId={hiringId}
-                  resumeLabel={t("kanban.resumeLink")}
-                  admitLabel={t("kanban.admit")}
-                  admittingLabel={t("kanban.admitting")}
-                />
-              ))}
-            </div>
-
-            <DragOverlay dropAnimation={null}>
-              {activeCard ? (
-                <div className="p-3 bg-card/90 backdrop-blur-sm rounded-xl space-y-1 w-[220px] rotate-1 ring-1 ring-muted/30">
-                  <p className="font-semibold text-sm">{activeCard.candidateName}</p>
-                  <p className="text-xs text-muted-foreground truncate">{activeCard.candidateEmail}</p>
-                </div>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
+          <div className="flex gap-3 h-full">
+            {STAGES.map((stage, index) => (
+              <KanbanColumn
+                key={stage}
+                stage={stage}
+                label={t(`stages.${stage}` as any)}
+                apps={appsByStage[stage]}
+                onReject={handleReject}
+                onHire={(appId) => hireMutation.mutate(appId)}
+                onMoveStage={handleMoveStage}
+                hiringId={hiringId}
+                resumeLabel={t("kanban.resumeLink")}
+                admitLabel={t("kanban.admit")}
+                admittingLabel={t("kanban.admitting")}
+                changeStageLabel={t("kanban.changeStage")}
+                stageIndex={index}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </RbacGuard>

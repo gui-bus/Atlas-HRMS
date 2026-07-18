@@ -449,7 +449,8 @@
       "noDepartment": "Sin Departamento",
       "viewJobsPortal": "Ver Portal de Empleo",
       "portalLinkCopied": "¡Enlace copiado!",
-      "copyPortalLink": "Copiar enlace público"
+      "copyPortalLink": "Copiar enlace público",
+      "changeStage": "Cambiar Etapa"
     }
   },
   "Audit": {

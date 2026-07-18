@@ -449,7 +449,8 @@
       "noDepartment": "No Department",
       "viewJobsPortal": "View Jobs Portal",
       "portalLinkCopied": "Link copied!",
-      "copyPortalLink": "Copy public link"
+      "copyPortalLink": "Copy public link",
+      "changeStage": "Change Stage"
     }
   },
   "Audit": {
