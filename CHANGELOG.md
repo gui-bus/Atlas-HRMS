@@ -9,7 +9,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 ### Corrigido
 
 - **Estabilidade de Sessão e Prevenção de Logouts na Navegação**:
-  - **Zustand Persist**: Implementada a persistência de estado do `useAuthStore` no `localStorage` via middleware `persist` do Zustand. Isso impede que atualizações de página (F5) limpem os dados da sessão em memória, mantendo a autenticação ativa.
+  - **Zustand Persist & Hidratação**: Implementada a persistência de estado do `useAuthStore` no `localStorage` via middleware `persist` do Zustand. Para contornar o atraso de hidratação (hydration lag) inerente ao Next.js em SSR, o `AuthProvider` agora recupera a sessão do `localStorage` de forma síncrona logo no início do ciclo de montagem. Isso impede reloads (F5) de disparar chamadas inválidas ao `/auth/refresh` que resultavam em logouts automáticos.
   - **Navegação Interna no Header**: Substituídas as tags HTML `<a>` por componentes `<Link>` do Next.js no `DesktopNav` e `MobileNav`. A navegação agora ocorre 100% via client-side (SPA), mantendo a integridade da store sem forçar reloads completos.
   - **Configuração Dinâmica do Cookie de Refresh**: A flag `secure` do cookie `refreshToken` agora é desabilitada no ambiente de desenvolvimento (`secure: false`) para permitir o envio correto sobre HTTP na comunicação local localhost cross-origin.
   - **Ordem de Resolução de Rotas (Vagas Administrativas)**: Reordenadas as rotas no `RecruitmentController` do NestJS para posicionar `GET /recruitments/admin` antes do wildcard `GET /recruitments/:slug`. Isso corrige a colisão de rotas onde `"admin"` era avaliado incorretamente como um slug público de vaga.
