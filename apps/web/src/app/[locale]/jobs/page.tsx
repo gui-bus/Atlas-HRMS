@@ -45,7 +45,7 @@ export default function PublicJobsPage() {
   const jobs = response?.data || [];
 
   const getSeniorityLabel = (sen: string) => {
-    const map = {
+    const map: Record<string, string> = {
       JUNIOR: t("allSeniorities").includes("Seniorities") ? "Junior" : "Júnior",
       MID: t("allSeniorities").includes("Seniorities") ? "Mid" : "Pleno",
       SENIOR: t("allSeniorities").includes("Seniorities") ? "Senior" : "Sênior",
@@ -56,7 +56,7 @@ export default function PublicJobsPage() {
   };
 
   const getWorkModelLabel = (model: string) => {
-    const map = {
+    const map: Record<string, string> = {
       REMOTE: t("allWorkModels").includes("Models") ? "Remote" : "Remoto",
       HYBRID: t("allWorkModels").includes("Models") ? "Hybrid" : "Híbrido",
       ONSITE: t("allWorkModels").includes("Models") ? "On-site" : "Presencial",
@@ -165,7 +165,7 @@ export default function PublicJobsPage() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wider w-fit">
                       <Buildings className="h-3 w-3" />
-                      {job.departmentName || "Geral"}
+                      {job.department?.name || "Geral"}
                     </div>
                     <h2 className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors leading-snug">
                       {job.title}

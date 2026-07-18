@@ -25,7 +25,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between">
-      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 h-20 flex flex-col md:flex-row items-center justify-center md:justify-between border-b border-muted/10 py-20 gap-5">
+      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 h-20 flex flex-col md:flex-row items-center justify-center md:justify-between border-b border-muted/10 py-20 md:py-0 gap-5">
         <Logo locale={locale as string} size="sm" />
 
         <div className="flex items-center gap-2 sm:gap-4">
