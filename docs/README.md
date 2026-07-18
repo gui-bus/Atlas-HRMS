@@ -10,6 +10,18 @@ Este repositório foi construído para servir como uma referência técnica de c
 
 ---
 
+## 🌐 Demonstração Online (Deploy no Render)
+
+O projeto está configurado e publicado em ambiente de produção contínuo hospedado na nuvem do Render. Você pode acessar as instâncias ativas através dos links a seguir:
+
+* **Frontend da Aplicação (Web App)**: [https://atlas-web-pt7t.onrender.com/pt/](https://atlas-web-pt7t.onrender.com/pt/)
+* **Backend da Aplicação & Documentação Interativa (API)**: [https://atlas-api-iraw.onrender.com/docs](https://atlas-api-iraw.onrender.com/docs)
+
+> [!WARNING]
+> **Aviso sobre Cold Start (Inicialização Tardia)**: As instâncias estão publicadas sob o plano de hospedagem gratuito da plataforma Render. Como resultado, se os serviços ficarem sem uso por alguns minutos, o servidor entra em modo de hibernação. Ao abrir qualquer uma das URLs pela primeira vez, poderá ocorrer um atraso de aproximadamente 30 a 50 segundos para que a instância do servidor seja reativada ("desperte"). As próximas interações funcionarão de forma instantânea.
+
+---
+
 ## 🛠️ Stack Tecnológica (Tecnologias Utilizadas)
 
 <div align="center">
