@@ -13,11 +13,26 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     const bootstrapSession = async () => {
-      if (isAuthenticated) {
-        setIsBootstrapped(true);
-        return;
+      // 1. Tenta recuperar a sessão de forma síncrona do localStorage para evitar atrasos na hidratação
+      try {
+        const stored = localStorage.getItem("atlas-auth");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const localToken = parsed.state?.accessToken;
+          const localUser = parsed.state?.user;
+
+          if (localToken && localUser) {
+            api.defaults.headers.common["Authorization"] = `Bearer ${localToken}`;
+            setAuth(localUser, localToken);
+            setIsBootstrapped(true);
+            return;
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao ler sessão do localStorage no bootstrap", e);
       }
 
+      // 2. Se não houver sessão local persistida, tenta o refresh silencioso via cookie
       try {
         const response = await api.post("/auth/refresh");
         const { accessToken } = response.data;
