@@ -41,6 +41,16 @@ import {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  private get refreshCookieOptions() {
+    const isProduction = process.env.NODE_ENV === "production";
+    return {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "none" as const,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    };
+  }
+
   @Post("register")
   @Throttle({ default: { limit: 100, ttl: 60000 } })
   @ApiOperation({ summary: "Cadastrar um novo usuário no sistema" })
@@ -67,12 +77,7 @@ export class AuthController {
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
     const result = await this.authService.login(dto);
 
-    response.cookie("refreshToken", result.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    response.cookie("refreshToken", result.refreshToken, this.refreshCookieOptions);
 
     return {
       user: result.user,
@@ -97,12 +102,7 @@ export class AuthController {
 
     const result = await this.authService.refreshToken(refreshToken);
 
-    response.cookie("refreshToken", result.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    response.cookie("refreshToken", result.refreshToken, this.refreshCookieOptions);
 
     return {
       accessToken: result.accessToken,
@@ -114,11 +114,7 @@ export class AuthController {
   @ApiOperation({ summary: "Efetuar logout limpando o cookie de sessão" })
   @ApiResponse({ status: 200, description: "Logout concluído", type: LogoutResponseDto })
   async logout(@Res({ passthrough: true }) response: Response) {
-    response.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
+    response.clearCookie("refreshToken", this.refreshCookieOptions);
     return { success: true };
   }
 

@@ -13,6 +13,11 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     const bootstrapSession = async () => {
+      if (isAuthenticated) {
+        setIsBootstrapped(true);
+        return;
+      }
+
       try {
         const response = await api.post("/auth/refresh");
         const { accessToken } = response.data;
@@ -30,7 +35,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     };
 
     bootstrapSession();
-  }, [setAuth, clearAuth]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!isBootstrapped) return;

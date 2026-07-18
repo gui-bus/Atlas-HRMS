@@ -84,7 +84,6 @@ describe("AuthController", () => {
         "refresh-token",
         expect.objectContaining({
           httpOnly: true,
-          secure: true,
           sameSite: "none",
         }),
       );
@@ -107,7 +106,6 @@ describe("AuthController", () => {
         "refreshToken",
         expect.objectContaining({
           httpOnly: true,
-          secure: true,
           sameSite: "none",
         }),
       );
