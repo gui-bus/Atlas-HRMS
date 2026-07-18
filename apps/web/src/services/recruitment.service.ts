@@ -61,9 +61,12 @@ export const recruitmentService = {
     workModel?: string;
     employmentType?: string;
   }): Promise<{ data: Recruitment[]; totalPages?: number }> {
-    const response = await api.get<{ data: Recruitment[]; totalPages?: number }>("/recruitments", {
-      params,
-    });
+    const response = await api.get<{ data: Recruitment[]; totalPages?: number }>(
+      "/recruitments/admin",
+      {
+        params,
+      },
+    );
     return response.data;
   },
 

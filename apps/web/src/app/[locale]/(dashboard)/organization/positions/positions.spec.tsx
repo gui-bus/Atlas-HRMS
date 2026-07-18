@@ -84,7 +84,7 @@ describe("Positions Page Tests", () => {
 
   test("renders positions listing page correctly", async () => {
     renderWithProviders(<PositionsPage />);
-    expect(screen.getByText("Cargos")).toBeInTheDocument();
+    expect(screen.getByText("positionsTitle")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText("Desenvolvedor Frontend")).toBeInTheDocument();
     });

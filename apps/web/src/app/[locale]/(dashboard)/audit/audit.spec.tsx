@@ -63,7 +63,7 @@ describe("AuditLogsPage integration tests", () => {
     expect(screen.getByText("title")).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText("EMPLOYEE_CREATED")).toBeInTheDocument();
+      expect(screen.getByText("actions.EMPLOYEE_CREATED")).toBeInTheDocument();
       expect(screen.getByText("admin@atlas.com")).toBeInTheDocument();
     });
   });

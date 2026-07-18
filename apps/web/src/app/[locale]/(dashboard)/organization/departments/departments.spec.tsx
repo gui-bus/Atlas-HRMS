@@ -63,7 +63,7 @@ describe("Departments Page Tests", () => {
 
   test("renders departments listing page correctly", async () => {
     renderWithProviders(<DepartmentsPage />);
-    expect(screen.getByText("Departamentos")).toBeInTheDocument();
+    expect(screen.getByText("departmentsTitle")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText("Tecnologia")).toBeInTheDocument();
       expect(screen.getByText("Recursos Humanos")).toBeInTheDocument();

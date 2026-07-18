@@ -58,7 +58,7 @@ describe("UserAccountsPage integration tests", () => {
   test("renders user accounts table and lists accounts", async () => {
     renderWithProviders(<UserAccountsPage />);
 
-    expect(screen.getByText("Contas de Usuário")).toBeInTheDocument();
+    expect(screen.getByText("title")).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText("admin@atlas.com")).toBeInTheDocument();
