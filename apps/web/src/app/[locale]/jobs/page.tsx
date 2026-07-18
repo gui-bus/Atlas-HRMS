@@ -63,19 +63,25 @@ export default function PublicJobsPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col w-full">
       <main className="flex-1 w-full px-6 md:px-12 py-10 space-y-8">
         {/* Back Link */}
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex flex-row items-center justify-between gap-4">
           <Button
             variant="ghost"
             onClick={() => router.push(`/${locale}`)}
-            className="p-0 hover:bg-transparent text-muted-foreground hover:text-foreground text-xs font-semibold flex items-center gap-1.5 border-0"
+            className="p-0 hover:bg-transparent text-muted-foreground hover:text-foreground text-xs font-semibold flex items-center gap-1.5 border-0 shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
-            Voltar para Início
+            <span className="hidden sm:inline">Voltar para Início</span>
+            <span className="sm:hidden">Voltar</span>
           </Button>
 
-          <Logo locale={locale as string} size="sm" />
+          <div className="sm:hidden shrink-0">
+            <Logo locale={locale as string} size="xs" />
+          </div>
+          <div className="hidden sm:block shrink-0">
+            <Logo locale={locale as string} size="sm" />
+          </div>
 
-          <span className="text-xs font-bold text-muted-foreground tracking-widest uppercase">
+          <span className="text-[10px] sm:text-xs font-bold text-muted-foreground tracking-widest uppercase text-right shrink-0">
             Portal de Carreiras
           </span>
         </div>

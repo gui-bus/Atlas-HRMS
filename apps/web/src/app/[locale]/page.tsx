@@ -26,19 +26,24 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between">
       {/* Landing Page Header */}
-      <header className="w-full max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between border-b border-muted/10">
-        <Logo locale={locale} size="sm" />
+      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 h-20 flex items-center justify-between border-b border-muted/10">
+        <div className="sm:hidden">
+          <Logo locale={locale} size="xs" />
+        </div>
+        <div className="hidden sm:block">
+          <Logo locale={locale} size="sm" />
+        </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* Utilities Switchers */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5 sm:gap-1">
             <LanguageSwitcher />
             <ThemeSwitcher />
           </div>
 
           <Button
             variant="outline"
-            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-xs font-semibold px-4"
+            className="rounded-2xl border-0 bg-muted/40 hover:bg-muted/65 text-[10px] sm:text-xs font-semibold px-3 sm:px-4 py-1.5 sm:py-2 h-auto"
             onClick={() => router.push(`/${locale}/login`)}
           >
             {t("employeePortal")}
