@@ -21,10 +21,14 @@ services:
           property: connectionString
       - key: JWT_SECRET
         generateValue: true # Gera um secret seguro aleatório de forma automática
+      - key: JWT_REFRESH_SECRET
+        generateValue: true # Gera um refresh secret seguro aleatório de forma automática
       - key: FRONTEND_URL
         value: https://atlas-web.onrender.com
-      # Chaves de APIs externas do UploadThing e Resend
+      # Chaves de APIs externas
       - key: UPLOADTHING_TOKEN
+        sync: false
+      - key: UPLOADTHING_SECRET
         sync: false
       - key: RESEND_API_KEY
         sync: false
@@ -34,7 +38,8 @@ services:
     name: atlas-web
     plan: free
     runtime: node
-    buildCommand: pnpm install && pnpm build
+    # Garante que o Prisma generate seja rodado na raiz antes do build para gerar os tipos compartilhados corretamente
+    buildCommand: pnpm install && pnpm --filter @atlas/api prisma:generate && pnpm build
     startCommand: pnpm --filter @atlas/web start
     envVars:
       - key: NEXT_PUBLIC_API_URL
