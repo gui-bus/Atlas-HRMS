@@ -19,7 +19,7 @@ Módulo responsável pela administração do ciclo de vida de ausências, afasta
 ## Fluxo de Estados
 
 ```mermaid
-stateDiagram-Obj
+stateDiagram-v2
     [*] --> PENDING : Solicitação criada pelo Funcionário
     PENDING --> APPROVED : Avaliado e Deferido pelo RH/Gestor
     PENDING --> REJECTED : Indeferido (Motivo Obrigatório)
