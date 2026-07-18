@@ -25,17 +25,10 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between">
-      {/* Landing Page Header */}
-      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 h-20 flex items-center justify-between border-b border-muted/10">
-        <div className="sm:hidden">
-          <Logo locale={locale} size="xs" />
-        </div>
-        <div className="hidden sm:block">
-          <Logo locale={locale} size="sm" />
-        </div>
-        
+      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 h-20 flex flex-col md:flex-row items-center justify-center md:justify-between border-b border-muted/10 py-20 gap-5">
+        <Logo locale={locale as string} size="sm" />
+
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* Utilities Switchers */}
           <div className="flex items-center gap-0.5 sm:gap-1">
             <LanguageSwitcher />
             <ThemeSwitcher />
@@ -51,11 +44,9 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col justify-center items-center px-6 md:px-12 py-16 animate-fade-in max-w-5xl mx-auto space-y-12 w-full">
-        {/* Logo Lg Hero */}
-        <div className="flex justify-center py-4">
-          <Logo locale={locale} size="lg" />
+        <div className="flex justify-center py-4 hidden md:block">
+          <Logo locale={locale as string} size="lg" />
         </div>
 
         <div className="text-center space-y-4 max-w-2xl">
@@ -126,7 +117,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center sm:items-start gap-1">
             <div className="scale-75 origin-left">
-              <Logo locale={locale} size="sm" />
+              <Logo locale={locale as string} size="sm" />
             </div>
             <span className="text-[10px] text-muted-foreground font-medium">
               © {new Date().getFullYear()} Atlas HRMS. Todos os direitos reservados.

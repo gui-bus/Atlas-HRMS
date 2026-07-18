@@ -12,14 +12,19 @@ import {
   Buildings,
 } from "@phosphor-icons/react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { recruitmentService } from "@/services/recruitment.service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/header/logo";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 export default function PublicJobsPage() {
   const router = useRouter();
   const { locale } = useParams();
+  const t = useTranslations("PublicJobs");
+  const tRec = useTranslations("Recruitment");
   const [search, setSearch] = useState("");
   const [seniority, setSeniority] = useState("");
   const [workModel, setWorkModel] = useState("");
@@ -33,7 +38,7 @@ export default function PublicJobsPage() {
         seniority: seniority || undefined,
         workModel: workModel || undefined,
         employmentType: employmentType || undefined,
-        limit: 100, // Fetch all matching jobs
+        limit: 100,
       }),
   });
 
@@ -41,57 +46,55 @@ export default function PublicJobsPage() {
 
   const getSeniorityLabel = (sen: string) => {
     const map = {
-      JUNIOR: "Júnior",
-      MID: "Pleno",
-      SENIOR: "Sênior",
+      JUNIOR: t("allSeniorities").includes("Seniorities") ? "Junior" : "Júnior",
+      MID: t("allSeniorities").includes("Seniorities") ? "Mid" : "Pleno",
+      SENIOR: t("allSeniorities").includes("Seniorities") ? "Senior" : "Sênior",
       LEAD: "Lead",
-      EXECUTIVE: "Diretoria",
+      EXECUTIVE: t("allSeniorities").includes("Seniorities") ? "Executive" : "Diretoria",
     };
     return map[sen] || sen;
   };
 
   const getWorkModelLabel = (model: string) => {
     const map = {
-      REMOTE: "Remoto",
-      HYBRID: "Híbrido",
-      ONSITE: "Presencial",
+      REMOTE: t("allWorkModels").includes("Models") ? "Remote" : "Remoto",
+      HYBRID: t("allWorkModels").includes("Models") ? "Hybrid" : "Híbrido",
+      ONSITE: t("allWorkModels").includes("Models") ? "On-site" : "Presencial",
     };
     return map[model] || model;
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col w-full">
-      <main className="flex-1 w-full px-6 md:px-12 py-10 space-y-8">
-        {/* Back Link */}
-        <div className="max-w-7xl mx-auto flex flex-row items-center justify-between gap-4">
+      <main className="flex-1 w-full py-10 space-y-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center md:justify-between gap-5">
           <Button
             variant="ghost"
             onClick={() => router.push(`/${locale}`)}
             className="p-0 hover:bg-transparent text-muted-foreground hover:text-foreground text-xs font-semibold flex items-center gap-1.5 border-0 shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Voltar para Início</span>
-            <span className="sm:hidden">Voltar</span>
+            <span className="hidden sm:inline">{t("backToHome")}</span>
+            <span className="sm:hidden">{t("backToHomeMobile")}</span>
           </Button>
 
-          <div className="sm:hidden shrink-0">
-            <Logo locale={locale as string} size="xs" />
-          </div>
-          <div className="hidden sm:block shrink-0">
-            <Logo locale={locale as string} size="sm" />
+          <Logo locale={locale as string} size="sm" />
+
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            <LanguageSwitcher />
+            <ThemeSwitcher />
           </div>
 
           <span className="text-[10px] sm:text-xs font-bold text-muted-foreground tracking-widest uppercase text-right shrink-0">
-            Portal de Carreiras
+            {t("portalTitle")}
           </span>
         </div>
 
-        {/* Toolbar & Filters (100% Width Layout) */}
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 bg-muted/10 p-5 rounded-3xl">
           <div className="relative md:col-span-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Pesquisar vagas..."
+              placeholder={t("searchPlaceholder")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10 h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
@@ -104,12 +107,12 @@ export default function PublicJobsPage() {
               onChange={(e) => setSeniority(e.target.value)}
               className="flex h-10 w-full rounded-2xl border border-transparent bg-background px-3 text-sm outline-none cursor-pointer text-foreground focus-visible:ring-1"
             >
-              <option value="">Todas Senioridades</option>
-              <option value="JUNIOR">Júnior</option>
-              <option value="MID">Pleno</option>
-              <option value="SENIOR">Sênior</option>
-              <option value="LEAD">Lead</option>
-              <option value="EXECUTIVE">Diretoria</option>
+              <option value="">{t("allSeniorities")}</option>
+              <option value="JUNIOR">{tRec("seniority.JUNIOR")}</option>
+              <option value="MID">{tRec("seniority.MID")}</option>
+              <option value="SENIOR">{tRec("seniority.SENIOR")}</option>
+              <option value="LEAD">{tRec("seniority.LEAD")}</option>
+              <option value="EXECUTIVE">{tRec("seniority.EXECUTIVE")}</option>
             </select>
           </div>
 
@@ -119,10 +122,10 @@ export default function PublicJobsPage() {
               onChange={(e) => setWorkModel(e.target.value)}
               className="flex h-10 w-full rounded-2xl border border-transparent bg-background px-3 text-sm outline-none cursor-pointer text-foreground focus-visible:ring-1"
             >
-              <option value="">Todos Modelos</option>
-              <option value="REMOTE">Remoto</option>
-              <option value="HYBRID">Híbrido</option>
-              <option value="ONSITE">Presencial</option>
+              <option value="">{t("allWorkModels")}</option>
+              <option value="REMOTE">{tRec("workModelOptions.REMOTE")}</option>
+              <option value="HYBRID">{tRec("workModelOptions.HYBRID")}</option>
+              <option value="ONSITE">{tRec("workModelOptions.ONSITE")}</option>
             </select>
           </div>
 
@@ -132,17 +135,16 @@ export default function PublicJobsPage() {
               onChange={(e) => setEmploymentType(e.target.value)}
               className="flex h-10 w-full rounded-2xl border border-transparent bg-background px-3 text-sm outline-none cursor-pointer text-foreground focus-visible:ring-1"
             >
-              <option value="">Todos Regimes</option>
-              <option value="CLT">CLT</option>
-              <option value="PJ">PJ</option>
-              <option value="CONTRACTOR">Prestador de Serviço</option>
-              <option value="INTERNSHIP">Estágio</option>
-              <option value="TEMPORARY">Temporário</option>
+              <option value="">{t("allTypes")}</option>
+              <option value="CLT">{tRec("employmentTypes.CLT")}</option>
+              <option value="PJ">{tRec("employmentTypes.PJ")}</option>
+              <option value="CONTRACTOR">{tRec("employmentTypes.CONTRACTOR")}</option>
+              <option value="INTERNSHIP">{tRec("employmentTypes.INTERNSHIP")}</option>
+              <option value="TEMPORARY">{tRec("employmentTypes.TEMPORARY")}</option>
             </select>
           </div>
         </div>
 
-        {/* Jobs Grid (100% Width Container Layout) */}
         <div className="max-w-7xl mx-auto w-full">
           {isLoading ? (
             <div className="py-24 flex items-center justify-center">
@@ -150,7 +152,7 @@ export default function PublicJobsPage() {
             </div>
           ) : jobs.length === 0 ? (
             <div className="py-24 text-center text-sm text-muted-foreground bg-muted/5 rounded-3xl">
-              Nenhuma vaga aberta encontrada para os filtros selecionados.
+              {t("empty")}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">

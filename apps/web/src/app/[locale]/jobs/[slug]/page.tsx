@@ -13,6 +13,7 @@ import {
   GraduationCap,
 } from "@phosphor-icons/react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { recruitmentService } from "@/services/recruitment.service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ import { Label } from "@/components/ui/label";
 export default function PublicJobDetailPage() {
   const router = useRouter();
   const { locale, slug } = useParams();
+  const t = useTranslations("PublicJobs");
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -53,10 +55,10 @@ export default function PublicJobDetailPage() {
       return recruitmentService.applyToJob(slug as string, formData);
     },
     onSuccess: () => {
-      setMessage({ text: "Candidatura enviada com sucesso! Boa sorte!", type: "success" });
+      setMessage({ text: t("successMessage"), type: "success" });
     },
     onError: (err: any) => {
-      const msg = err?.response?.data?.message || "Erro ao enviar candidatura. Tente novamente.";
+      const msg = err?.response?.data?.message || t("errorGeneric");
       setMessage({ text: msg, type: "error" });
     },
   });
@@ -65,7 +67,7 @@ export default function PublicJobDetailPage() {
     e.preventDefault();
     if (!firstName || !lastName || !email || !phone || !resumeFile) {
       setMessage({
-        text: "Por favor, preencha todos os campos obrigatórios e anexe o currículo.",
+        text: t("errorFillRequired"),
         type: "error",
       });
       return;
@@ -74,21 +76,21 @@ export default function PublicJobDetailPage() {
   };
 
   const getSeniorityLabel = (seniority: string) => {
-    const map = {
-      JUNIOR: "Júnior",
-      MID: "Pleno",
-      SENIOR: "Sênior",
+    const map: Record<string, string> = {
+      JUNIOR: t("allSeniorities").includes("Seniorities") ? "Junior" : "Júnior",
+      MID: t("allSeniorities").includes("Seniorities") ? "Mid" : "Pleno",
+      SENIOR: t("allSeniorities").includes("Seniorities") ? "Senior" : "Sênior",
       LEAD: "Lead",
-      EXECUTIVE: "Diretoria",
+      EXECUTIVE: t("allSeniorities").includes("Seniorities") ? "Executive" : "Diretoria",
     };
     return map[seniority] || seniority;
   };
 
   const getWorkModelLabel = (model: string) => {
-    const map = {
-      REMOTE: "Remoto",
-      HYBRID: "Híbrido",
-      ONSITE: "Presencial",
+    const map: Record<string, string> = {
+      REMOTE: t("allWorkModels").includes("Models") ? "Remote" : "Remoto",
+      HYBRID: t("allWorkModels").includes("Models") ? "Hybrid" : "Híbrido",
+      ONSITE: t("allWorkModels").includes("Models") ? "On-site" : "Presencial",
     };
     return map[model] || model;
   };
@@ -104,9 +106,9 @@ export default function PublicJobDetailPage() {
   if (!job) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground space-y-4">
-        <p className="text-muted-foreground text-sm">Vaga não encontrada ou encerrada.</p>
+        <p className="text-muted-foreground text-sm">{t("notFound")}</p>
         <Button onClick={() => router.push(`/${locale}/jobs`)} variant="outline">
-          Voltar para Vagas
+          {t("backToList")}
         </Button>
       </div>
     );
@@ -124,13 +126,13 @@ export default function PublicJobDetailPage() {
             className="p-0 hover:bg-transparent text-muted-foreground hover:text-foreground text-xs font-semibold flex items-center gap-1.5 border-0"
           >
             <ArrowLeft className="w-4 h-4" />
-            Voltar para vagas
+            {t("backToList")}
           </Button>
 
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wider w-fit">
               <Buildings className="h-3 w-3" />
-              {job.departmentName || "Geral"}
+              {job.department?.name || "Geral"}
             </div>
             
             <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
@@ -153,7 +155,7 @@ export default function PublicJobDetailPage() {
             <div className="space-y-3">
               <h3 className="text-lg font-bold flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-primary" />
-                Descrição da Vaga
+                {t("jobDescription")}
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">
                 {job.description}
@@ -164,7 +166,7 @@ export default function PublicJobDetailPage() {
               <div className="space-y-3">
                 <h3 className="text-lg font-bold flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 text-primary" />
-                  Requisitos & Habilidades
+                  {t("requirements")}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">
                   {job.requirements}
@@ -176,23 +178,23 @@ export default function PublicJobDetailPage() {
 
         {/* Right Column: Apply Form Card (col-span 5) */}
         <div className="lg:col-span-5 bg-muted/10 p-6 md:p-8 rounded-3xl h-fit space-y-6 animate-fade-in">
-          <h2 className="text-xl font-bold tracking-tight">Candidatar-se</h2>
+          <h2 className="text-xl font-bold tracking-tight">{t("applyTitle")}</h2>
           <p className="text-xs text-muted-foreground font-semibold">
-            Preencha seus dados de contato e envie seu currículo em PDF.
+            {t("applySubTitle")}
           </p>
 
           {applyMutation.isSuccess ? (
             <div className="space-y-4 text-center py-6">
               <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto" />
-              <p className="text-sm font-bold text-emerald-500">Candidatura enviada com sucesso!</p>
+              <p className="text-sm font-bold text-emerald-500">{t("successTitle")}</p>
               <p className="text-xs text-muted-foreground">
-                Em breve nossa equipe entrará em contato.
+                {t("successDesc")}
               </p>
               <Button
                 onClick={() => router.push(`/${locale}/jobs`)}
                 className="w-full rounded-2xl text-xs font-bold mt-4 border-0 bg-primary/10 text-primary hover:bg-primary/20"
               >
-                Ver outras vagas
+                {t("viewOtherJobs")}
               </Button>
             </div>
           ) : (
@@ -212,7 +214,7 @@ export default function PublicJobDetailPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">
-                    Nome <span className="text-destructive">*</span>
+                    {t("firstName")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="firstName"
@@ -225,7 +227,7 @@ export default function PublicJobDetailPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="lastName">
-                    Sobrenome <span className="text-destructive">*</span>
+                    {t("lastName")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="lastName"
@@ -239,7 +241,7 @@ export default function PublicJobDetailPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="email">
-                  E-mail <span className="text-destructive">*</span>
+                  {t("email")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="email"
@@ -253,32 +255,56 @@ export default function PublicJobDetailPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="phone">
-                  Telefone <span className="text-destructive">*</span>
+                  {t("phone")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  placeholder="(00) 00000-0000"
+                  placeholder={t("phonePlaceholder")}
                   required
                 />
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="linkedinUrl">{t("linkedin")}</Label>
+                  <Input
+                    id="linkedinUrl"
+                    value={linkedinUrl}
+                    onChange={(e) => setLinkedinUrl(e.target.value)}
+                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    placeholder={t("linkedinPlaceholder")}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="githubUrl">{t("github")}</Label>
+                  <Input
+                    id="githubUrl"
+                    value={githubUrl}
+                    onChange={(e) => setGithubUrl(e.target.value)}
+                    className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
+                    placeholder={t("githubPlaceholder")}
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="linkedinUrl">LinkedIn (URL)</Label>
-                <Input
-                  id="linkedinUrl"
-                  value={linkedinUrl}
-                  onChange={(e) => setLinkedinUrl(e.target.value)}
-                  className="h-10 rounded-2xl bg-background border-0 focus-visible:ring-1"
-                  placeholder="https://linkedin.com/in/..."
+                <Label htmlFor="coverLetter">{t("coverLetter")}</Label>
+                <textarea
+                  id="coverLetter"
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  className="flex min-h-[80px] w-full rounded-2xl border-0 bg-background px-3 py-2 text-sm outline-none focus-visible:ring-1 text-foreground"
+                  placeholder={t("coverLetterPlaceholder")}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="resume">
-                  Currículo (PDF) <span className="text-destructive">*</span>
+                  {t("resumePdf")} <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors rounded-2xl p-4 flex flex-col items-center justify-center gap-1.5 cursor-pointer text-center bg-background">
                   <input
@@ -295,7 +321,7 @@ export default function PublicJobDetailPage() {
                   />
                   <FileArrowUp className="w-5 h-5 text-muted-foreground/75" />
                   <span className="text-xs font-semibold text-muted-foreground/90">
-                    {resumeFile ? resumeFile.name : "Clique para anexar seu PDF"}
+                    {resumeFile ? resumeFile.name : t("resumeAttach")}
                   </span>
                 </div>
               </div>
@@ -305,7 +331,7 @@ export default function PublicJobDetailPage() {
                 disabled={applyMutation.isPending}
                 className="w-full h-11 rounded-2xl font-bold text-xs bg-primary text-primary-foreground hover:bg-primary/95 border-0 mt-4"
               >
-                {applyMutation.isPending ? "Enviando Candidatura..." : "Enviar Candidatura"}
+                {applyMutation.isPending ? t("submitting") : t("submit")}
               </Button>
             </form>
           )}
