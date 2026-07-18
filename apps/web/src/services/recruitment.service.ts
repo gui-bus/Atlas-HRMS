@@ -25,20 +25,29 @@ export interface Recruitment {
   };
 }
 
+export interface Candidate {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  linkedinUrl?: string | null;
+  githubUrl?: string | null;
+  portfolioUrl?: string | null;
+  currentSalary?: string | null;
+  expectedSalary?: string | null;
+}
+
 export interface Application {
   id: string;
   candidateName: string;
   candidateEmail: string;
   resumeUrl: string;
-  status:
-    | "SCREENING"
-    | "HR_INTERVIEW"
-    | "TECHNICAL_TEST"
-    | "OFFER"
-    | "HIRED"
-    | "REJECTED";
+  coverLetter?: string | null;
+  status: "SCREENING" | "HR_INTERVIEW" | "TECHNICAL_TEST" | "OFFER" | "HIRED" | "REJECTED";
   recruitmentId: string;
   createdAt: string;
+  candidate?: Candidate;
 }
 
 export const recruitmentService = {

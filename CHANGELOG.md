@@ -4,6 +4,18 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.8.1] - 2026-07-18
+
+### Corrigido
+
+- **Quadro Kanban — Departamento exibindo "Sem Departamento"**: A rota `GET /recruitments/:id`, utilizada pelo painel administrativo para carregar os detalhes da vaga no Kanban, retornava o nome do departamento como um campo string flat (`departmentName`), enquanto o frontend consumia a propriedade como objeto aninhado (`vacancy.department?.name`). A propriedade sendo `undefined` fazia com que o texto de fallback "Sem Departamento" fosse exibido, mesmo para vagas com departamento associado.
+  - **Backend** (`recruitment.service.ts` — `findBySlugPublic`): O retorno agora inclui o objeto aninhado `department: { name }` e `position: { title }`, além de manter `departmentName` e `positionTitle` para retrocompatibilidade.
+  - **DTO** (`PublicRecruitmentResponseDto`): Documentados os novos campos `department` e `position` com `@ApiProperty()`.
+  - **Testes** (`recruitment.service.spec.ts`): Mocks atualizados com `departmentId` e `positionId` para cobrir o novo contrato de retorno.
+  - Todos os 247 testes de unidade e integração permanecem passando.
+
+---
+
 ## [1.8.0] - 2026-07-17
 
 ### Adicionado

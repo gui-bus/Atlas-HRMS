@@ -450,7 +450,11 @@
       "viewJobsPortal": "View Jobs Portal",
       "portalLinkCopied": "Link copied!",
       "copyPortalLink": "Copy public link",
-      "changeStage": "Change Stage"
+      "changeStage": "Change Stage",
+      "rejectCandidate": "Reject Candidate",
+      "appliedAt": "Applied on",
+      "coverLetter": "Cover Letter",
+      "noCoverLetter": "No cover letter"
     }
   },
   "Audit": {

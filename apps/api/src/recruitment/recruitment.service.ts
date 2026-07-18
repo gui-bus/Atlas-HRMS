@@ -132,6 +132,82 @@ export class RecruitmentService {
     return recruitment;
   }
 
+  async findAllAdmin(query: QueryRecruitmentDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.RecruitmentWhereInput = { deletedAt: null };
+
+    if (query.search) {
+      where.OR = [
+        { title: { contains: query.search, mode: "insensitive" } },
+        { description: { contains: query.search, mode: "insensitive" } },
+      ];
+    }
+
+    if (query.departmentId) where.departmentId = query.departmentId;
+    if (query.seniority) where.seniority = query.seniority;
+    if (query.workModel) where.workModel = query.workModel;
+    if (query.employmentType) where.employmentType = query.employmentType;
+
+    let orderBy: any = { createdAt: "desc" };
+    if (query.sortBy) {
+      const order = query.sortOrder || "asc";
+      if (query.sortBy === "department" || query.sortBy === "departmentName") {
+        orderBy = { department: { name: order } };
+      } else if (
+        ["title", "status", "workModel", "employmentType", "publishedAt", "createdAt"].includes(
+          query.sortBy,
+        )
+      ) {
+        orderBy = { [query.sortBy]: order };
+      }
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.recruitment.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          department: { select: { name: true } },
+          position: { select: { title: true } },
+        },
+      }),
+      this.prisma.recruitment.count({ where }),
+    ]);
+
+    return {
+      data: data.map((r) => ({
+        id: r.id,
+        title: r.title,
+        slug: r.slug,
+        status: r.status,
+        employmentType: r.employmentType,
+        workModel: r.workModel,
+        seniority: r.seniority,
+        vacancies: r.vacancies,
+        salaryMin: r.salaryMin,
+        salaryMax: r.salaryMax,
+        city: r.city,
+        state: r.state,
+        country: r.country,
+        publishedAt: r.publishedAt,
+        createdAt: r.createdAt,
+        departmentId: r.departmentId,
+        positionId: r.positionId,
+        department: r.department ? { name: r.department.name } : null,
+        position: r.position ? { title: r.position.title } : null,
+      })),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   async findAllPublic(query: QueryRecruitmentDto) {
     const page = query.page ?? 1;
     const limit = query.limit ?? 10;
@@ -190,6 +266,7 @@ export class RecruitmentService {
       title: r.title,
       slug: r.slug,
       description: r.description,
+      status: r.status,
       employmentType: r.employmentType,
       workModel: r.workModel,
       seniority: r.seniority,
@@ -203,8 +280,8 @@ export class RecruitmentService {
       responsibilities: r.responsibilities,
       benefits: r.benefits,
       publishedAt: r.publishedAt,
-      departmentName: r.department.name,
-      positionTitle: r.position.title,
+      departmentName: r.department?.name ?? null,
+      positionTitle: r.position?.title ?? null,
     }));
 
     return {
@@ -254,6 +331,8 @@ export class RecruitmentService {
       title: recruitment.title,
       slug: recruitment.slug,
       description: recruitment.description,
+      departmentId: recruitment.departmentId,
+      positionId: recruitment.positionId,
       employmentType: recruitment.employmentType,
       workModel: recruitment.workModel,
       seniority: recruitment.seniority,
@@ -267,8 +346,10 @@ export class RecruitmentService {
       responsibilities: recruitment.responsibilities,
       benefits: recruitment.benefits,
       publishedAt: recruitment.publishedAt,
-      departmentName: recruitment.department.name,
-      positionTitle: recruitment.position.title,
+      department: recruitment.department ? { name: recruitment.department.name } : null,
+      position: recruitment.position ? { title: recruitment.position.title } : null,
+      departmentName: recruitment.department?.name ?? null,
+      positionTitle: recruitment.position?.title ?? null,
       status: recruitment.status,
     };
   }

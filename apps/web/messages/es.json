@@ -450,7 +450,11 @@
       "viewJobsPortal": "Ver Portal de Empleo",
       "portalLinkCopied": "¡Enlace copiado!",
       "copyPortalLink": "Copiar enlace público",
-      "changeStage": "Cambiar Etapa"
+      "changeStage": "Cambiar Etapa",
+      "rejectCandidate": "Rechazar Candidato",
+      "appliedAt": "Aplicó el",
+      "coverLetter": "Carta de Presentación",
+      "noCoverLetter": "Sin carta de presentación"
     }
   },
   "Audit": {

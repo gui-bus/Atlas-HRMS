@@ -279,6 +279,8 @@ describe("RecruitmentService (Unit)", () => {
         expiresAt: null,
         deletedAt: null,
         views: 10,
+        departmentId: "dept-1",
+        positionId: "pos-1",
         department: { name: "Tech" },
         position: { title: "Dev" },
       };

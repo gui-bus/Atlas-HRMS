@@ -178,11 +178,37 @@ export class PublicRecruitmentResponseDto {
   @ApiProperty({ description: "Data de publicação" })
   publishedAt?: Date;
 
-  @ApiProperty({ description: "Nome do departamento", example: "Tecnologia" })
-  departmentName?: string;
+  @ApiProperty({
+    description: "Nome do departamento",
+    example: "Tecnologia",
+    nullable: true,
+    required: false,
+  })
+  departmentName?: string | null;
 
-  @ApiProperty({ description: "Nome do cargo", example: "Desenvolvedor Backend" })
-  positionTitle?: string;
+  @ApiProperty({
+    description: "Nome do cargo",
+    example: "Desenvolvedor Backend",
+    nullable: true,
+    required: false,
+  })
+  positionTitle?: string | null;
+
+  @ApiProperty({
+    description: "Departamento aninhado",
+    nullable: true,
+    required: false,
+    example: { name: "Tecnologia" },
+  })
+  department?: { name: string } | null;
+
+  @ApiProperty({
+    description: "Cargo aninhado",
+    nullable: true,
+    required: false,
+    example: { title: "Desenvolvedor Backend" },
+  })
+  position?: { title: string } | null;
 }
 
 export class PaginatedRecruitmentResponseDto {

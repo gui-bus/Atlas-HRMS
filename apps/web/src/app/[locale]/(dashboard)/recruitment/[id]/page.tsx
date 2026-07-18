@@ -9,15 +9,17 @@ import {
   CircleNotch,
   XCircle,
   ArrowSquareOut,
-  File,
   UserCheck,
   CaretLeft,
   CaretRight,
+  Phone,
+  LinkedinLogo,
 } from "@phosphor-icons/react";
 
 import { recruitmentService, Application } from "@/services/recruitment.service";
 import { RbacGuard } from "@/components/rbac-guard";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const STAGES = [
   "SCREENING",
@@ -40,6 +42,8 @@ interface KanbanCardProps {
   admitLabel: string;
   admittingLabel: string;
   changeStageLabel: string;
+  rejectCandidateLabel: string;
+  appliedAtLabel: string;
   currentIndex: number;
 }
 
@@ -53,59 +57,94 @@ function KanbanCard({
   admitLabel,
   admittingLabel,
   changeStageLabel,
+  rejectCandidateLabel,
+  appliedAtLabel,
   currentIndex,
 }: KanbanCardProps) {
+  const candidate = app.candidate;
+  const fullName = candidate ? `${candidate.firstName} ${candidate.lastName}` : app.candidateName;
+  const email = candidate?.email ?? app.candidateEmail;
+  const phone = candidate?.phone;
+  const linkedin = candidate?.linkedinUrl;
+  const appliedDate = new Date(app.createdAt).toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
   return (
-    <div className="relative p-3.5 rounded-xl border border-muted/20 bg-background shadow-[0_2px_6px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_6px_rgba(0,0,0,0.15)] transition-all duration-200 hover:border-muted-foreground/30 hover:shadow-md">
-      <div className="space-y-1 pr-1">
-        <p className="font-bold text-sm text-foreground tracking-tight leading-none">{app.candidateName}</p>
-        <p className="text-[11px] text-muted-foreground truncate">{app.candidateEmail}</p>
+    <div className="p-4 rounded-xl border border-muted/20 bg-neutral-100 dark:bg-neutral-900 shadow-[0_2px_6px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_6px_rgba(0,0,0,0.15)] transition-all duration-200 hover:border-muted-foreground/30 hover:shadow-md flex flex-col gap-3">
+      {/* Candidate info */}
+      <div className="space-y-1">
+        <p className="font-bold text-sm text-foreground tracking-tight leading-snug">{fullName}</p>
+        <p className="text-[11px] text-muted-foreground truncate">{email}</p>
+        {phone && (
+          <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+            <Phone className="h-3 w-3 shrink-0" />
+            <span>{phone}</span>
+          </div>
+        )}
+        {linkedin && (
+          <a
+            href={linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-[11px] text-blue-500 hover:text-blue-400 hover:underline transition-colors w-fit"
+          >
+            <LinkedinLogo className="h-3 w-3 shrink-0" />
+            <span>LinkedIn</span>
+            <ArrowSquareOut className="h-2.5 w-2.5 shrink-0" />
+          </a>
+        )}
+        <p className="text-[10px] text-muted-foreground/60 pt-0.5">
+          {appliedAtLabel}: {appliedDate}
+        </p>
       </div>
 
-      <div className="flex flex-col gap-2 pt-2.5 mt-2.5 border-t border-muted/10">
-        {app.resumeUrl ? (
+      {/* Action buttons — full column */}
+      <div className="flex flex-col gap-1.5 pt-2.5 border-t border-muted/10">
+        {app.resumeUrl && (
           <a
             href={app.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-[11px] font-bold text-primary/95 hover:text-primary transition-colors hover:underline w-fit"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "w-full h-8 text-[11px] font-semibold gap-1.5 rounded-lg justify-center",
+            )}
           >
-            <File className="h-3.5 w-3.5 shrink-0" />
+            <ArrowSquareOut className="h-3.5 w-3.5 shrink-0" />
             <span>{resumeLabel}</span>
-            <ArrowSquareOut className="h-2.5 w-2.5 shrink-0" />
           </a>
-        ) : (
-          <span />
         )}
 
-        <div className="flex items-center justify-between gap-1.5 w-full">
-          {app.status === "HIRED" ? (
-            <Button
-              size="sm"
-              className="h-7 text-[10px] px-3 rounded-lg gap-1.5 font-bold border-0 bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-150 w-full"
-              disabled={isHiring}
-              onClick={() => onHire(app.id)}
-            >
-              <UserCheck className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{isHiring ? admittingLabel : admitLabel}</span>
-            </Button>
-          ) : (
-            <span />
-          )}
+        {app.status === "HIRED" && (
+          <Button
+            size="sm"
+            className="w-full h-8 text-[11px] px-3 rounded-lg gap-1.5 font-semibold border-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 transition-colors duration-150"
+            disabled={isHiring}
+            onClick={() => onHire(app.id)}
+          >
+            <UserCheck className="h-3.5 w-3.5 shrink-0" />
+            <span>{isHiring ? admittingLabel : admitLabel}</span>
+          </Button>
+        )}
 
-          {app.status !== "HIRED" && app.status !== "REJECTED" && (
-            <button
-              className="h-7 w-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-150 ml-auto shrink-0"
-              onClick={() => onReject(app.id)}
-            >
-              <XCircle className="h-4 w-4" />
-            </button>
-          )}
-        </div>
+        {app.status !== "HIRED" && app.status !== "REJECTED" && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full h-8 text-[11px] font-semibold gap-1.5 rounded-lg justify-center border-0 bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition-colors duration-150"
+            onClick={() => onReject(app.id)}
+          >
+            <XCircle className="h-3.5 w-3.5 shrink-0" />
+            <span>{rejectCandidateLabel}</span>
+          </Button>
+        )}
       </div>
 
-      {/* Stage Transition Buttons */}
-      <div className="flex justify-between items-center gap-1 mt-2.5 pt-2 border-t border-dashed border-muted/10">
+      {/* Stage navigation */}
+      <div className="flex justify-between items-center gap-1 pt-2 border-t border-dashed border-muted/10">
         <Button
           variant="outline"
           size="icon"
@@ -144,6 +183,8 @@ interface KanbanColumnProps {
   admitLabel: string;
   admittingLabel: string;
   changeStageLabel: string;
+  rejectCandidateLabel: string;
+  appliedAtLabel: string;
   stageIndex: number;
 }
 
@@ -159,6 +200,8 @@ function KanbanColumn({
   admitLabel,
   admittingLabel,
   changeStageLabel,
+  rejectCandidateLabel,
+  appliedAtLabel,
   stageIndex,
 }: KanbanColumnProps) {
   return (
@@ -186,6 +229,8 @@ function KanbanColumn({
             admitLabel={admitLabel}
             admittingLabel={admittingLabel}
             changeStageLabel={changeStageLabel}
+            rejectCandidateLabel={rejectCandidateLabel}
+            appliedAtLabel={appliedAtLabel}
             currentIndex={stageIndex}
           />
         ))}
@@ -286,8 +331,7 @@ export default function RecruitmentDetailsPage() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight leading-tight">{vacancy.title}</h1>
               <p className="text-muted-foreground text-sm">
-                {vacancy.department?.name || t("kanban.noDepartment")} •{" "}
-                {t("kanban.funnelLabel")}
+                {vacancy.department?.name || t("kanban.noDepartment")} • {t("kanban.funnelLabel")}
               </p>
             </div>
           </div>
@@ -310,6 +354,8 @@ export default function RecruitmentDetailsPage() {
                 admitLabel={t("kanban.admit")}
                 admittingLabel={t("kanban.admitting")}
                 changeStageLabel={t("kanban.changeStage")}
+                rejectCandidateLabel={t("kanban.rejectCandidate")}
+                appliedAtLabel={t("kanban.appliedAt")}
                 stageIndex={index}
               />
             ))}

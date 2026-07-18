@@ -1,11 +1,8 @@
-# 1. Bancos de Dados Relacionais
 databases:
   - name: atlas-database
     plan: free
 
-# 2. Serviços da Aplicação (Web Services)
 services:
-  # Servidor Backend (NestJS API)
   - type: web
     name: atlas-api
     plan: free
@@ -20,12 +17,11 @@ services:
           name: atlas-database
           property: connectionString
       - key: JWT_SECRET
-        generateValue: true # Gera um secret seguro aleatório de forma automática
+        generateValue: true
       - key: JWT_REFRESH_SECRET
-        generateValue: true # Gera um refresh secret seguro aleatório de forma automática
+        generateValue: true
       - key: FRONTEND_URL
         value: https://atlas-web.onrender.com
-      # Chaves de APIs externas
       - key: UPLOADTHING_TOKEN
         sync: false
       - key: UPLOADTHING_SECRET
@@ -33,12 +29,10 @@ services:
       - key: RESEND_API_KEY
         sync: false
 
-  # Frontend (Next.js Web App)
   - type: web
     name: atlas-web
     plan: free
     runtime: node
-    # Garante que o Prisma generate seja rodado na raiz antes do build para gerar os tipos compartilhados corretamente
     buildCommand: pnpm install && pnpm --filter @atlas/api prisma:generate && pnpm build
     startCommand: pnpm --filter @atlas/web start
     envVars:
