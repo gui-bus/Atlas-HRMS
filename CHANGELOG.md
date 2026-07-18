@@ -14,6 +14,7 @@ Todos os registros de alterações relevantes para este projeto serão documenta
   - **Configuração Dinâmica do Cookie de Refresh**: A flag `secure` do cookie `refreshToken` agora é desabilitada no ambiente de desenvolvimento (`secure: false`) para permitir o envio correto sobre HTTP na comunicação local localhost cross-origin.
   - **Ordem de Resolução de Rotas (Vagas Administrativas)**: Reordenadas as rotas no `RecruitmentController` do NestJS para posicionar `GET /recruitments/admin` antes do wildcard `GET /recruitments/:slug`. Isso corrige a colisão de rotas onde `"admin"` era avaliado incorretamente como um slug público de vaga.
   - **Sintaxe de Diagramas Mermaid nos Docs**: Corrigidos erros de renderização nos diagramas Mermaid nos arquivos de documentação (`vacations-leaves.md` atualizado de `stateDiagram-Obj` para `stateDiagram-v2` e `notifications.md` simplificado para evitar conflitos de caracteres).
+  - **URLs de Produção no Render**: Atualizadas as variáveis de ambiente `FRONTEND_URL` e `NEXT_PUBLIC_API_URL` no arquivo `render.yaml` com as URLs corretas do ambiente ativo, prevenindo que resets de servidor no Render sobrescrevam as configurações do painel.
 
 ---
 
