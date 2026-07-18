@@ -50,6 +50,15 @@ Este repositório foi construído para servir como uma referência técnica de c
   <img alt="Github Actions" height="50" width="50" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Github%20Actions.svg" title="GitHub Actions">
 </div>
 
+### 🎯 Decisões de Arquitetura e Escolha da Stack
+
+A stack tecnológica do **Atlas HRMS** foi meticulosamente selecionada para simular um ambiente de desenvolvimento corporativo altamente produtivo, tipado e seguro:
+- **Next.js + Turborepo**: A escolha do monorepo via Turborepo garante o compartilhamento nativo e imediato de tipos de domínio (`packages/types`) entre o cliente e o servidor. O Next.js com App Router fornece SSR eficiente e carregamento otimizado de páginas públicas (ex: portal de vagas e formulário de inscrição).
+- **NestJS + Prisma + PostgreSQL**: No backend, o NestJS provê uma arquitetura modular robusta baseada em injeção de dependência e controle restrito de exceções. O Prisma ORM simplifica a modelagem relacional, aplicando integridade referencial física diretamente nas chaves do PostgreSQL.
+- **Segurança Corporativa Híbrida**: O uso de tokens JWT em memória combinado com cookies HTTP-Only de renovação automática mitiga vulnerabilidades de XSS e CSRF. O controle fino via RBAC em decorators no NestJS protege as rotas operacionais do sistema.
+- **UploadThing, Resend & Scalar**: A integração direta com o UploadThing Cloud possibilita o upload assíncrono seguro de PDFs diretamente do navegador para a nuvem. A comunicação transacional por e-mail é feita via Resend, enquanto a especificação OpenAPI da API é dinamicamente renderizada pelo Scalar.
+- **Docker**: A containerização do banco PostgreSQL e dependências de infraestrutura por meio do Docker simplifica o provisionamento local, garantindo consistência total de ambientes de desenvolvimento, staging e produção.
+
 ---
 
 ## 🏛️ Arquitetura do Sistema e Monorepo
@@ -274,7 +283,6 @@ O script de **seed** popula o banco de dados com uma estrutura organizacional co
 
 A API do Atlas HRMS possui documentação interativa de rotas. Com o servidor NestJS rodando localmente (`pnpm dev`), acesse:
 
-- **Scalar Interactive Documentation**: [http://localhost:8080/reference](http://localhost:8080/reference) (Recomendado - Interface moderna e performática)
-- **Swagger UI**: [http://localhost:8080/api](http://localhost:8080/api) (Padrão clássico)
+- **Scalar Interactive Documentation**: [http://localhost:8080/reference](http://localhost:8080/reference) (Interface moderna e performática para exploração e testes de endpoints)
 
 Todas as rotas privadas exigem autenticação via JWT Header (`Authorization: Bearer <Token>`) ou são validadas de forma transparente pelo cookie Http-only seguro.
