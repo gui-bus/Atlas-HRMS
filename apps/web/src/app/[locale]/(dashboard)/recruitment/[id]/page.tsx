@@ -10,6 +10,7 @@ import {
   useSensor,
   useSensors,
   rectIntersection,
+  useDroppable,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -81,13 +82,13 @@ function KanbanCard({
     <div
       ref={setNodeRef}
       style={style}
-      className="relative p-3 bg-muted/30 rounded-xl space-y-2 select-none hover:bg-muted/50 transition-colors duration-150"
+      {...attributes}
+      {...listeners}
+      className={`relative p-3 rounded-xl space-y-2 select-none hover:bg-muted/50 transition-colors duration-150 border border-transparent cursor-grab active:cursor-grabbing ${
+        isDragging ? "bg-muted/10 border-dashed border-muted" : "bg-muted/30"
+      }`}
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute top-2.5 right-2.5 cursor-grab active:cursor-grabbing p-0.5 rounded text-muted-foreground/30 hover:text-muted-foreground/70 transition-colors"
-      >
+      <div className="absolute top-2.5 right-2.5 p-0.5 rounded text-muted-foreground/30 hover:text-muted-foreground/70">
         <DotsSixVertical className="h-4 w-4" />
       </div>
 
@@ -169,10 +170,17 @@ function KanbanColumn({
   admitLabel,
   admittingLabel,
 }: KanbanColumnProps) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: stage,
+  });
+
   return (
     <div
+      ref={setNodeRef}
       data-stage={stage}
-      className="flex flex-col rounded-2xl bg-muted/20 p-3 w-[220px] flex-shrink-0"
+      className={`flex flex-col rounded-2xl p-3 w-[220px] flex-shrink-0 transition-colors duration-200 border border-transparent ${
+        isOver ? "bg-primary/5 border-dashed border-primary/20" : "bg-muted/20"
+      }`}
     >
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="font-bold text-xs uppercase tracking-wider text-foreground">{label}</h3>
@@ -182,7 +190,7 @@ function KanbanColumn({
       </div>
 
       <SortableContext items={apps.map((a) => a.id)} strategy={verticalListSortingStrategy}>
-        <div className="flex flex-col gap-2 flex-1 min-h-[80px]">
+        <div className="flex flex-col gap-2 flex-1 min-h-[150px]">
           {apps.map((app) => (
             <KanbanCard
               key={app.id}
