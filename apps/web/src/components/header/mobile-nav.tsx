@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import {
   List,
   SignOut,
@@ -199,7 +200,7 @@ export function MobileNav({ locale }: MobileNavProps) {
                 const singleItem = category.items[0];
                 return (
                   <div key={category.label} className="space-y-2">
-                    <a
+                    <Link
                       href={singleItem.href}
                       className="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-accent text-foreground text-sm font-medium transition-colors animate-fade-in"
                     >
@@ -207,7 +208,7 @@ export function MobileNav({ locale }: MobileNavProps) {
                         {singleItem.icon}
                       </div>
                       <span>{singleItem.label}</span>
-                    </a>
+                    </Link>
                   </div>
                 );
               }
@@ -219,7 +220,7 @@ export function MobileNav({ locale }: MobileNavProps) {
                   </p>
                   <div className="grid grid-cols-1 gap-1">
                     {category.items.map((item) => (
-                      <a
+                      <Link
                         key={item.label}
                         href={item.href}
                         className="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-accent text-foreground text-sm font-medium transition-colors"
@@ -228,7 +229,7 @@ export function MobileNav({ locale }: MobileNavProps) {
                           {item.icon}
                         </div>
                         <span>{item.label}</span>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import {
   CaretDown,
   Users,
@@ -204,13 +205,13 @@ export function DesktopNav({ locale }: DesktopNavProps) {
     return (
       <nav className="hidden lg:flex items-center space-x-2">
         {employeeItems.map((item) => (
-          <a
+          <Link
             key={item.label}
             href={item.href}
             className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
           >
             <span>{item.label === "Documentos" ? "Meus Documentos" : item.label}</span>
-          </a>
+          </Link>
         ))}
       </nav>
     );
@@ -222,13 +223,13 @@ export function DesktopNav({ locale }: DesktopNavProps) {
         if (category.items.length === 1) {
           const singleItem = category.items[0];
           return (
-            <a
+            <Link
               key={category.label}
               href={singleItem.href}
               className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/40 transition-colors focus:outline-none select-none cursor-pointer"
             >
               <span>{singleItem.label}</span>
-            </a>
+            </Link>
           );
         }
 
@@ -268,7 +269,7 @@ export function DesktopNav({ locale }: DesktopNavProps) {
                   {category.items.map((item) => (
                     <DropdownMenuItem
                       key={item.label}
-                      render={<a href={item.href} />}
+                      render={<Link href={item.href} />}
                       className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-accent/60 hover:text-accent-foreground transition-all duration-200 cursor-pointer border-0"
                     >
                       <div className="p-5 rounded-2xl bg-primary/10 text-primary shrink-0 flex items-center justify-center">
