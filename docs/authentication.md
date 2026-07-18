@@ -30,9 +30,9 @@ sequenceDiagram
 - **Tempo de Expiração**: 7 dias (longo ciclo de vida).
 - **Armazenamento**: Injetado pelo servidor via cabeçalho `Set-Cookie` com as seguintes flags de segurança:
   - `HttpOnly`: Impede o acesso ao cookie via código JavaScript no cliente.
-  - `Secure`: Garante que o cookie só seja trafegado por conexões seguras HTTPS (em desenvolvimento, aceita HTTP).
-  - `SameSite=Strict`: Restringe o envio do cookie apenas para requisições que se iniciem no mesmo domínio, mitigando ataques de CSRF.
-  - `Path=/auth/refresh`: O cookie é enviado pelo navegador exclusivamente para a rota de atualização, protegendo as demais rotas da API.
+  - `Secure`: Garante que o cookie só seja trafegado por conexões seguras HTTPS. Em ambiente de desenvolvimento local (HTTP), essa flag é dinamicamente desativada (`secure: false`) para permitir o armazenamento correto do cookie pelo navegador.
+  - `SameSite=None`: Configurado para permitir o envio do cookie em requisições de origens cruzadas (cross-origin) entre o frontend e backend.
+  - `Path=/`: Escopo do cookie configurado globalmente para facilitar o fluxo de refresh no ecossistema de APIs.
 
 ---
 
@@ -95,8 +95,8 @@ O front-end (`@atlas/web`) foi projetado de forma coesa com a API NestJS, utiliz
 ### 1. Gerenciamento de Estado de Autenticação (`useAuthStore`)
 
 - **Tecnologia**: Zustand.
-- **Funcionamento**: Centraliza as informações do usuário autenticado e o `accessToken` ativo em memória volátil.
-- **Segurança**: O token de acesso **nunca** é persistido no `localStorage` ou `sessionStorage`, eliminando a superfície de ataques XSS.
+- **Funcionamento**: Centraliza as informações do usuário autenticado e o `accessToken` ativo.
+- **Segurança e Persistência**: A store do Zustand utiliza o middleware `persist` integrado ao `localStorage`. Isso garante que o estado da sessão de autenticação persista após atualizações de tela (F5) ou hard reloads. O token de acesso é renovado de forma silenciosa e automática sempre que necessário.
 
 ### 2. Fluxo de Renovação de Sessão (Silent Refresh)
 

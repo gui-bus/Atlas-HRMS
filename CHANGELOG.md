@@ -4,6 +4,19 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.8.2] - 2026-07-18
+
+### Corrigido
+
+- **Estabilidade de Sessão e Prevenção de Logouts na Navegação**:
+  - **Zustand Persist**: Implementada a persistência de estado do `useAuthStore` no `localStorage` via middleware `persist` do Zustand. Isso impede que atualizações de página (F5) limpem os dados da sessão em memória, mantendo a autenticação ativa.
+  - **Navegação Interna no Header**: Substituídas as tags HTML `<a>` por componentes `<Link>` do Next.js no `DesktopNav` e `MobileNav`. A navegação agora ocorre 100% via client-side (SPA), mantendo a integridade da store sem forçar reloads completos.
+  - **Configuração Dinâmica do Cookie de Refresh**: A flag `secure` do cookie `refreshToken` agora é desabilitada no ambiente de desenvolvimento (`secure: false`) para permitir o envio correto sobre HTTP na comunicação local localhost cross-origin.
+  - **Ordem de Resolução de Rotas (Vagas Administrativas)**: Reordenadas as rotas no `RecruitmentController` do NestJS para posicionar `GET /recruitments/admin` antes do wildcard `GET /recruitments/:slug`. Isso corrige a colisão de rotas onde `"admin"` era avaliado incorretamente como um slug público de vaga.
+  - **Sintaxe de Diagramas Mermaid nos Docs**: Corrigidos erros de renderização nos diagramas Mermaid nos arquivos de documentação (`vacations-leaves.md` atualizado de `stateDiagram-Obj` para `stateDiagram-v2` e `notifications.md` simplificado para evitar conflitos de caracteres).
+
+---
+
 ## [1.8.1] - 2026-07-18
 
 ### Corrigido
