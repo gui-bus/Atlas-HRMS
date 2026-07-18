@@ -1,11 +1,11 @@
-services:
-  # 1. Banco de Dados PostgreSQL (Render Managed)
-  - type: db
-    name: atlas-database
+# 1. Bancos de Dados Relacionais
+databases:
+  - name: atlas-database
     plan: free
-    ipAllowList: [] # Permite conexões apenas de dentro da rede do Render (seguro)
 
-  # 2. Servidor Backend (NestJS API)
+# 2. Serviços da Aplicação (Web Services)
+services:
+  # Servidor Backend (NestJS API)
   - type: web
     name: atlas-api
     plan: free
@@ -20,20 +20,19 @@ services:
           name: atlas-database
           property: connectionString
       - key: JWT_SECRET
-        generateValue: true # Gera um secret seguro aleatório automaticamente
+        generateValue: true # Gera um secret seguro aleatório de forma automática
       - key: FRONTEND_URL
         fromService:
           type: web
           name: atlas-web
           property: url
-      # Essas variáveis dependem de serviços externos (UploadThing e Resend)
-      # Devem ser preenchidas manualmente no painel do Render se você desejar testar upload/emails em produção
+      # Chaves de APIs externas do UploadThing e Resend
       - key: UPLOADTHING_TOKEN
         sync: false
       - key: RESEND_API_KEY
         sync: false
 
-  # 3. Frontend (Next.js Web App)
+  # Frontend (Next.js Web App)
   - type: web
     name: atlas-web
     plan: free
