@@ -286,3 +286,18 @@ A API do Atlas HRMS possui documentação interativa de rotas. Com o servidor Ne
 - **Scalar Interactive Documentation**: [http://localhost:8080/reference](http://localhost:8080/reference) (Interface moderna e performática para exploração e testes de endpoints)
 
 Todas as rotas privadas exigem autenticação via JWT Header (`Authorization: Bearer <Token>`) ou são validadas de forma transparente pelo cookie Http-only seguro.
+
+---
+
+## 🚀 Deploy em Produção na Render (Blueprint)
+
+O repositório já inclui um arquivo de configuração de Blueprint [render.yaml](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/render.yaml) pronto para fazer o deploy automático da stack completa no plano gratuito da **Render**.
+
+### Como publicar o projeto:
+1. Acesse o painel da [Render](https://dashboard.render.com/) e faça login.
+2. Clique no botão **New +** e selecione **Blueprint**.
+3. Conecte sua conta do GitHub e selecione este repositório do **Atlas HRMS**.
+4. O Render irá ler o arquivo `render.yaml` e exibirá os 3 serviços a serem criados (`atlas-database`, `atlas-api` e `atlas-web`).
+5. Preencha as variáveis de ambiente necessárias indicadas no painel (ex: `UPLOADTHING_TOKEN` e `RESEND_API_KEY` para as integrações de upload e e-mail).
+6. Clique em **Apply** e aguarde a finalização do build paralelo automática de cada aplicação.
+
