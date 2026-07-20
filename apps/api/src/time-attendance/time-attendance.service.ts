@@ -11,9 +11,9 @@ import { TimeRecordType, TimeRecordSource, RequestStatus } from "@prisma/client"
 export class TimeAttendanceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ==========================================
-  // CLOCK IN/OUT BUSINESS LOGIC
-  // ==========================================
+  
+  
+  
 
   async clockIn(
     userId: string,
@@ -38,7 +38,7 @@ export class TimeAttendanceService {
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-    // Validate active vacations
+    
     const activeVacation = await this.prisma.vacation.findFirst({
       where: {
         employeeId: employee.id,
@@ -52,7 +52,7 @@ export class TimeAttendanceService {
       throw new BadRequestException("Não é permitido registrar ponto durante férias aprovadas.");
     }
 
-    // Validate active leaves
+    
     const activeLeave = await this.prisma.leave.findFirst({
       where: {
         employeeId: employee.id,
@@ -68,7 +68,7 @@ export class TimeAttendanceService {
       );
     }
 
-    // Get today's existing records
+    
     const todayRecords = await this.prisma.timeRecord.findMany({
       where: {
         employeeId: employee.id,
@@ -80,7 +80,7 @@ export class TimeAttendanceService {
       orderBy: { timestamp: "asc" },
     });
 
-    // Check temporal duplication (must wait at least 1 minute)
+    
     if (todayRecords.length > 0) {
       const lastRecord = todayRecords[todayRecords.length - 1];
       const diffMs = now.getTime() - new Date(lastRecord.timestamp).getTime();
@@ -91,7 +91,7 @@ export class TimeAttendanceService {
       }
     }
 
-    // Determine type
+    
     let type: TimeRecordType;
     if (todayRecords.length === 0) {
       type = TimeRecordType.ENTRY;
@@ -107,7 +107,7 @@ export class TimeAttendanceService {
       );
     }
 
-    // Save record
+    
     const record = await this.prisma.timeRecord.create({
       data: {
         employeeId: employee.id,
@@ -122,7 +122,7 @@ export class TimeAttendanceService {
       },
     });
 
-    // If EXIT, compute daily summary and balance ledger
+    
     if (type === TimeRecordType.EXIT) {
       await this.calculateAndSaveDailySummary(employee.id, now);
     }
@@ -164,9 +164,9 @@ export class TimeAttendanceService {
     });
   }
 
-  // ==========================================
-  // CORRECTIONS SECTION
-  // ==========================================
+  
+  
+  
 
   async requestCorrection(
     userId: string,
@@ -212,12 +212,12 @@ export class TimeAttendanceService {
     });
 
     if (status === RequestStatus.APPROVED) {
-      // Create the corrected record at target date/time
+      
       const [hours, minutes] = request.time.split(":").map(Number);
       const targetTimestamp = new Date(request.date);
       targetTimestamp.setHours(hours, minutes, 0, 0);
 
-      // Check if existing record of that type exists to update it, or create a new one
+      
       const existing = await this.prisma.timeRecord.findFirst({
         where: {
           employeeId: request.employeeId,
@@ -262,16 +262,16 @@ export class TimeAttendanceService {
         });
       }
 
-      // Recalculate summary for that day
+      
       await this.calculateAndSaveDailySummary(request.employeeId, targetTimestamp);
     }
 
     return updated;
   }
 
-  // ==========================================
-  // LEDGER / BALANCE GETTERS
-  // ==========================================
+  
+  
+  
 
   async getHourBankBalance(userId: string) {
     const employee = await this.prisma.employee.findUnique({
@@ -287,9 +287,9 @@ export class TimeAttendanceService {
     return lastLedger?.balance || 0;
   }
 
-  // ==========================================
-  // HELPERS: SUMMARIES AND LEDGERS
-  // ==========================================
+  
+  
+  
 
   private async calculateAndSaveDailySummary(employeeId: string, day: Date) {
     const todayStart = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0);
@@ -310,9 +310,9 @@ export class TimeAttendanceService {
 
     if (!entry || !exit) return;
 
-    const expectedWorkMinutes = 480; // default 8 hours (ex: 8:00 to 17:00 with 60 mins lunch)
+    const expectedWorkMinutes = 480; 
 
-    // Compute net worked minutes
+    
     const morningMs =
       intOut && entry
         ? new Date(intOut.timestamp).getTime() - new Date(entry.timestamp).getTime()
@@ -321,7 +321,7 @@ export class TimeAttendanceService {
       exit && intIn ? new Date(exit.timestamp).getTime() - new Date(intIn.timestamp).getTime() : 0;
     const netMinutes = Math.max(0, Math.floor((morningMs + afternoonMs) / 60000));
 
-    // Compute interval
+    
     const intervalMs =
       intIn && intOut
         ? new Date(intIn.timestamp).getTime() - new Date(intOut.timestamp).getTime()
@@ -329,7 +329,7 @@ export class TimeAttendanceService {
     const intervalMinutes = Math.max(0, Math.floor(intervalMs / 60000));
     const grossMinutes = netMinutes + intervalMinutes;
 
-    // Calculate delta against expected hours
+    
     let overtimeMinutes = 0;
     let debtMinutes = 0;
 
@@ -339,7 +339,7 @@ export class TimeAttendanceService {
       debtMinutes = expectedWorkMinutes - netMinutes;
     }
 
-    // Save summary
+    
     await this.prisma.timeDaySummary.upsert({
       where: {
         employeeId_date: {
@@ -367,7 +367,7 @@ export class TimeAttendanceService {
       },
     });
 
-    // Update hour bank ledger balance
+    
     const netDelta = overtimeMinutes - debtMinutes;
     if (netDelta !== 0) {
       const lastLedger = await this.prisma.hourBankLedger.findFirst({

@@ -26,8 +26,8 @@ import { TimeAttendanceModule } from "./time-attendance/time-attendance.module";
     }),
     ThrottlerModule.forRoot([
       {
-        ttl: 60000, // 60 seconds
-        limit: 100, // Limit each IP to 100 requests per ttl
+        ttl: 60000, 
+        limit: 100, 
       },
     ]),
     CommonModule,

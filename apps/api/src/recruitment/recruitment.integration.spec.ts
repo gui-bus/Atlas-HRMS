@@ -109,7 +109,7 @@ describe("Recruitment Integration Tests (Supertest)", () => {
     jest.clearAllMocks();
   });
 
-  // ===================== PUBLIC ROUTES =====================
+  
 
   describe("GET /recruitments (public)", () => {
     it("should list open recruitments without auth", async () => {
@@ -180,7 +180,7 @@ describe("Recruitment Integration Tests (Supertest)", () => {
     });
   });
 
-  // ===================== ADMIN ROUTES =====================
+  
 
   describe("POST /recruitments/admin (authenticated)", () => {
     const validDto = {

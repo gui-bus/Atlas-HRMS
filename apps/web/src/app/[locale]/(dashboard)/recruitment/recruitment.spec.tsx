@@ -6,7 +6,7 @@ import RecruitmentListPage from "./page";
 import NewVacancyPage from "./new/page";
 import RecruitmentDetailsPage from "./[id]/page";
 
-// Mock Services
+
 vi.mock("@/services/recruitment.service", () => ({
   recruitmentService: {
     getRecruitments: vi.fn().mockResolvedValue({

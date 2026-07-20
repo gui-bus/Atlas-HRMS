@@ -10,7 +10,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const status =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    // Build a descriptive, structured error response
+    
     const responseBody =
       exception instanceof HttpException
         ? exception.getResponse()

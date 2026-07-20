@@ -52,14 +52,14 @@ export default function LeavesAdminPage() {
   const queryClient = useQueryClient();
   const locale = params?.locale || "pt";
 
-  // State
+  
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useQueryState("status", parseAsString.withDefault("ALL"));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
   const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
-  // Fetch
+  
   const { data: leavesData, isLoading } = useQuery({
     queryKey: ["leaves", { page, sortBy, sortOrder }],
     queryFn: () =>
@@ -73,7 +73,7 @@ export default function LeavesAdminPage() {
   const leaves = leavesData?.data || [];
   const totalPages = leavesData?.totalPages || 1;
 
-  // Approve Mutation
+  
   const approveMutation = useMutation({
     mutationFn: (id: string) => vacationService.updateLeaveStatus(id, { status: "APPROVED" }),
     onSuccess: () => {
@@ -81,7 +81,7 @@ export default function LeavesAdminPage() {
     },
   });
 
-  // Local Filter
+  
   const filteredData = useMemo(() => {
     return leaves.filter((l) => {
       if (statusFilter !== "ALL" && l.status !== statusFilter) return false;
@@ -212,10 +212,10 @@ export default function LeavesAdminPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        {/* Title Header */}
+        
         <PageHeader title={t("leavesTitle")} subTitle={t("leavesSubTitle")} />
 
-        {/* Toolbar */}
+        
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -239,7 +239,7 @@ export default function LeavesAdminPage() {
           </Select>
         </div>
 
-        {/* Table */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -311,7 +311,7 @@ export default function LeavesAdminPage() {
           </div>
         </div>
 
-        {/* Pagination controls */}
+        
         {!isLoading && totalPages > 1 && (
           <Pagination className="justify-end pt-4">
             <PaginationContent>

@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DocumentsPage from "./page";
 import NewDocumentPage from "./new/page";
 
-// Mock Services
+
 vi.mock("@/services/document.service", () => ({
   documentService: {
     getDocuments: vi.fn().mockResolvedValue([

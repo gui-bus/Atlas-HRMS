@@ -52,7 +52,7 @@ export default function AuditLogsPage() {
   const [search, setSearch] = useQueryState("search", parseAsString.withDefault(""));
   const [logId, setLogId] = useQueryState("logId", parseAsString.withDefault(""));
 
-  // --- Fetch List ---
+  
   const { data: auditResponse, isLoading } = useQuery({
     queryKey: ["audit-logs", page, search],
     queryFn: () => auditService.getAuditLogs({ page, limit: 15, search }),
@@ -103,7 +103,7 @@ export default function AuditLogsPage() {
     }
   };
 
-  // --- Tables Setup ---
+  
   const columnHelper = createColumnHelper<AuditLog>();
   const columns = [
     columnHelper.accessor("action", {
@@ -151,13 +151,13 @@ export default function AuditLogsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR"]}>
       <div className="p-6 md:p-8 space-y-6 w-full">
-        {/* Title Header */}
+        
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-muted-foreground text-sm">{t("subTitle")}</p>
         </div>
 
-        {/* Filter Toolbar */}
+        
         <div className="flex items-center gap-4 pt-2">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -173,7 +173,7 @@ export default function AuditLogsPage() {
           </div>
         </div>
 
-        {/* Tabela Zebrada Sem Bordas */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -229,7 +229,7 @@ export default function AuditLogsPage() {
           </div>
         </div>
 
-        {/* Paginação */}
+        
         {totalPages > 1 && (
           <Pagination className="justify-end pt-4">
             <PaginationContent>
@@ -260,7 +260,7 @@ export default function AuditLogsPage() {
           </Pagination>
         )}
 
-        {/* --- Details Dialog --- */}
+        
         <Dialog open={!!logId} onOpenChange={(open) => !open && setLogId("")}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-2xl">
             <DialogHeader>

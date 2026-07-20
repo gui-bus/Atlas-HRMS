@@ -28,7 +28,7 @@ export default function MyVacationsPage() {
   const { user } = useAuthStore();
   const locale = params?.locale || "pt";
 
-  // --- Fetch the Employee matching the logged-in user email ---
+  
   const { data: employeesData, isLoading: loadingEmployee } = useQuery({
     queryKey: ["employees", { search: user?.email }],
     queryFn: () => employeeService.getEmployees({ search: user?.email }),
@@ -38,14 +38,14 @@ export default function MyVacationsPage() {
   const employee = employeesData?.data?.[0];
   const employeeId = employee?.id || "";
 
-  // --- Fetch My History ---
+  
   const { data: myVacations = [], isLoading: loadingVacations } = useQuery({
     queryKey: ["my-vacations", employeeId],
     queryFn: () => vacationService.getEmployeeVacations(employeeId),
     enabled: !!employeeId,
   });
 
-  // Cancel Mutations
+  
   const cancelVacationMutation = useMutation({
     mutationFn: (id: string) => vacationService.cancelVacation(id),
     onSuccess: () => {
@@ -53,7 +53,7 @@ export default function MyVacationsPage() {
     },
   });
 
-  // Table state
+  
   const [vSorting, setVSorting] = useState<SortingState>([]);
 
   const formatDate = (dateString: string) => {
@@ -64,7 +64,7 @@ export default function MyVacationsPage() {
     }
   };
 
-  // --- Vacation Columns ---
+  
   const vColumnHelper = createColumnHelper<Vacation>();
   const vacationColumns = [
     vColumnHelper.accessor("startDate", {
@@ -161,7 +161,7 @@ export default function MyVacationsPage() {
           </Button>
         </div>
 
-        {/* Vacations Table */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">

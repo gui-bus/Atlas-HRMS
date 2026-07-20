@@ -28,7 +28,7 @@ export default function MyLeavesPage() {
   const { user } = useAuthStore();
   const locale = params?.locale || "pt";
 
-  // --- Fetch the Employee matching the logged-in user email ---
+  
   const { data: employeesData, isLoading: loadingEmployee } = useQuery({
     queryKey: ["employees", { search: user?.email }],
     queryFn: () => employeeService.getEmployees({ search: user?.email }),
@@ -38,14 +38,14 @@ export default function MyLeavesPage() {
   const employee = employeesData?.data?.[0];
   const employeeId = employee?.id || "";
 
-  // --- Fetch My History ---
+  
   const { data: myLeaves = [], isLoading: loadingLeaves } = useQuery({
     queryKey: ["my-leaves", employeeId],
     queryFn: () => vacationService.getEmployeeLeaves(employeeId),
     enabled: !!employeeId,
   });
 
-  // Cancel Mutations
+  
   const cancelLeaveMutation = useMutation({
     mutationFn: (id: string) => vacationService.cancelLeave(id),
     onSuccess: () => {
@@ -53,7 +53,7 @@ export default function MyLeavesPage() {
     },
   });
 
-  // Table state
+  
   const [lSorting, setLSorting] = useState<SortingState>([]);
 
   const formatDate = (dateString: string) => {
@@ -64,7 +64,7 @@ export default function MyLeavesPage() {
     }
   };
 
-  // --- Leave Columns ---
+  
   const lColumnHelper = createColumnHelper<Leave>();
   const leaveColumns = [
     lColumnHelper.accessor("type", {
@@ -172,7 +172,7 @@ export default function MyLeavesPage() {
           </Button>
         </div>
 
-        {/* Leaves Table */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">

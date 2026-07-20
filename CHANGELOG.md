@@ -11,6 +11,10 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 - **Galeria de Imagens de Visualização**: Adicionada uma seção de Galeria de Telas (Preview) no arquivo de documentação [docs/README.md](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/README.md) agrupando capturas de tela das principais interfaces do frontend.
 - **Sumário Interativo**: Adicionado sumário de navegação com links âncora e IDs correspondentes a todas as seções no cabeçalho do documento.
 
+### Alterado
+
+- **Remoção de Comentários**: Executada a remoção de todos os comentários explicativos e redundantes em arquivos TS/TSX/JS/JSX das pastas `apps/` e `packages/`, em conformidade com as diretrizes de código limpo (comentários) do projeto. Diretivas de linter e compilador (como `eslint` e `@ts-ignore`) foram preservadas.
+
 ---
 
 ## [1.8.2] - 2026-07-18

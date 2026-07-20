@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
       const segments = pathname.split("/");
       const locale = segments[1] || "pt";
 
-      // Setup live countdown logic
+      
       let currentSeconds = 5;
       const interval = setInterval(() => {
         currentSeconds -= 1;

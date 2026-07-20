@@ -48,14 +48,14 @@ export default function UserAccountsPage() {
   const params = useParams();
   const locale = params?.locale || "pt";
   const t = useTranslations("Users");
-  // State
+  
   const [globalFilter, setGlobalFilter] = useState("");
   const [roleFilter, setRoleFilter] = useQueryState("role", parseAsString.withDefault("ALL"));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
   const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
-  // --- Fetch List ---
+  
   const { data: accountsData, isLoading } = useQuery({
     queryKey: ["user-accounts", { page, sortBy, sortOrder }],
     queryFn: () =>
@@ -87,7 +87,7 @@ export default function UserAccountsPage() {
     }
   };
 
-  // Local Filter
+  
   const filteredData = useMemo(() => {
     return accounts.filter((acc) => {
       if (roleFilter !== "ALL" && acc.role !== roleFilter) return false;
@@ -174,13 +174,13 @@ export default function UserAccountsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        {/* Title Header */}
+        
         <PageHeader
           title={t("title")}
           subTitle={t("subTitle")}
         />
 
-        {/* Toolbar */}
+        
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -205,7 +205,7 @@ export default function UserAccountsPage() {
           </Select>
         </div>
 
-        {/* Table */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -277,7 +277,7 @@ export default function UserAccountsPage() {
           </div>
         </div>
 
-        {/* Pagination controls */}
+        
         {!isLoading && totalPages > 1 && (
           <Pagination className="justify-end pt-4">
             <PaginationContent>

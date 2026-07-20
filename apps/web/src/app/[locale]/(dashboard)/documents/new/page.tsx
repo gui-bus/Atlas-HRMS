@@ -171,7 +171,7 @@ export default function NewDocumentPage() {
                 {errors.type && <p className="text-xs text-destructive">{errors.type.message}</p>}
               </div>
 
-              {/* Native Drag and Drop upload area */}
+              
               <div className="space-y-2 col-span-2">
                 <Label>
                   {t("form.file")} <span className="text-destructive">*</span>

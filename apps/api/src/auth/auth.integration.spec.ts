@@ -101,7 +101,7 @@ describe("Auth Integration Tests (Supertest)", () => {
     it("should return 400 if password does not meet strength requirements", async () => {
       const response = await request(app.getHttpServer()).post("/auth/register").send({
         email: "weak@atlas.com",
-        password: "123", // too weak, no special char, uppercase or length
+        password: "123", 
         confirmPassword: "123",
       });
 
@@ -126,7 +126,7 @@ describe("Auth Integration Tests (Supertest)", () => {
       expect(response.body).toHaveProperty("accessToken");
       expect(response.body.user.email).toBe("integration@atlas.com");
 
-      // Verify secure HTTPOnly cookie
+      
       const cookies = response.headers["set-cookie"];
       expect(cookies).toBeDefined();
       expect(cookies[0]).toContain("refreshToken=");
@@ -158,7 +158,7 @@ describe("Auth Integration Tests (Supertest)", () => {
 
       const cookies = response.headers["set-cookie"];
       expect(cookies).toBeDefined();
-      expect(cookies[0]).toContain("refreshToken=;"); // cleared
+      expect(cookies[0]).toContain("refreshToken=;"); 
     });
   });
 

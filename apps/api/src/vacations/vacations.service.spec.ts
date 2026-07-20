@@ -64,7 +64,7 @@ describe("VacationsService (Unit)", () => {
     };
 
     it("should create vacation successfully if aquisitive period is met and no overlap", async () => {
-      // Completed 12 months (hireDate in past)
+      
       mockPrisma.employee.findUnique.mockResolvedValue({
         id: "emp-1",
         hireDate: new Date("2024-01-01"),
@@ -80,7 +80,7 @@ describe("VacationsService (Unit)", () => {
     it("should throw BadRequestException if employee has not completed 12 months", async () => {
       mockPrisma.employee.findUnique.mockResolvedValue({
         id: "emp-1",
-        // Hired recently
+        
         hireDate: new Date(),
       });
 

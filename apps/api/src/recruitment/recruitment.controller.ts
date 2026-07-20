@@ -55,9 +55,9 @@ import {
 export class RecruitmentController {
   constructor(private readonly recruitmentService: RecruitmentService) {}
 
-  // =============================================
-  //  ROTAS PÚBLICAS (sem autenticação)
-  // =============================================
+  
+  
+  
 
   @Get()
   @ApiOperation({
@@ -170,9 +170,9 @@ export class RecruitmentController {
     return this.recruitmentService.applyToRecruitment(slug, dto, resume);
   }
 
-  // =============================================
-  //  ROTAS ADMINISTRATIVAS (autenticadas)
-  // =============================================
+  
+  
+  
 
   @Post("admin")
   @UseGuards(AuthGuard, RolesGuard)

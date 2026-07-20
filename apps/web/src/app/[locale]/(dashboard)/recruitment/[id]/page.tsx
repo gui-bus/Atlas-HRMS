@@ -74,7 +74,7 @@ function KanbanCard({
 
   return (
     <div className="p-4 rounded-xl border border-muted/20 bg-neutral-100 dark:bg-neutral-900 shadow-[0_2px_6px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_6px_rgba(0,0,0,0.15)] transition-all duration-200 hover:border-muted-foreground/30 hover:shadow-md flex flex-col gap-3">
-      {/* Candidate info */}
+      
       <div className="space-y-1">
         <p className="font-bold text-sm text-foreground tracking-tight leading-snug">{fullName}</p>
         <p className="text-[11px] text-muted-foreground truncate">{email}</p>
@@ -101,7 +101,7 @@ function KanbanCard({
         </p>
       </div>
 
-      {/* Action buttons — full column */}
+      
       <div className="flex flex-col gap-1.5 pt-2.5 border-t border-muted/10">
         {app.resumeUrl && (
           <a
@@ -143,7 +143,7 @@ function KanbanCard({
         )}
       </div>
 
-      {/* Stage navigation */}
+      
       <div className="flex justify-between items-center gap-1 pt-2 border-t border-dashed border-muted/10">
         <Button
           variant="outline"
@@ -317,7 +317,7 @@ export default function RecruitmentDetailsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="flex flex-col overflow-hidden" style={{ height: "calc(100vh - 4rem)" }}>
-        {/* Header */}
+        
         <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 flex-shrink-0">
           <div className="flex items-center gap-4">
             <Button
@@ -337,7 +337,7 @@ export default function RecruitmentDetailsPage() {
           </div>
         </div>
 
-        {/* Kanban Board — scrolls horizontally only */}
+        
         <div className="flex-1 overflow-x-auto overflow-y-hidden px-6 pb-6">
           <div className="flex gap-3 h-full">
             {STAGES.map((stage, index) => (

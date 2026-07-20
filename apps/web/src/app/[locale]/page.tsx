@@ -58,7 +58,7 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Primary CTA Buttons */}
+        
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
           <Button
             size="lg"
@@ -78,7 +78,7 @@ export default function LandingPage() {
           </Button>
         </div>
 
-        {/* Feature Highlights Grid */}
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full pt-10 border-t border-muted/10">
           <div className="bg-muted/5 p-6 rounded-3xl space-y-3">
             <div className="h-10 w-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
@@ -112,7 +112,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* Footer */}
+      
       <footer className="w-full border-t border-muted/10 bg-muted/5 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center sm:items-start gap-1">

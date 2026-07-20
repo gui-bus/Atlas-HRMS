@@ -64,7 +64,7 @@ export default function PositionsPage() {
   const { user } = useAuthStore();
   const isAdminOrHr = user?.role === "ADMIN" || user?.role === "HR";
 
-  // State
+  
   const [globalFilter, setGlobalFilter] = useState("");
   const [deptFilter, setDeptFilter] = useQueryState("department", parseAsString.withDefault("ALL"));
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -73,7 +73,7 @@ export default function PositionsPage() {
   const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
   const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
-  // Fetch lists
+  
   const { data: positionsData, isLoading } = useQuery({
     queryKey: ["positions", { page, sortBy, sortOrder }],
     queryFn: () =>
@@ -95,7 +95,7 @@ export default function PositionsPage() {
     ? departmentsData
     : departmentsData?.data || [];
 
-  // Mutation
+  
   const deleteMutation = useMutation({
     mutationFn: (id: string) => positionService.deletePosition(id),
     onSuccess: () => {
@@ -105,7 +105,7 @@ export default function PositionsPage() {
     },
   });
 
-  // Filtering data locally
+  
   const filteredData = useMemo(() => {
     return positions.filter((pos) => {
       if (deptFilter !== "ALL" && pos.departmentId !== deptFilter) return false;
@@ -119,16 +119,16 @@ export default function PositionsPage() {
   };
 
   const getDeptName = (deptId?: string) => {
-    if (!deptId) return t("inactive"); // or non-assigned key, but let's translate inline or with commons if available. Let's look at getDeptName below.
+    if (!deptId) return t("inactive"); 
     const found = departments.find((d) => d.id === deptId);
-    return found ? found.name : "Desconhecido"; // translation isn't critical since it's database value, but fallback "Desconhecido" can be "Unknown"
+    return found ? found.name : "Desconhecido"; 
   };
 
   const formatCurrency = (val?: string) => {
     if (!val) return "—";
     const parsed = parseFloat(val);
     if (isNaN(parsed)) return "—";
-    // We should use a helper or format dynamically based on locale. For BRL, keeping currency BRL but formatting based on active locale:
+    
     return new Intl.NumberFormat(locale === "pt" ? "pt-BR" : locale === "es" ? "es-ES" : "en-US", {
       style: "currency",
       currency: "BRL",
@@ -234,7 +234,7 @@ export default function PositionsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        {/* Title Header */}
+        
         <PageHeader
           title={t("positionsTitle")}
           subTitle={t("positionsSubTitle")}
@@ -242,7 +242,7 @@ export default function PositionsPage() {
           buttonLink={`/${locale}/organization/positions/new`}
         />
 
-        {/* Toolbar controls: search & filter */}
+        
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -268,7 +268,7 @@ export default function PositionsPage() {
           </Select>
         </div>
 
-        {/* Tabela Zebrada Sem Bordas */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -340,7 +340,7 @@ export default function PositionsPage() {
           </div>
         </div>
 
-        {/* Pagination controls */}
+        
         {!isLoading && totalPages > 1 && (
           <Pagination className="justify-end pt-4">
             <PaginationContent>
@@ -371,7 +371,7 @@ export default function PositionsPage() {
           </Pagination>
         )}
 
-        {/* --- Delete Confirmation Dialog --- */}
+        
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-sm">
             <DialogHeader>

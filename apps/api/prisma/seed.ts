@@ -29,7 +29,7 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("Iniciando limpeza do banco de dados...");
 
-  // Delete in correct order to respect constraints
+  
   await prisma.application.deleteMany();
   await prisma.candidate.deleteMany();
   await prisma.recruitment.deleteMany();
@@ -52,10 +52,10 @@ async function main() {
 
   console.log("Banco de dados limpo. Criando registros realistas em grande escala...");
 
-  // Password for all seeded users
+  
   const hashedPassword = await bcrypt.hash("Senha@123", 10);
 
-  // 1. Departamentos (15 no total)
+  
   const departmentsData = [
     { name: "Tecnologia", code: "TECH" },
     { name: "Recursos Humanos", code: "RH" },
@@ -88,7 +88,7 @@ async function main() {
   const depProd = departments.find((d) => d.code === "PROD")!;
   const depQA = departments.find((d) => d.code === "QA")!;
 
-  // 2. Cargos (Positions - 25+ no total)
+  
   const positionsData = [
     { title: "Chief Technology Officer", dep: depTech, min: 18000, max: 28000 },
     { title: "Tech Lead", dep: depTech, min: 11000, max: 15000 },
@@ -163,7 +163,7 @@ async function main() {
   const posDevPl = positions.find((p) => p.title === "Desenvolvedor Pleno")!;
   const posRecrutador = positions.find((p) => p.title === "Recrutador Senior")!;
 
-  // 3. Usuários Admin e Managers Principais
+  
   await prisma.user.create({
     data: {
       email: "admin@atlas.com",
@@ -279,11 +279,11 @@ async function main() {
     },
   });
 
-  // Vincula gestores aos departamentos
+  
   await prisma.department.update({ where: { id: depTech.id }, data: { managerId: empCTO.id } });
   await prisma.department.update({ where: { id: depRH.id }, data: { managerId: empHR.id } });
 
-  // 4. Gerar 30+ Colaboradores programaticamente
+  
   console.log("Gerando mais de 30 colaboradores realistas...");
   const firstNames = [
     "Juliana",
@@ -360,7 +360,7 @@ async function main() {
     const cpf = `111.222.333-${i.toString().padStart(2, "0")}`;
     const phone = `(11) 9${(70000 + i * 17).toString().slice(0, 4)}-${(1000 + i * 29).toString().slice(0, 4)}`;
 
-    // Distribuir entre posições e departamentos
+    
     const posIndex = i % positions.length;
     const pos = positions[posIndex];
     const posOriginal = positionsData[posIndex];
@@ -431,7 +431,7 @@ async function main() {
   }
   console.log(`${createdEmployees.length} colaboradores criados com sucesso.`);
 
-  // 5. Férias (25+ solicitações)
+  
   console.log("Criando histórico amplo de Férias...");
   const vacationStatuses = [
     VacationStatus.APPROVED,
@@ -457,7 +457,7 @@ async function main() {
     });
   }
 
-  // 6. Atestados e Afastamentos (20+ registros)
+  
   console.log("Criando histórico amplo de Atestados...");
   const leaveTypes = [LeaveType.MEDICAL, LeaveType.LEGAL, LeaveType.PARENTAL, LeaveType.OTHER];
   const leaveStatuses = [LeaveStatus.APPROVED, LeaveStatus.PENDING, LeaveStatus.REJECTED];
@@ -485,7 +485,7 @@ async function main() {
     });
   }
 
-  // 7. Vagas e Recrutamento (20+ vagas)
+  
   console.log("Criando mais de 20 vagas de emprego para testes de paginação...");
   const jobsData = [
     {
@@ -592,7 +592,7 @@ async function main() {
     recruitments.push(rec);
   }
 
-  // 8. Candidatos e Inscrições (35+ candidaturas)
+  
   console.log("Inserindo amplo volume de candidatos e inscrições...");
   const candidateNames = [
     "Alice",
@@ -695,7 +695,7 @@ async function main() {
     });
   }
 
-  // 9. Marcações de Ponto (Juliana - Colaboradora regular)
+  
   console.log("Criando marcações de ponto e relatórios diários...");
   const targetEmployee = createdEmployees[0];
   const baseDate = new Date();

@@ -189,7 +189,7 @@ describe("AuthService", () => {
       const dto = { email: "user@atlas.com", password: "Password123#" };
       const lockedUser = {
         ...mockUser,
-        lockoutUntil: new Date(Date.now() + 10 * 60 * 1000), // locked for 10m
+        lockoutUntil: new Date(Date.now() + 10 * 60 * 1000), 
       };
       prisma.user.findUnique.mockResolvedValue(lockedUser);
 
@@ -264,7 +264,7 @@ describe("AuthService", () => {
       prisma.user.findUnique.mockResolvedValue({ id: "u-1", email: "known@email.com" });
       prisma.user.update.mockResolvedValue({ id: "u-1" });
 
-      // Mock process.env.RESEND_API_KEY to trigger mockResend
+      
       const originalApiKey = process.env.RESEND_API_KEY;
       process.env.RESEND_API_KEY = "dummy_key";
 

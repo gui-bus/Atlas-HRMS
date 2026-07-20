@@ -34,11 +34,11 @@ export default function NewLeaveRequestPage() {
   const { user } = useAuthStore();
   const locale = params?.locale || "pt";
 
-  // State for upload management
+  
   const [uploading, setUploading] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState("");
 
-  // Fetch the Employee matching the logged-in user email
+  
   const { data: employeesData } = useQuery({
     queryKey: ["employees", { search: user?.email }],
     queryFn: () => employeeService.getEmployees({ search: user?.email }),
@@ -67,10 +67,10 @@ export default function NewLeaveRequestPage() {
     },
   });
 
-  // Watch type changes to conditionally display customType input
+  
   const selectedType = watch("type");
 
-  // Keep employeeId updated in form state
+  
   useEffect(() => {
     if (employeeId) {
       setValue("employeeId", employeeId);
@@ -228,7 +228,7 @@ export default function NewLeaveRequestPage() {
                 )}
               </div>
 
-              {/* Upload Dropzone */}
+              
               <div className="space-y-2 col-span-2">
                 <Label>{t("attachment")}</Label>
                 {attachmentUrl ? (

@@ -116,9 +116,9 @@ export default function PublicJobDetailPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col w-full">
-      {/* Main Details Panel (Clean, Premium, border-free) */}
+      
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 md:px-12 py-10 grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Left Column: Job Info (col-span 7) */}
+        
         <div className="lg:col-span-7 space-y-8 animate-fade-in">
           <Button
             variant="ghost"
@@ -176,7 +176,7 @@ export default function PublicJobDetailPage() {
           </div>
         </div>
 
-        {/* Right Column: Apply Form Card (col-span 5) */}
+        
         <div className="lg:col-span-5 bg-muted/10 p-6 md:p-8 rounded-3xl h-fit space-y-6 animate-fade-in">
           <h2 className="text-xl font-bold tracking-tight">{t("applyTitle")}</h2>
           <p className="text-xs text-muted-foreground font-semibold">

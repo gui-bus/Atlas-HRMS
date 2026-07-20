@@ -22,10 +22,10 @@ import { AllExceptionsFilter } from "./common/http-exception.filter";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable cookie parsing
+  
   app.use(cookieParser());
 
-  // Security headers with Content Security Policy for Scalar API Docs
+  
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -52,13 +52,13 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS with credentials support for frontend local dev
+  
   app.enableCors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   });
 
-  // Global validation pipe
+  
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -67,10 +67,10 @@ async function bootstrap() {
     }),
   );
 
-  // Global exception filter for rich error presentation
+  
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  // Swagger setup
+  
   const config = new DocumentBuilder()
     .setTitle("Atlas HRMS API")
     .setDescription("Documentação interativa das APIs corporativas do sistema Atlas HRMS.")
@@ -80,7 +80,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  // Scalar API Docs
+  
   app.use(
     "/docs",
     apiReference({

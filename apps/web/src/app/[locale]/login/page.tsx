@@ -118,7 +118,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Minimal Form body */}
+        
         <div className="space-y-6">
           {errorMsg && (
             <div className="bg-destructive/15 border border-destructive/30 text-destructive text-sm px-4 py-3 rounded-lg text-center font-medium">

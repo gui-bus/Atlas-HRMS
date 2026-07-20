@@ -158,7 +158,7 @@ export default function PendingCorrectionsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        {/* Title Header */}
+        
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-muted-foreground text-sm">
@@ -178,7 +178,7 @@ export default function PendingCorrectionsPage() {
           </div>
         )}
 
-        {/* Toolbar */}
+        
         <div className="relative w-full">
           <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -189,7 +189,7 @@ export default function PendingCorrectionsPage() {
           />
         </div>
 
-        {/* Table */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">

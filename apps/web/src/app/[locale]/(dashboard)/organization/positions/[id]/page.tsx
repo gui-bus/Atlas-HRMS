@@ -26,7 +26,7 @@ export default function EditPositionPage() {
   const id = params?.id as string;
   const locale = params?.locale || "pt";
 
-  // Fetch current position data
+  
   const {
     data: position,
     isLoading,

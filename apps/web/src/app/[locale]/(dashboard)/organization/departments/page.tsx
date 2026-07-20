@@ -63,7 +63,7 @@ export default function DepartmentsPage() {
   const { user } = useAuthStore();
   const isAdminOrHr = user?.role === "ADMIN" || user?.role === "HR";
 
-  // State
+  
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useQueryState("status", parseAsString.withDefault("ALL"));
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -72,7 +72,7 @@ export default function DepartmentsPage() {
   const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
   const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
-  // Fetch
+  
   const { data: departmentsData, isLoading } = useQuery({
     queryKey: ["departments", { page, sortBy, sortOrder }],
     queryFn: () =>
@@ -86,7 +86,7 @@ export default function DepartmentsPage() {
   const departments = departmentsData?.data || [];
   const totalPages = departmentsData?.totalPages || 1;
 
-  // Mutation
+  
   const deleteMutation = useMutation({
     mutationFn: (id: string) => departmentService.deleteDepartment(id),
     onSuccess: () => {
@@ -96,7 +96,7 @@ export default function DepartmentsPage() {
     },
   });
 
-  // Filtering data locally
+  
   const filteredData = useMemo(() => {
     return departments.filter((dept) => {
       if (statusFilter === "ACTIVE") return dept.active === true;
@@ -146,7 +146,7 @@ export default function DepartmentsPage() {
       header: t("table.actions"),
       cell: (info) => {
         const dept = info.row.original;
-        // Hide edit/delete actions if not ADMIN or HR
+        
         if (!isAdminOrHr) return <span className="text-muted-foreground/60 text-xs">—</span>;
 
         return (
@@ -204,7 +204,7 @@ export default function DepartmentsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        {/* Title Header */}
+        
         <PageHeader
           title={t("departmentsTitle")}
           subTitle={t("departmentsSubTitle")}
@@ -212,7 +212,7 @@ export default function DepartmentsPage() {
           buttonLink={`/${locale}/organization/departments/new`}
         />
 
-        {/* Toolbar controls: search & filter */}
+        
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -235,7 +235,7 @@ export default function DepartmentsPage() {
           </Select>
         </div>
 
-        {/* Tabela Zebrada Sem Bordas */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -307,7 +307,7 @@ export default function DepartmentsPage() {
           </div>
         </div>
 
-        {/* Pagination controls */}
+        
         {!isLoading && totalPages > 1 && (
           <Pagination className="justify-end pt-4">
             <PaginationContent>
@@ -338,7 +338,7 @@ export default function DepartmentsPage() {
           </Pagination>
         )}
 
-        {/* --- Delete Confirmation Dialog --- */}
+        
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-sm">
             <DialogHeader>

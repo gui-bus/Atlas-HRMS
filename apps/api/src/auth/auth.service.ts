@@ -50,7 +50,7 @@ export class AuthService {
       },
     });
 
-    // Log registration
+    
     await this.auditService.logAction(
       user.id,
       "USER_REGISTER",
@@ -66,7 +66,7 @@ export class AuthService {
     });
 
     if (!user || !user.isActive) {
-      // Log failed login due to invalid email
+      
       await this.auditService.logAction(
         null,
         "USER_LOGIN_INVALID_EMAIL",
@@ -75,10 +75,10 @@ export class AuthService {
       throw new UnauthorizedException("Credenciais inválidas");
     }
 
-    // Check account lockout status
+    
     if (user.lockoutUntil && user.lockoutUntil > new Date()) {
       const minutesLeft = Math.ceil((user.lockoutUntil.getTime() - Date.now()) / (60 * 1000));
-      // Log blocked attempt
+      
       await this.auditService.logAction(
         user.id,
         "USER_LOGIN_LOCKED",
@@ -97,11 +97,11 @@ export class AuthService {
       let action = "USER_LOGIN_FAILURE";
 
       if (updatedFailedAttempts >= 10) {
-        lockoutUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes lockout
+        lockoutUntil = new Date(Date.now() + 30 * 60 * 1000); 
         message = "Conta bloqueada por 30 minutos devido a 10 tentativas falhas consecutivas.";
         action = "USER_LOCKOUT_MAX";
       } else if (updatedFailedAttempts >= 5) {
-        lockoutUntil = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes lockout
+        lockoutUntil = new Date(Date.now() + 10 * 60 * 1000); 
         message = "Conta bloqueada por 10 minutos devido a 5 tentativas falhas consecutivas.";
         action = "USER_LOCKOUT_WARN";
       } else {
@@ -117,7 +117,7 @@ export class AuthService {
         },
       });
 
-      // Log failure/lockout
+      
       await this.auditService.logAction(
         user.id,
         action,
@@ -127,7 +127,7 @@ export class AuthService {
       throw new UnauthorizedException(message);
     }
 
-    // Reset lockout parameters on success
+    
     await this.prisma.user.update({
       where: { id: user.id },
       data: {
@@ -136,7 +136,7 @@ export class AuthService {
       },
     });
 
-    // Log successful login
+    
     await this.auditService.logAction(
       user.id,
       "USER_LOGIN_SUCCESS",
@@ -233,7 +233,7 @@ export class AuthService {
     const crypto = await import("crypto");
     const token = crypto.randomBytes(20).toString("hex");
     const expiration = new Date();
-    expiration.setMinutes(expiration.getMinutes() + 15); // 15 mins validity
+    expiration.setMinutes(expiration.getMinutes() + 15); 
 
     await this.prisma.user.update({
       where: { id: user.id },

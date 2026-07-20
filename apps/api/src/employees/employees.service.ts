@@ -96,7 +96,7 @@ export class EmployeesService {
   }
 
   async create(dto: CreateEmployeeDto) {
-    // Check if email already exists
+    
     const emailExists = await this.prisma.employee.findUnique({
       where: { email: dto.email },
     });
@@ -104,7 +104,7 @@ export class EmployeesService {
       throw new ConflictException("E-mail corporativo já cadastrado");
     }
 
-    // Check if CPF already exists
+    
     const cpfClean = dto.personalData.cpf.replace(/[^\d]/g, "");
     const cpfExists = await this.prisma.employeePersonalData.findUnique({
       where: { cpf: cpfClean },
@@ -113,7 +113,7 @@ export class EmployeesService {
       throw new ConflictException("CPF já cadastrado no sistema");
     }
 
-    // Verify userId relationship uniqueness
+    
     if (dto.userId) {
       const userHasEmployee = await this.prisma.employee.findUnique({
         where: { userId: dto.userId },
@@ -126,7 +126,7 @@ export class EmployeesService {
     return this.prisma.$transaction(async (tx) => {
       let linkedUserId = dto.userId || null;
       if (!linkedUserId) {
-        // Check if user already exists
+        
         const existingUser = await tx.user.findUnique({
           where: { email: dto.email },
         });
@@ -241,9 +241,9 @@ export class EmployeesService {
     }
 
     return this.prisma.$transaction(async (tx) => {
-      // Emergency Contacts handling if provided
+      
       if (dto.emergencyContacts) {
-        // Delete all old contacts first
+        
         await tx.emergencyContact.deleteMany({
           where: { employeeId: id },
         });
@@ -343,7 +343,7 @@ export class EmployeesService {
     const employee = await this.findOne(id);
 
     return this.prisma.$transaction(async (tx) => {
-      // Soft delete Employee
+      
       const updated = await tx.employee.update({
         where: { id },
         data: {
@@ -352,7 +352,7 @@ export class EmployeesService {
         },
       });
 
-      // If user linked, soft delete and deactivate the user
+      
       if (employee.userId) {
         await tx.user.update({
           where: { id: employee.userId },

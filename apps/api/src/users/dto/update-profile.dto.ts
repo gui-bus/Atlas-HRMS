@@ -22,7 +22,7 @@ export class UpdateProfileDto {
   @IsOptional()
   avatarUrl?: string;
 
-  // Personal Data
+  
   @ApiProperty({ example: "12.345.678-9", required: false })
   @IsString()
   @IsOptional()
@@ -43,7 +43,7 @@ export class UpdateProfileDto {
   @IsOptional()
   maritalStatus?: string;
 
-  // Address
+  
   @ApiProperty({ example: "01001-000", required: false })
   @IsString()
   @IsOptional()
@@ -79,7 +79,7 @@ export class UpdateProfileDto {
   @IsOptional()
   state?: string;
 
-  // Bank Account
+  
   @ApiProperty({ example: "341", required: false })
   @IsString()
   @IsOptional()

@@ -575,7 +575,7 @@ export class RecruitmentService {
         return employee;
       })
       .then(async (employee) => {
-        // Find user matching the candidate's email if already created, or schedule a welcome notification if user exists
+        
         const associatedUser = await this.prisma.user.findFirst({
           where: { email: employee.email, deletedAt: null },
         });

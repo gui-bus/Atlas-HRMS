@@ -62,7 +62,7 @@ export default function ProfilePage() {
     }
   };
 
-  // State fields
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -204,7 +204,7 @@ export default function ProfilePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left Side: General Profile Card */}
+        
         <div className="md:col-span-1 space-y-6">
           <div className="bg-muted/10 p-6 rounded-3xl flex flex-col items-center text-center space-y-4">
             <div className="relative w-24 h-24 rounded-full overflow-hidden bg-muted/40 flex items-center justify-center border-0">
@@ -255,10 +255,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Right Side: Forms */}
+        
         <div className="md:col-span-2">
           <form onSubmit={handleProfileSubmit} className="space-y-8">
-            {/* Personal Info Section */}
+            
             <div className="bg-muted/5 p-6 rounded-3xl space-y-6 border-0">
               <FormSectionHeader
                 title={t("personalInfo")}
@@ -372,7 +372,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Address Section */}
+            
             {user?.employee && (
               <div className="bg-muted/5 p-6 rounded-3xl space-y-6 border-0">
                 <FormSectionHeader
@@ -458,7 +458,7 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Bank Account Section */}
+            
             {user?.employee && (
               <div className="bg-muted/5 p-6 rounded-3xl space-y-6 border-0">
                 <FormSectionHeader

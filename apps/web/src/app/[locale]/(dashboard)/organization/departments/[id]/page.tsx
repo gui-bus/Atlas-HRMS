@@ -25,7 +25,7 @@ export default function EditDepartmentPage() {
   const id = params?.id as string;
   const locale = params?.locale || "pt";
 
-  // Fetch current department data
+  
   const {
     data: department,
     isLoading,

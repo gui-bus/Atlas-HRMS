@@ -27,16 +27,16 @@ export function NotificationDropdown({ locale }: NotificationDropdownProps) {
   const { user } = useAuthStore();
   const t = useTranslations("Notifications");
 
-  // --- Fetch notifications ---
+  
   const { data: notifications = [], isLoading } = useQuery({
     queryKey: ["notifications"],
     queryFn: () => notificationService.getNotifications(),
     enabled: !!user,
-    // Poll every 30 seconds for live updates
+    
     refetchInterval: 30000,
   });
 
-  // --- Mutations ---
+  
   const readMutation = useMutation({
     mutationFn: (id: string) => notificationService.markAsRead(id),
     onSuccess: () => {

@@ -4,7 +4,7 @@ import { expect, test, describe, vi, beforeEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ClockWidget } from "./clock-widget";
 
-// Mock Services
+
 vi.mock("@/services/time-attendance.service", () => ({
   timeAttendanceService: {
     getTodayRecords: vi
@@ -40,7 +40,7 @@ describe("ClockWidget Unit Tests", () => {
 
     await waitFor(() => {
       expect(screen.getByText("entry")).toBeInTheDocument();
-      expect(screen.getByText("+02h 00m")).toBeInTheDocument(); // 120 mins = +02h 00m
+      expect(screen.getByText("+02h 00m")).toBeInTheDocument(); 
     });
   });
 });

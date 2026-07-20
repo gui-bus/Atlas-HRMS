@@ -97,7 +97,7 @@ export default function DashboardPage() {
     0,
   );
 
-  // ─── Employee View ───────────────────────────────────────────────────────────
+  
   if (isEmployee) {
     const balance = employeeSummary?.hourBankBalance ?? 0;
     const nextVacation = employeeSummary?.upcomingVacations?.[0];
@@ -115,12 +115,12 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Clock Widget */}
+        
         <ClockWidget />
 
-        {/* Info Cards */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-          {/* Banco de Horas */}
+          
           <div className="bg-muted/15 p-5 rounded-2xl space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-muted-foreground uppercase">
@@ -142,7 +142,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">{t("myHourBankDesc")}</p>
           </div>
 
-          {/* Próximas Férias */}
+          
           <div className="bg-muted/15 p-5 rounded-2xl space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-muted-foreground uppercase">
@@ -169,7 +169,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">{t("myVacationsDesc")}</p>
           </div>
 
-          {/* Minhas Solicitações */}
+          
           <div className="bg-muted/15 p-5 rounded-2xl space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-muted-foreground uppercase">
@@ -202,10 +202,10 @@ export default function DashboardPage() {
     );
   }
 
-  // ─── Administrative View ─────────────────────────────────────────────────────
+  
   return (
     <div className="p-6 md:p-8 space-y-8 w-full animate-fade-in">
-      {/* Header */}
+      
       <div className="space-y-1.5">
         <h1 className="text-2xl font-bold tracking-tight">
           {getGreeting()}, {user?.email.split("@")[0]}
@@ -215,7 +215,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Row 1 — Main Stats (4 cards) */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
         <div className="bg-muted/15 p-6 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
@@ -278,7 +278,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Row 2 — Operational Stats (3 cards) */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
         <div className="bg-muted/15 p-6 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
@@ -330,7 +330,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Recruitment Funnel */}
+      
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-bold tracking-tight flex items-center gap-2">
@@ -427,7 +427,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      
       <div className="space-y-4">
         <h2 className="text-base font-bold tracking-tight">{t("quickActions")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 w-full">

@@ -58,13 +58,13 @@ export function UserDropdown({ locale }: UserDropdownProps) {
 
   return (
     <div className="flex items-center gap-3">
-      {/* Utilities Switchers */}
+      
       <div className="hidden sm:flex items-center gap-1">
         <LanguageSwitcher />
         <ThemeSwitcher />
       </div>
 
-      {/* User Dropdown */}
+      
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
@@ -92,7 +92,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
           align="end"
           side="bottom"
         >
-          {/* Premium User Profile Header Card */}
+          
           <div className="flex flex-col items-center text-center p-4 bg-muted/40 rounded-xl mb-1.5">
             <div className="w-12 h-12 rounded-full overflow-hidden bg-primary/10 text-primary flex items-center justify-center font-bold text-lg uppercase mb-2">
               {user?.employee?.avatarUrl || user?.avatarUrl ? (
@@ -123,7 +123,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
 
           <DropdownMenuSeparator className="my-1" />
 
-          {/* Navigation/Actions Group */}
+          
           <DropdownMenuGroup>
             <DropdownMenuItem
               render={<a href={`/${locale}/profile`} />}
@@ -136,7 +136,7 @@ export function UserDropdown({ locale }: UserDropdownProps) {
 
           <DropdownMenuSeparator className="my-1" />
 
-          {/* Logout Trigger */}
+          
           <DropdownMenuItem
             onClick={handleLogout}
             disabled={loggingOut}

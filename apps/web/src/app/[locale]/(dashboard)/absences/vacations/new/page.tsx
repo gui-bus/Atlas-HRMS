@@ -25,7 +25,7 @@ export default function NewVacationRequestPage() {
   const { user } = useAuthStore();
   const locale = params?.locale || "pt";
 
-  // Fetch the Employee matching the logged-in user email
+  
   const { data: employeesData } = useQuery({
     queryKey: ["employees", { search: user?.email }],
     queryFn: () => employeeService.getEmployees({ search: user?.email }),

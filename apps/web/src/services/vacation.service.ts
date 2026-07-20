@@ -62,7 +62,7 @@ export interface PaginatedLeavesResponse {
 }
 
 export const vacationService = {
-  // --- Vacations endpoints ---
+  
   async getVacations(params?: {
     page?: number;
     limit?: number;
@@ -104,7 +104,7 @@ export const vacationService = {
     return response.data;
   },
 
-  // --- Leaves endpoints ---
+  
   async getLeaves(params?: {
     page?: number;
     limit?: number;

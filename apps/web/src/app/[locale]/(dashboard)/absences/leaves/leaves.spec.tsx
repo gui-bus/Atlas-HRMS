@@ -7,7 +7,7 @@ import NewLeaveRequestPage from "./new/page";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-// Mock Services
+
 vi.mock("@/services/vacation.service", () => ({
   vacationService: {
     getLeaves: vi.fn().mockResolvedValue({

@@ -6,7 +6,7 @@ import AuditLogsPage from "./page";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-// Mock Services
+
 vi.mock("@/services/audit.service", () => ({
   auditService: {
     getAuditLogs: vi.fn().mockResolvedValue({

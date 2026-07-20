@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 export interface AuditLog {
   id: string;
   action: string;
-  details?: string; // stringified JSON
+  details?: string; 
   timestamp: string;
   userId?: string;
   user?: {

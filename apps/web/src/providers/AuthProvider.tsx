@@ -13,7 +13,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     const bootstrapSession = async () => {
-      // 1. Tenta recuperar a sessão de forma síncrona do localStorage para evitar atrasos na hidratação
+      
       try {
         const stored = localStorage.getItem("atlas-auth");
         if (stored) {
@@ -32,7 +32,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         console.error("Erro ao ler sessão do localStorage no bootstrap", e);
       }
 
-      // 2. Se não houver sessão local persistida, tenta o refresh silencioso via cookie
+      
       try {
         const response = await api.post("/auth/refresh");
         const { accessToken } = response.data;

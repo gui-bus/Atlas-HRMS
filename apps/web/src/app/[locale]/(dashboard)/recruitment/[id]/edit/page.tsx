@@ -29,7 +29,7 @@ export default function EditVacancyPage() {
   const id = params?.id as string;
   const locale = params?.locale || "pt";
 
-  // Fetch lists
+  
   const { data: vacancy, isLoading: loadingVacancy } = useQuery({
     queryKey: ["vacancy", id],
     queryFn: () => recruitmentService.getRecruitment(id),

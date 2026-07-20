@@ -58,7 +58,7 @@ describe("Vacations Integration Tests (Supertest)", () => {
 
     jwtService = moduleFixture.get<JwtService>(JwtService);
 
-    // Generate test tokens
+    
     hrToken = jwtService.sign({ sub: "user-hr", role: UserRole.HR });
     employeeToken = jwtService.sign({ sub: "user-emp", role: UserRole.EMPLOYEE });
   });
@@ -110,7 +110,7 @@ describe("Vacations Integration Tests (Supertest)", () => {
       mockPrisma.vacation.findFirst.mockResolvedValue(null);
       mockPrisma.vacation.create.mockResolvedValue({ id: "vac-1", ...validDto });
 
-      // Using mock bypass check ownership on helper for HR token
+      
       const response = await request(app.getHttpServer())
         .post("/vacations")
         .set("Authorization", `Bearer ${hrToken}`)

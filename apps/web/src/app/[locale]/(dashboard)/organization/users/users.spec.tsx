@@ -6,7 +6,7 @@ import UserAccountsPage from "./page";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-// Mock Services
+
 vi.mock("@/services/user-account.service", () => ({
   userAccountService: {
     getUserAccounts: vi.fn().mockResolvedValue({

@@ -31,7 +31,7 @@ export default function NewVacancyPage() {
   const router = useRouter();
   const locale = params?.locale || "pt";
 
-  // --- Fetch Departments & Positions ---
+  
   const { data: departmentsData } = useQuery({
     queryKey: ["departments"],
     queryFn: () => departmentService.getDepartments(),
@@ -46,7 +46,7 @@ export default function NewVacancyPage() {
   });
   const positions = Array.isArray(positionsData) ? positionsData : positionsData?.data || [];
 
-  // --- React Hook Form ---
+  
   const {
     register,
     handleSubmit,
@@ -70,7 +70,7 @@ export default function NewVacancyPage() {
     },
   });
 
-  // --- Mutation ---
+  
   const mutation = useMutation({
     mutationFn: (data: RecruitmentFormValues) => {
       return recruitmentService.createRecruitment({

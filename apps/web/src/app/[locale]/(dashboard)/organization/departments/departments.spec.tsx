@@ -7,7 +7,7 @@ import NewDepartmentPage from "./new/page";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-// Mock Services
+
 vi.mock("@/services/department.service", () => ({
   departmentService: {
     getDepartments: vi.fn().mockResolvedValue({

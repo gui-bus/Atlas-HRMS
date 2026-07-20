@@ -4,8 +4,8 @@ export interface Position {
   id: string;
   title: string;
   description?: string;
-  salaryRangeMin: string; // Decimal returned as string
-  salaryRangeMax: string; // Decimal returned as string
+  salaryRangeMin: string; 
+  salaryRangeMax: string; 
   active: boolean;
   departmentId: string;
   department?: {

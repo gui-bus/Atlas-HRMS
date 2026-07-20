@@ -54,7 +54,7 @@ export default function NewCorrectionRequestPage() {
 
   return (
     <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-      {/* Header */}
+      
       <div className="flex items-center gap-4">
         <Button
           variant="outline"
@@ -80,7 +80,7 @@ export default function NewCorrectionRequestPage() {
         </div>
       </div>
 
-      {/* Form Container */}
+      
       <form onSubmit={handleSubmit} className="space-y-6 pt-4">
         {message && (
           <div
@@ -95,7 +95,7 @@ export default function NewCorrectionRequestPage() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Date */}
+          
           <div className="space-y-2">
             <Label htmlFor="date">
               Data da Batida <span className="text-destructive">*</span>
@@ -109,7 +109,7 @@ export default function NewCorrectionRequestPage() {
             />
           </div>
 
-          {/* Type */}
+          
           <div className="space-y-2">
             <Label htmlFor="targetType">
               Tipo de Batida <span className="text-destructive">*</span>
@@ -128,7 +128,7 @@ export default function NewCorrectionRequestPage() {
           </div>
         </div>
 
-        {/* Time */}
+        
         <div className="space-y-2">
           <Label htmlFor="time">
             Horário Correto (HH:MM) <span className="text-destructive">*</span>
@@ -142,7 +142,7 @@ export default function NewCorrectionRequestPage() {
           />
         </div>
 
-        {/* Reason */}
+        
         <div className="space-y-2">
           <Label htmlFor="reason">
             Motivo do Ajuste <span className="text-destructive">*</span>
@@ -156,7 +156,7 @@ export default function NewCorrectionRequestPage() {
           />
         </div>
 
-        {/* Actions */}
+        
         <div className="flex justify-end gap-3 pt-6 border-t border-transparent">
           <Button
             type="button"

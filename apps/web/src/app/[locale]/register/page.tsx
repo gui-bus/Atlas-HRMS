@@ -165,7 +165,7 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Minimal Form body */}
+        
         <div className="space-y-6">
           {errorMsg && (
             <div className="bg-destructive/15 border border-destructive/30 text-destructive text-sm px-4 py-3 rounded-lg text-center font-medium">
@@ -215,7 +215,7 @@ export default function RegisterPage() {
                 </button>
               </div>
 
-              {/* Password Strength Indicator */}
+              
               {passwordValue && (
                 <div className="space-y-2 pt-1">
                   <div className="flex justify-between items-center text-xs font-medium">
@@ -239,7 +239,7 @@ export default function RegisterPage() {
                     />
                   </div>
 
-                  {/* Requirement Checklist */}
+                  
                   <div className="space-y-1.5 pt-1">
                     {passwordRules.map((rule) => {
                       const passed = rule.test(passwordValue);

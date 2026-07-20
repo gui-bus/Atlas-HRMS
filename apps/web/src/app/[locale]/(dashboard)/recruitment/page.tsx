@@ -55,14 +55,14 @@ export default function RecruitmentListPage() {
   const { user } = useAuthStore();
   const isAdminOrHr = user?.role === "ADMIN" || user?.role === "HR";
 
-  // State
+  
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useQueryState("status", parseAsString.withDefault("ALL"));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault(""));
   const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault(""));
 
-  // --- Fetch List ---
+  
   const { data: recruitmentsData, isLoading } = useQuery({
     queryKey: ["recruitments", { page, sortBy, sortOrder }],
     queryFn: () =>
@@ -76,7 +76,7 @@ export default function RecruitmentListPage() {
   const recruitments = recruitmentsData?.data || [];
   const totalPages = recruitmentsData?.totalPages || 1;
 
-  // --- Delete Vacancy ---
+  
   const deleteMutation = useMutation({
     mutationFn: (id: string) => recruitmentService.deleteRecruitment(id),
     onSuccess: () => {
@@ -115,7 +115,7 @@ export default function RecruitmentListPage() {
     return map[val] ?? val;
   };
 
-  // Local Filter
+  
   const filteredData = useMemo(() => {
     return recruitments.filter((r) => {
       if (statusFilter !== "ALL" && r.status !== statusFilter) return false;
@@ -244,7 +244,7 @@ export default function RecruitmentListPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        {/* Title Header */}
+        
         <PageHeader
           title={t("title")}
           subTitle={t("subTitle")}
@@ -252,7 +252,7 @@ export default function RecruitmentListPage() {
           buttonLink={`/${locale}/recruitment/new`}
         />
 
-        {/* Toolbar */}
+        
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -277,7 +277,7 @@ export default function RecruitmentListPage() {
           </Select>
         </div>
 
-        {/* Table */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -349,7 +349,7 @@ export default function RecruitmentListPage() {
           </div>
         </div>
 
-        {/* Pagination controls */}
+        
         {!isLoading && totalPages > 1 && (
           <Pagination className="justify-end pt-4">
             <PaginationContent>

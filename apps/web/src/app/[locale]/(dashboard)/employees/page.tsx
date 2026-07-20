@@ -259,7 +259,7 @@ export default function EmployeesListPage() {
           </Select>
         </div>
 
-        {/* Table section */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -344,7 +344,7 @@ export default function EmployeesListPage() {
           </div>
         </div>
 
-        {/* Pagination controls */}
+        
         {!isLoading && !isError && totalPages > 1 && (
           <Pagination className="justify-end pt-4">
             <PaginationContent>
@@ -375,7 +375,7 @@ export default function EmployeesListPage() {
           </Pagination>
         )}
 
-        {/* Delete confirmation dialog */}
+        
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent>
             <DialogHeader>

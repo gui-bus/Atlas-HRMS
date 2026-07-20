@@ -56,7 +56,7 @@ describe("Employees Integration Tests (Supertest)", () => {
 
     jwtService = moduleFixture.get<JwtService>(JwtService);
 
-    // Generate test tokens
+    
     hrToken = jwtService.sign({ sub: "user-hr", role: UserRole.HR });
     employeeToken = jwtService.sign({ sub: "user-emp", role: UserRole.EMPLOYEE });
   });
@@ -98,7 +98,7 @@ describe("Employees Integration Tests (Supertest)", () => {
       hireDate: "2026-07-14",
       salary: "5500.00",
       personalData: {
-        cpf: "12345678909", // Validador customizado CPF aceita sem pontos
+        cpf: "12345678909", 
         birthDate: "1990-05-15",
       },
       address: {
@@ -136,7 +136,7 @@ describe("Employees Integration Tests (Supertest)", () => {
         ...validDto,
         personalData: {
           ...validDto.personalData,
-          cpf: "11111111111", // CPF falso de digito repetido
+          cpf: "11111111111", 
         },
       };
 

@@ -6,14 +6,11 @@ export class UploadthingService {
   private utapi: UTApi;
 
   constructor() {
-    // Under the hood, UTApi reads UPLOADTHING_TOKEN/UPLOADTHING_SECRET from process.env
+    
     this.utapi = new UTApi();
   }
 
-  /**
-   * Faz o upload de um arquivo passando um Buffer ou File direto para o UploadThing.
-   * Útil para controllers HTTP que recebem o arquivo via Multipart/form-data.
-   */
+  
   async uploadFile(file: any) {
     try {
       let fileToUpload = file;
@@ -34,9 +31,7 @@ export class UploadthingService {
     }
   }
 
-  /**
-   * Remove um arquivo do UploadThing usando a chave única do arquivo (fileKey).
-   */
+  
   async deleteFile(fileKey: string) {
     try {
       await this.utapi.deleteFiles(fileKey);

@@ -1,7 +1,7 @@
 import { api } from "@/lib/api";
 import { Employee } from "@atlas/types";
 
-// Extended structures to match backend responses
+
 export interface PersonalData {
   id: string;
   cpf: string;
@@ -40,7 +40,7 @@ export interface EmergencyContact {
 }
 
 export interface EmployeeWithDetails extends Omit<Employee, "salary"> {
-  salary: string; // Backend returns Decimal as string
+  salary: string; 
   personalData?: PersonalData;
   address?: Address;
   bankAccount?: BankAccount;

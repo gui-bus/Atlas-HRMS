@@ -4,7 +4,7 @@ import { expect, test, describe, vi, beforeEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NotificationDropdown } from "./notification-dropdown";
 
-// Mock Services
+
 vi.mock("@/services/notification.service", () => ({
   notificationService: {
     getNotifications: vi.fn().mockResolvedValue([

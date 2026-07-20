@@ -181,7 +181,7 @@ export default function ChangePasswordPage() {
                 </button>
               </div>
 
-              {/* Password strength meter */}
+              
               {newPassword && (
                 <div className="space-y-2 pt-1">
                   <div className="flex justify-between items-center text-xs font-semibold">
@@ -205,7 +205,7 @@ export default function ChangePasswordPage() {
                     />
                   </div>
 
-                  {/* Rules Check List */}
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1.5 pt-1">
                     {passwordRules.map((rule) => {
                       const passed = rule.test(newPassword);

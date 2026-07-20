@@ -53,7 +53,7 @@ export default function DocumentsPage() {
   const userRole = user?.role || "EMPLOYEE";
   const isEmployee = userRole === "EMPLOYEE";
 
-  // Get current logged-in employee ID if role is EMPLOYEE
+  
   const { data: employeesData } = useQuery({
     queryKey: ["employees", { search: user?.email }],
     queryFn: () => employeeService.getEmployees({ search: user?.email }),
@@ -61,20 +61,20 @@ export default function DocumentsPage() {
   });
   const currentEmployee = employeesData?.data?.[0];
 
-  // --- Fetch Lists ---
+  
   const { data: documents = [], isLoading: loadingDocs } = useQuery({
     queryKey: ["documents"],
     queryFn: () => documentService.getDocuments(),
   });
 
-  // --- State ---
+  
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  // --- Mutations ---
+  
   const deleteMutation = useMutation({
     mutationFn: (id: string) => documentService.deleteDocument(id),
     onSuccess: () => {
@@ -84,7 +84,7 @@ export default function DocumentsPage() {
     },
   });
 
-  // --- Open Dialogs ---
+  
   const handleOpenDeleteConfirm = (id: string) => {
     setDeleteId(id);
     setDeleteConfirmOpen(true);
@@ -111,7 +111,7 @@ export default function DocumentsPage() {
     }
   };
 
-  // Local Filter
+  
   const filteredData = useMemo(() => {
     return documents.filter((doc) => {
       if (isEmployee) {
@@ -200,7 +200,7 @@ export default function DocumentsPage() {
   return (
     <RbacGuard allowedRoles={["ADMIN", "HR", "MANAGER", "EMPLOYEE"]}>
       <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-        {/* Title Header */}
+        
         <PageHeader
           title={t("title")}
           subTitle={t("subTitle")}
@@ -208,7 +208,7 @@ export default function DocumentsPage() {
           buttonLink={`/${locale}/documents/new`}
         />
 
-        {/* Toolbar */}
+        
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -233,7 +233,7 @@ export default function DocumentsPage() {
           </Select>
         </div>
 
-        {/* Table */}
+        
         <div className="w-full bg-transparent overflow-hidden">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-sm border-collapse text-left border-0">
@@ -305,7 +305,7 @@ export default function DocumentsPage() {
           </div>
         </div>
 
-        {/* Delete Confirmation */}
+        
         <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
           <DialogContent className="border-0 shadow-2xl rounded-2xl max-w-sm">
             <DialogHeader>

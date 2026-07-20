@@ -11,15 +11,15 @@ export function IsCPF(validationOptions?: ValidationOptions) {
         validate(value: any) {
           if (typeof value !== "string") return false;
 
-          // Remove non-digit characters
+          
           const cleanCPF = value.replace(/[^\d]/g, "");
 
-          // Check if cleanCPF has 11 digits or consists of identical numbers
+          
           if (cleanCPF.length !== 11 || /^(\d)\1+$/.test(cleanCPF)) {
             return false;
           }
 
-          // Validate first digit
+          
           let sum = 0;
           for (let i = 0; i < 9; i++) {
             sum += parseInt(cleanCPF.charAt(i)) * (10 - i);
@@ -31,7 +31,7 @@ export function IsCPF(validationOptions?: ValidationOptions) {
             return false;
           }
 
-          // Validate second digit
+          
           sum = 0;
           for (let i = 0; i < 10; i++) {
             sum += parseInt(cleanCPF.charAt(i)) * (11 - i);

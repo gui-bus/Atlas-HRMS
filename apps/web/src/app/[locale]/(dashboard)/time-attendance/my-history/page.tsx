@@ -29,7 +29,7 @@ export default function MyTimeHistoryPage() {
     return map[type] || type;
   };
 
-  // Group records by local date
+  
   const groupedDays = useMemo(() => {
     const groups: { [dateKey: string]: TimeRecord[] } = {};
 
@@ -47,7 +47,7 @@ export default function MyTimeHistoryPage() {
       groups[dateKey].push(rec);
     });
 
-    // Sort punches inside each day ascending
+    
     Object.keys(groups).forEach((key) => {
       groups[key].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
     });
@@ -55,7 +55,7 @@ export default function MyTimeHistoryPage() {
     return groups;
   }, [records]);
 
-  // Calculate worked time for a day
+  
   const calculateWorkedTime = (dayRecords: TimeRecord[]) => {
     if (dayRecords.length < 2) return "--:--";
 
@@ -65,16 +65,16 @@ export default function MyTimeHistoryPage() {
     const intIn = dayRecords.find((r) => r.type === "INTERVAL_IN");
     const exit = dayRecords.find((r) => r.type === "EXIT");
 
-    // Morning shift
+    
     if (entry && intOut) {
       totalMs += new Date(intOut.timestamp).getTime() - new Date(entry.timestamp).getTime();
     }
-    // Afternoon shift
+    
     if (intIn && exit) {
       totalMs += new Date(exit.timestamp).getTime() - new Date(intIn.timestamp).getTime();
     }
 
-    // Fallback if no interval records but have ENTRY and EXIT
+    
     if (totalMs === 0 && entry && exit) {
       totalMs += new Date(exit.timestamp).getTime() - new Date(entry.timestamp).getTime();
     }
@@ -94,7 +94,7 @@ export default function MyTimeHistoryPage() {
         return dateKey.includes(globalFilter);
       })
       .sort((a, b) => {
-        // Sort dates descending
+        
         const [dayA, monthA, yearA] = a.split("/").map(Number);
         const [dayB, monthB, yearB] = b.split("/").map(Number);
         return (
@@ -105,7 +105,7 @@ export default function MyTimeHistoryPage() {
 
   return (
     <div className="p-6 md:p-8 space-y-6 w-full animate-fade-in">
-      {/* Title Header */}
+      
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs text-muted-foreground font-semibold">
@@ -126,7 +126,7 @@ export default function MyTimeHistoryPage() {
         </Button>
       </div>
 
-      {/* MagnifyingGlass Input */}
+      
       <div className="relative w-full">
         <MagnifyingGlass className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -137,7 +137,7 @@ export default function MyTimeHistoryPage() {
         />
       </div>
 
-      {/* Main List */}
+      
       <div className="space-y-4">
         {isLoading ? (
           <div className="py-12 flex items-center justify-center">
@@ -157,7 +157,7 @@ export default function MyTimeHistoryPage() {
                 key={dateKey}
                 className="bg-muted/10 p-5 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-0"
               >
-                {/* Day Info */}
+                
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-sm font-bold text-foreground">
                     <Calendar className="w-4 h-4 text-primary shrink-0" />
@@ -169,7 +169,7 @@ export default function MyTimeHistoryPage() {
                   </div>
                 </div>
 
-                {/* Clock Timeline Row */}
+                
                 <div className="flex flex-wrap gap-4 items-center">
                   {dayRecords.map((rec) => (
                     <div

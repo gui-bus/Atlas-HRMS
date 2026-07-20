@@ -3,7 +3,7 @@ import { http, HttpResponse } from "msw";
 const API_URL = "http://localhost:3001";
 
 export const handlers = [
-  // Mock login handler
+  
   http.post(`${API_URL}/auth/login`, async ({ request }) => {
     const { email, password } = (await request.json()) as any;
 
@@ -28,7 +28,7 @@ export const handlers = [
     );
   }),
 
-  // Mock register handler
+  
   http.post(`${API_URL}/auth/register`, async ({ request }) => {
     const { email } = (await request.json()) as any;
 
@@ -52,14 +52,14 @@ export const handlers = [
     });
   }),
 
-  // Mock refresh token handler
+  
   http.post(`${API_URL}/auth/refresh`, () => {
     return HttpResponse.json({
       accessToken: "mock-refreshed-access-token",
     });
   }),
 
-  // Mock forgot password handler
+  
   http.post(`${API_URL}/auth/forgot-password`, async ({ request }) => {
     const { email } = (await request.json()) as any;
 

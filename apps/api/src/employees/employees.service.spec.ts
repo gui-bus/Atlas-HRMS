@@ -114,8 +114,8 @@ describe("EmployeesService (Unit)", () => {
     };
 
     it("should create employee successfully", async () => {
-      mockPrisma.employee.findUnique.mockResolvedValue(null); // email check
-      mockPrisma.employeePersonalData.findUnique.mockResolvedValue(null); // cpf check
+      mockPrisma.employee.findUnique.mockResolvedValue(null); 
+      mockPrisma.employeePersonalData.findUnique.mockResolvedValue(null); 
       mockPrisma.employee.create.mockResolvedValue({ id: "new-emp-1", ...createDto });
 
       const result = await service.create(createDto);

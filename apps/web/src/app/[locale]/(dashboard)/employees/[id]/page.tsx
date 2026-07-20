@@ -37,7 +37,7 @@ export default function EmployeeDetailsPage() {
   const id = params?.id as string;
   const locale = params?.locale || "pt";
 
-  // Fetch data
+  
   const {
     data: employee,
     isLoading,
@@ -91,7 +91,7 @@ export default function EmployeeDetailsPage() {
     name: "emergencyContacts",
   });
 
-  // Prepopulate form when data arrives
+  
   useEffect(() => {
     if (employee) {
       reset({
@@ -183,7 +183,7 @@ export default function EmployeeDetailsPage() {
         />
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
-          {/* Section 1: Professional Info */}
+          
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.professional")}
@@ -265,7 +265,7 @@ export default function EmployeeDetailsPage() {
             </div>
           </div>
 
-          {/* Section 2: Personal Info */}
+          
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.personal")}
@@ -340,7 +340,7 @@ export default function EmployeeDetailsPage() {
             </div>
           </div>
 
-          {/* Section 3: Address */}
+          
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.address")}
@@ -420,7 +420,7 @@ export default function EmployeeDetailsPage() {
             </div>
           </div>
 
-          {/* Section 4: Bank Details */}
+          
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.bank")}
@@ -491,7 +491,7 @@ export default function EmployeeDetailsPage() {
             </div>
           </div>
 
-          {/* Section 5: Emergency Contacts */}
+          
           <div className="space-y-4">
             <FormSectionHeader
               title={t("tabs.emergency")}
@@ -578,7 +578,7 @@ export default function EmployeeDetailsPage() {
             </p>
           )}
 
-          {/* Action Controls */}
+          
           <FormActions
             cancelText={t("table.cancel")}
             submitText={t("form.save")}

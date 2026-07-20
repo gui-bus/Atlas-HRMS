@@ -22,9 +22,9 @@ export class VacationsService {
     private readonly uploadthingService: UploadthingService,
   ) {}
 
-  // ==========================================
-  // VACATIONS LOR / BUSINESS LOGIC
-  // ==========================================
+  
+  
+  
 
   async findAllVacations(query: QueryPaginationDto) {
     const page = query.page ?? 1;
@@ -84,7 +84,7 @@ export class VacationsService {
       throw new BadRequestException("A data de início deve ser anterior à data de término");
     }
 
-    // Verify 12 months working history (CLT period rule)
+    
     const diffTime = Math.abs(new Date().getTime() - new Date(employee.hireDate).getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays < 365) {
@@ -93,7 +93,7 @@ export class VacationsService {
       );
     }
 
-    // Check overlap vacations
+    
     const overlapping = await this.prisma.vacation.findFirst({
       where: {
         employeeId: dto.employeeId,
@@ -167,7 +167,7 @@ export class VacationsService {
       throw new NotFoundException("Férias não encontradas");
     }
 
-    // Verify ownership
+    
     if (!isHrOrAdmin && vacation.employee.userId !== requesterUserId) {
       throw new ForbiddenException("Você não tem permissão para cancelar estas férias");
     }
@@ -181,9 +181,9 @@ export class VacationsService {
     });
   }
 
-  // ==========================================
-  // LEAVES LOR / BUSINESS LOGIC (ATTESTED / REASONS)
-  // ==========================================
+  
+  
+  
 
   async findAllLeaves(query: QueryPaginationDto) {
     const page = query.page ?? 1;
@@ -241,7 +241,7 @@ export class VacationsService {
       throw new BadRequestException("A data de início deve ser anterior à data de término");
     }
 
-    // Check overlap leaves
+    
     const overlapping = await this.prisma.leave.findFirst({
       where: {
         employeeId: dto.employeeId,
@@ -303,7 +303,7 @@ export class VacationsService {
       );
     }
 
-    // If rejected and had an attachment, delete it from UploadThing
+    
     if (dto.status === LeaveStatus.REJECTED && updated.attachmentUrl) {
       try {
         const fileKey = updated.attachmentUrl.split("/f/").pop();
@@ -328,7 +328,7 @@ export class VacationsService {
       throw new NotFoundException("Licença não encontrada");
     }
 
-    // Verify ownership
+    
     if (!isHrOrAdmin && leave.employee.userId !== requesterUserId) {
       throw new ForbiddenException("Você não tem permissão para cancelar esta licença");
     }
@@ -341,7 +341,7 @@ export class VacationsService {
       },
     });
 
-    // Delete attachment if cancelled
+    
     if (updated.attachmentUrl) {
       try {
         const fileKey = updated.attachmentUrl.split("/f/").pop();
