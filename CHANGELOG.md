@@ -4,6 +4,15 @@ Todos os registros de alterações relevantes para este projeto serão documenta
 
 ---
 
+## [1.8.3] - 2026-07-20
+
+### Adicionado
+
+- **Galeria de Imagens de Visualização**: Adicionada uma seção de Galeria de Telas (Preview) no arquivo de documentação [docs/README.md](file:///c:/Users/Guilherme/Desktop/PROJETOS/atlas-hrms/docs/README.md) agrupando capturas de tela das principais interfaces do frontend.
+- **Sumário Interativo**: Adicionado sumário de navegação com links âncora e IDs correspondentes a todas as seções no cabeçalho do documento.
+
+---
+
 ## [1.8.2] - 2026-07-18
 
 ### Corrigido
